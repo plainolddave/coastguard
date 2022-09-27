@@ -15,9 +15,9 @@ export async function handler(event, context) {
         }
 
         let url = `${API_ENDPOINT}?field=${event.queryStringParameters.field || "obs"}`;
-        if (event.queryStringParameters.from) { url += `${url}&from=${event.queryStringParameters.from}` };
-        if (event.queryStringParameters.to) { url += `${url}&to=${event.queryStringParameters.to}` };
-        url += `${url}&limit=${event.queryStringParameters.limit || "1"}`;
+        if (event.queryStringParameters.from) { url += `&from=${event.queryStringParameters.from}` };
+        if (event.queryStringParameters.to) { url += `&to=${event.queryStringParameters.to}` };
+        url += `&limit=${event.queryStringParameters.limit || "1"}`;
 
         const response = await axios.get(url, API_CONFIG);
         const data = JSON.stringify(response.data);
