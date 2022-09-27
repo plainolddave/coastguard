@@ -15,12 +15,17 @@ export async function handler(event, context) {
         }
 
         let url = `${API_ENDPOINT}?field=${event.queryStringParameters.field || "obs"}`;
-        if (event.queryStringParameters.from) { url = `${url}&from=${event.queryStringParameters.from}` };
-        if (event.queryStringParameters.to) { url = `${url}&to=${event.queryStringParameters.to}` };
+        if (event.queryStringParameters.from) { url += `${url}&from=${event.queryStringParameters.from}` };
+        if (event.queryStringParameters.to) { url += `${url}&to=${event.queryStringParameters.to}` };
         url += event.queryStringParameters.limit || "1";
+
+        console.log(`get url: ${url}`) 
 
         const response = await axios.get(url, API_CONFIG);
         const data = response.data
+
+        console.log(`response: ${JSON.stringify(response) }`) 
+
         return {
             statusCode: 200,
             body: JSON.stringify(data)
