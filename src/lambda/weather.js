@@ -24,7 +24,7 @@ export async function handler(event, context) {
         const response = await axios.get(url, API_CONFIG);
         const data = response.data
 
-        console.log(`response: ${JSON.stringify(response) }`) 
+        console.log(`response: ${JSON.stringify(data) }`) 
 
         return {
             statusCode: 200,
