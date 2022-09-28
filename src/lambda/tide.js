@@ -1,5 +1,5 @@
 import axios from "axios"
-const API_ENDPOINT = "https://ap-southeast-2.aws.data.mongodb-api.com/app/signalk-jtrvz/endpoint/forecast";
+const API_ENDPOINT = "https://ap-southeast-2.aws.data.mongodb-api.com/app/signalk-jtrvz/endpoint/tide";
 const API_CONFIG = {
     headers: {
         'api-key': 'Eik2e3WiQpKligCnVUJEOPtav9oUUwN8Ai4qEUmICdSc27Q9R6BmAiP94kaNekKi',
@@ -15,7 +15,7 @@ export async function handler(event, context) {
         }
 
         let url = API_ENDPOINT + `?limit=${event.queryStringParameters.limit || "10"}`
-        if (event.queryStringParameters.field) { url += `&field=${event.queryStringParameters.field}` };
+        if (event.queryStringParameters.offset) { url += `&offset=${event.queryStringParameters.offset}` };
         if (event.queryStringParameters.from) { url += `&from=${event.queryStringParameters.from}` };
         if (event.queryStringParameters.to) { url += `&to=${event.queryStringParameters.to}` };
 
