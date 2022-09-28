@@ -1,3 +1,9 @@
+[[headers]]
+for = "/*"
+
+[headers.values]
+Access-Control-Allow-Origin = "*"
+
 [build]
   command = "yarn build" # the command you run to build this file
   functions = "built-lambda" # netlify-lambda builds to this folder AND Netlify reads functions from here

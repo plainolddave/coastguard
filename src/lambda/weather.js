@@ -25,6 +25,9 @@ export async function handler(event, context) {
 
         return {
             statusCode: 200,
+            headers: {
+                "Access-Control-Allow-Origin": "*", // Allow from anywhere 
+            },
             body: data
         }
 
@@ -33,6 +36,9 @@ export async function handler(event, context) {
         console.log(err) 
         return {
             statusCode: 500,
+            headers: {
+                "Access-Control-Allow-Origin": "*", // Allow from anywhere 
+            },
             body: JSON.stringify({ msg: err.message })
         }
     }
