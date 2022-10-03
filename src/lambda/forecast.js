@@ -14,7 +14,7 @@ export async function handler(event, context) {
             return { statusCode: 405, body: "Method Not Allowed" };
         }
 
-        let url = API_ENDPOINT + `?limit=${event.queryStringParameters.limit || "10"}`
+        let url = API_ENDPOINT + `?limit=${event.queryStringParameters.limit || "100"}`
         if (event.queryStringParameters.field) { url += `&field=${event.queryStringParameters.field}` };
         if (event.queryStringParameters.from) { url += `&from=${event.queryStringParameters.from}` };
         if (event.queryStringParameters.to) { url += `&to=${event.queryStringParameters.to}` };
