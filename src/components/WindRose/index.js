@@ -1,4 +1,4 @@
-﻿import React, { Component } from 'react'
+import React, { Component } from 'react'
 import { ClampAngle, Saturate } from "./../App/Helpers"
 
 /*import Border from "./Border"*/
