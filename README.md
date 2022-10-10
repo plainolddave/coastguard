@@ -53,4 +53,4 @@ Issues and improvements are:
 - add timestamps in the bottom corner of the map
 - add a button or something to the map to click and drag the screen up on a mobile
 - look at a higher contrast map or marine chart layer
-
+- add different color or line style to indicate where signal has been lost
