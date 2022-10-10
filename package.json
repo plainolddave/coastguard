@@ -8,10 +8,11 @@
     "react-dom": "^18.2.0",
     "react-scripts": "^3.0.1",
     "dayjs": "^1.11.5",
-    "leaflet": "^1.8.0",
+    "leaflet": "^1.7.1",
     "react-icons": "^4.4.0",
-    "react-leaflet": "^4.0.2",
-    "recharts": "^2.1.14"
+    "react-leaflet": "^3.0.5",
+    "recharts": "^2.1.14",
+    "typescript": "^4.0.3"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -33,6 +34,7 @@
   ],
   "devDependencies": {
     "netlify-lambda": "^1.4.5",
-    "npm-run-all": "^4.1.5"
+    "npm-run-all": "^4.1.5",
+    "@types/leaflet": "^1.5.19"
   }
 }
