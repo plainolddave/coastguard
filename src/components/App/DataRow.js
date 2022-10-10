@@ -151,7 +151,7 @@ function DataRow({ label, value, styling="data-row" }) {
             return "";
         else if (label === "Tide") {
             let label = value.type;
-            if (label === "High" || label == "Low") {
+            if (label === "High" || label === "Low") {
                 label += ` at ${dayjs.unix(value.dt).format("HH:mm")}`;
             }
             return label;

@@ -191,4 +191,3 @@ WindRose.defaultProps = {
 };
 
 export default WindRose;
-
