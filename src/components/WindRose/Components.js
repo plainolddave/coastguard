@@ -1,6 +1,4 @@
 import React, { Component } from 'react'
-import styles from "./../App/styles.css"
-import { Log } from "./../App/Helpers"
 
 const Dial = ({ inside, outside }) => (
     <g>

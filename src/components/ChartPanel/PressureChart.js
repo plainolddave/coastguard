@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import * as dayjs from 'dayjs'
 import { GetTimeOffset, Log } from "./../App/Helpers"
-import styles from "./../App/styles.css"
 import {
     AreaChart,
     Area,

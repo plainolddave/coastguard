@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import * as dayjs from 'dayjs'
-import styles from "./../App/styles.css"
 
 /**
  * Displays time and date

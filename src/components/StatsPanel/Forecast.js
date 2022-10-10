@@ -3,7 +3,6 @@ import * as dayjs from 'dayjs'
 import axios from "axios";
 import DataRow from "./../App/DataRow"
 import { Log } from "./../App/Helpers"
-import styles from "./../App/styles.css"
 
 const settings = {
     refreshMillis: 1000 * 60 * 60,  // 1 hour

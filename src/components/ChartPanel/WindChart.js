@@ -39,8 +39,6 @@ function WindChart() {
     // props, state, refs
 
     let [data, setData] = useState([]);                 // data received from the server
-    let [speedNow, setSpeedNow] = useState(0);          // current speed in knots
-    let [directionNow, setDirectionNow] = useState(0);  // current direction in degrees
 
     // ----------------------------------------------------------------------------------------------------
     // refresh data from the server
@@ -69,12 +67,7 @@ function WindChart() {
             .then((response) => {
                 const data = response.data;
                 setData(data);
-
-                const lastRecord = data[data.length - 1].value;
-                setSpeedNow(lastRecord.knots);
-                setDirectionNow(lastRecord.direction);
-                Log("wind", data);
-
+                //Log("wind", data);
             })
             .catch((err) => {
                 Log("wind error", err);
@@ -110,7 +103,7 @@ function WindChart() {
 
     return (
         <div className="wrapper">
-            {/*            <div className="label left">Wind</div>*/}
+{/*            <div className="label left">Wind</div>*/}
             <WindRose
                 data={data}
                 precision={settings.numberPrecision}

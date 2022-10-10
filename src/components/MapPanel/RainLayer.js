@@ -5,7 +5,7 @@ import axios from "axios";
 
 const settings = {
     refreshMillis: 1000 * 60 * 5,   // updates
-    tickMillis: 250,                // animation
+    tickMillis: 500,                // animation
     rainOn: 0.5,
     rainOff: 0.01,
     rainSize: 512,

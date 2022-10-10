@@ -1,5 +1,4 @@
 import React from "react";
-import styles from "./../App/styles.css"
 import {
     WiNa,
     WiBarometer,
@@ -20,16 +19,8 @@ import {
     WiWindBeaufort9,
     WiWindBeaufort10,
     WiWindBeaufort11,
-    WiWindBeaufort12,
-    WiWindBeaufort13,
-    WiCelsius,
-    WiDirectionUpRight,
-    WiDirectionDownRight
+    WiWindBeaufort12
 } from "react-icons/wi";
-import {
-    GiHighTide,
-    GiLowTide
-} from "react-icons/gi";
 import {
     GoArrowDown,
     GoArrowUp,
@@ -98,12 +89,13 @@ function DataRow({ label, value, styling="data-row" }) {
                     return <WiWindBeaufort11 />;
                 }
                 return <WiWindBeaufort12 />;
+
             case "Tide":
                 if (value == null) {
                     return "";
-                } else if (value.type == "High") {
+                } else if (value.type === "High") {
                     return <GoArrowUp />;
-                } else if (value.type == "Low") {
+                } else if (value.type === "Low") {
                     return <GoArrowDown />;
                 } else {
                     return <GoGlobe />; 
@@ -155,11 +147,11 @@ function DataRow({ label, value, styling="data-row" }) {
     // Tide value is passed as an object with properties:
     // { "height": 0.274, "dt": 1665160299, "type": "Low" }
     function getLabel(label, value = {}, styling = "data-row") {
-        if (styling == "forecast-row")
+        if (styling === "forecast-row")
             return "";
-        else if (label == "Tide") {
+        else if (label === "Tide") {
             let label = value.type;
-            if (label == "High" || label == "Low") {
+            if (label === "High" || label == "Low") {
                 label += ` at ${dayjs.unix(value.dt).format("HH:mm")}`;
             }
             return label;

@@ -1,9 +1,8 @@
 ﻿import React, { Component } from 'react'
-import styles from "./../App/styles.css"
-import { Log, ClampAngle, Saturate } from "./../App/Helpers"
+import { ClampAngle, Saturate } from "./../App/Helpers"
 
 /*import Border from "./Border"*/
-import { Dial, Border, Dot, Numeral, Tick } from "./Components"
+import { Dot, Numeral, Tick } from "./Components"
 import { TestData } from "./Data"
 
 const settings = {
@@ -126,7 +125,7 @@ class WindRose extends Component {
         dots.forEach(dot => {
             let index = 0;
             if (dot.count > 0) index = 1;
-            if (dot.angle == this.current.angle) index = 2;
+            if (dot.angle === this.current.angle) index = 2;
 
             dot.strokeColor = this.dotStrokeColor[index];
             dot.fillColor = this.dotFillColor[index];

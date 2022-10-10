@@ -50,21 +50,17 @@ var greyIcon = new ChartIcon({
     iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png'
 });
 
-var greyIcon = new ChartIcon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png'
-});
+//var redIcon = new ChartIcon({
+//    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png'
+//});
 
-var redIcon = new ChartIcon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png'
-});
+//var orangeIcon = new ChartIcon({
+//    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png'
+//});
 
-var orangeIcon = new ChartIcon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png'
-});
-
-var blackIcon = new ChartIcon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-black.png'
-});
+//var blackIcon = new ChartIcon({
+//    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-black.png'
+//});
 
 // -------------------------------------------------------------------------------
 
@@ -140,7 +136,7 @@ class TrackLayer extends Component {
 
     // get the vessel name, or MMSI if name is blank
     getName = (vessel) => {
-        if (vessel.vessel.length == 0) {
+        if (vessel.vessel.length === 0) {
             let name = "*"; // add a star to indicate its not a vessel in the database
             name += vessel.name == null ? String(vessel.mmsi) : String(vessel.name); 
             return name;
@@ -168,16 +164,12 @@ class TrackLayer extends Component {
         switch (org) {
             case "QF2":
                 return goldIcon;
-                break;
             case "QPS":
                 return blueIcon
-                break;
             case "AVCG":
                 return greenIcon
-                break;
             case "VMR":
                 return violetIcon
-                break;
             default:
                 return greyIcon;
         }

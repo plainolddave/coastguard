@@ -1,5 +1,4 @@
 import React from "react";
-import styles from "./../App/styles.css"
 
 /**
  * Simple spacer, that can be adjusted by name using CSS

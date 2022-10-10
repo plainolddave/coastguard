@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useLayoutEffect } from "react";
+import React from "react";
 import axios from "axios";
 import * as dayjs from 'dayjs'
 import DataRow from "./../App/DataRow";
@@ -57,7 +57,7 @@ class TideChart extends React.Component {
             date: new Date(),
             heights: [],    // tide data received from the server
             extremes: [],   // tide data received from the server
-            tideNow: { height: 0, dt: 0, type: "" },     // current height
+            tideNow: { height: 0, dt: 0, type: ""},     // current height
             prevTide: { height: 0, dt: 0, type: "" },   // previous tide state info
             nextTide: { height: 0, dt: 0, type: "" },   // next tide state info
             station: ""
@@ -99,14 +99,14 @@ class TideChart extends React.Component {
         }
 
         // find the previous and next extreme heights
-        for (var i = 0; i < extremes.length; i++) {
+        for (var c = 0; c < extremes.length; c++) {
 
             // find the index of the next reading 
-            if (extremes[i].dt < seconds) { continue; }
+            if (extremes[c].dt < seconds) { continue; }
 
             // get the previous and next times and heights
-            prevTide = extremes[i - 1];
-            nextTide = extremes[i];
+            prevTide = extremes[c - 1];
+            nextTide = extremes[c];
             break;
         }
 
@@ -192,7 +192,7 @@ class TideChart extends React.Component {
         return tickArray;
     }
 
-    getTideHeightNow() {
+    getTideHeightNow(){
         //console.log(`tide now: ${JSON.stringify(this.state.tideNow)}`);
         return this.state.tideNow.height.toFixed(settings.numberPrecision);
     }
@@ -258,7 +258,6 @@ class TideChart extends React.Component {
                         >
                             <Label
                                 value={this.getTideHeightNow()}
-                                position="insideRight"
                                 position='top'
                                 fill={settings.fontColor}
                                 fontSize={settings.fontSize}

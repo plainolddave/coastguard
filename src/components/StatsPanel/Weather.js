@@ -1,6 +1,5 @@
 import React from "react";
-import styles from "./../App/styles.css"
-import { WiCelsius } from "react-icons/wi";
+
 /**
  * Displays weather icon
  * "weather": { "icon": "04d", "label": "Broken Clouds", "temp": 22.42 },

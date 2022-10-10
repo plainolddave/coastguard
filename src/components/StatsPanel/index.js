@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import styles from "./../App/styles.css"
 import { Log } from "./../App/Helpers"
 import Spacer from "./../App/Spacer"
 import Forecast from "./Forecast.js"
@@ -41,7 +40,7 @@ class StatsPanel extends Component {
                 "weather": { "icon": "01d", "label": "Fine", "temp": 0.0 },
                 "stats": {
                     "sunrise": 0,
-                    "sunrise": 0,
+                    "sunset": 0,
                     "cloud": 0,
                     "pressure": 0,
                     "humidity": 0,
