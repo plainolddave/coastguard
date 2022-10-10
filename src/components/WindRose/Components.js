@@ -40,8 +40,8 @@ const Dot = ({ angle, radius, size, strokeWidth, strokeColor, fillColor }) => {
 const Tick = ({ angle, radius, label, fontSize }) => {
     return (
         <g transform={`rotate(${angle})`}>
-            <text x={0} y={-radius} text-anchor="middle"
-                fill="white" font-size={fontSize}>
+            <text x={0} y={-radius} textAnchor="middle"
+                fill="white" fontSize={fontSize}>
                 {label}
             </text>
         </g>
@@ -54,20 +54,20 @@ const Numeral = ({ value, units,
     return (
         <g>
             <text x="0" y={valueY}
-                text-anchor="middle"
-                dominant-baseline="middle"
+                textAnchor="middle"
+                dominantBaseline="middle"
                 fill="white"
-                font-size={valueSize}
-                font-weight={valueWeight}
+                fontSize={valueSize}
+                fontWeight={valueWeight}
             >
                 {value}
             </text>
             <text x="0" y={unitY}
-                text-anchor="middle"
-                dominant-baseline="middle"
+                textAnchor="middle"
+                dominantBaseline="middle"
                 fill="white"
-                font-size={unitSize}
-                font-weight={unitWeight}
+                fontSize={unitSize}
+                fontWeight={unitWeight}
             >
                 {units}
             </text>

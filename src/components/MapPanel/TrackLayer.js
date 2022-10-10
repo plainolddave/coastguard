@@ -138,7 +138,7 @@ class TrackLayer extends Component {
     getName = (vessel) => {
         if (vessel.vessel.length === 0) {
             let name = "*"; // add a star to indicate its not a vessel in the database
-            name += vessel.name == null ? String(vessel.mmsi) : String(vessel.name); 
+            name += vessel.name == null ? String(vessel.mmsi) : String(vessel.name);
             return name;
         } else {
             return vessel.vessel[0].name;
@@ -178,35 +178,37 @@ class TrackLayer extends Component {
     render = () => {
 
         Log("track", "render");
-        return <LayerGroup>
-            {this.state.tracks.map((vessel, index) =>
-                <>
-                    <Polyline
-                        key={`tk-${vessel.mmsi}`}
-                        pathOptions={settings.track}
-                        positions={vessel.line}
-                    />
-                    <Marker
-                        key={`mk-${vessel.mmsi}`}
-                        position={[vessel.pos.lat, vessel.pos.lon]}
-                        icon={this.getIcon(vessel)}>
-                        <Tooltip
-                            key={`tt-${vessel.mmsi}`}
-                            opacity={settings.markerOpacity}
-                            permanent>
-                            {this.getName(vessel)}
-                        </Tooltip>
-                        <Popup key={`pp-${vessel.mmsi}`}>
-                            Name: {this.getName(vessel)}<br />
-                            MMSI: {vessel.mmsi}<br />
-                            Time: {dayjs.unix(vessel.pos.dt).format("HH:mm")}<br />
-                            Course: {vessel.pos.cog}<br />
-                            Speed: {vessel.pos.sog} kts<br />
-                        </Popup>
-                    </Marker>
-                </>
-            )}
-        </LayerGroup>
+        return (
+            <>
+                {this.state.tracks.map((vessel, index) =>
+                    <LayerGroup key={`lg-${vessel.mmsi}`}>
+                        <Polyline
+                            key={`tk-${vessel.mmsi}`}
+                            pathOptions={settings.track}
+                            positions={vessel.line}
+                        />
+                        <Marker
+                            key={`mk-${vessel.mmsi}`}
+                            position={[vessel.pos.lat, vessel.pos.lon]}
+                            icon={this.getIcon(vessel)}>
+                            <Tooltip
+                                key={`tt-${vessel.mmsi}`}
+                                opacity={settings.markerOpacity}
+                                permanent>
+                                {this.getName(vessel)}
+                            </Tooltip>
+                            <Popup key={`pp-${vessel.mmsi}`}>
+                                Name: {this.getName(vessel)}<br />
+                                MMSI: {vessel.mmsi}<br />
+                                Time: {dayjs.unix(vessel.pos.dt).format("HH:mm")}<br />
+                                Course: {vessel.pos.cog}<br />
+                                Speed: {vessel.pos.sog} kts<br />
+                            </Popup>
+                        </Marker>
+                    </LayerGroup>
+                )}
+            </>
+        )
     }
 }
 

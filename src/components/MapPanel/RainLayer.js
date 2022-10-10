@@ -72,11 +72,21 @@ class RainLayer extends Component {
 
                             // reset opacity
                             let opacity = this.state.opacity;
+                            let lastTimestamp = 0;
                             opacity.clear();
-                            timestamps.forEach(timestamp => { opacity.set(timestamp, settings.rainOff); });
+                            timestamps.forEach(timestamp => {
+                                opacity.set(timestamp, settings.rainOff);
+                                if (timestamp > lastTimestamp)
+                                    lastTimestamp = timestamp;
+                            });
+
+                            // set the last frame 'on'
+                            opacity.set(lastTimestamp, settings.rainOn);
+
+                            // save the state and trigger a re-render
                             this.setState({
-                                timestamps: timestamps,
-                                opacity: opacity
+                                'timestamps': timestamps,
+                                'opacity': opacity
                             })
                             this.refreshErrors = 0;
                             return true;
@@ -105,31 +115,32 @@ class RainLayer extends Component {
     // -------------------------------------------------------------------------------
 
     tick = () => {
-        try {  
+        if (this.props.animate === true) {
+            try {
+                let opacity = this.state.opacity;
+                let index = this.layerIndex >= this.state.timestamps.length
+                    ? this.state.timestamps.length - 1
+                    : this.layerIndex;
+                opacity.set(this.state.timestamps[index], settings.rainOff);
 
-            let opacity = this.state.opacity;
-            let index = this.layerIndex >= this.state.timestamps.length
-                ? this.state.timestamps.length - 1
-                : this.layerIndex;
-            opacity.set(this.state.timestamps[index], settings.rainOff);
+                this.layerIndex = this.layerIndex < (this.state.timestamps.length + settings.overrun)
+                    ? this.layerIndex + 1
+                    : 0;
 
-            this.layerIndex = this.layerIndex < (this.state.timestamps.length + settings.overrun)
-                ? this.layerIndex + 1
-                : 0;
+                if (this.layerIndex >= this.state.timestamps.length) {
+                    opacity.set(
+                        this.state.timestamps[this.state.timestamps.length - 1],
+                        settings.rainOn);
+                } else {
+                    opacity.set(
+                        this.state.timestamps[this.layerIndex],
+                        settings.rainOn);
+                }
+                this.setState({ 'opacity': opacity });
 
-            if (this.layerIndex >= this.state.timestamps.length) {
-                opacity.set(
-                    this.state.timestamps[this.state.timestamps.length - 1],
-                    settings.rainOn);
-            } else {
-                opacity.set(
-                    this.state.timestamps[this.layerIndex],
-                    settings.rainOn);
+            } catch (err) {
+                console.log(`rain exception ${err}`);
             }
-            this.setState({ 'opacity': opacity });
-
-        } catch (err) {
-            console.log(`rain exception ${err}`);
         }
     }
 
@@ -142,7 +153,8 @@ class RainLayer extends Component {
     }
 
     render = () => {
-        //console.log(`rain: render`);
+
+        Log("track", "render");
         this.layerRefs = [];
         return <LayerGroup ref={this.layerGroupRef}>
             {this.state.timestamps.map((timestamp, index) =>
