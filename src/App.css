@@ -1,32 +1,61 @@
 .App {
-  text-align: center;
+    margin: 0px;
+    padding: 0px;
+    display: flex;
+    flex-wrap: wrap;
+    min-height: 100vh;
+    flex-direction: row;
+    align-items: stretch;
+    width: calc(100vw - (100vw - 100%));
+    max-width: calc(100vw - (100vw - 100%));
+    min-width: calc(100vw - (100vw - 100%));
+    background-color: black;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
+/*--------------------------------------------------------*/
+
+.panel {
+    margin: 5px;
+    padding: 0px;
+    height: 98vh;
+    font-size: 30px;
+    text-align: center;
+    border-radius: 10px;
+    background-color: black;
+    overflow: hidden;
+    /*    background-color: #282c34;*/
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.map {
+    flex: 1 0 auto;
+    order: 1;
+    z-index: 10;
 }
 
-.App-link {
-  color: #61dafb;
+.stats {
+    flex: 0 0 350px;
+    order: 3;
+    z-index: 10;
+    width: 350px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.chart {
+    flex: 0 0 350px;
+    order: 2;
+    z-index: 10;
+    width: 350px;
+}
+
+@media (max-width: 800px) {
+    .App {
+        flex-wrap: wrap;
+    }
+
+    .stats {
+        order: 2;
+    }
+
+    .chart {
+        order: 3;
+    }
 }
