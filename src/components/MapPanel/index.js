@@ -36,6 +36,4 @@ class MapPanel extends Component {
     }
 }
 
-<TrackLayer />
-
 export default MapPanel
