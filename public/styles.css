@@ -48,13 +48,17 @@ img {
     background-color: #282c34;
 }
 
+label {
+    text-align: left;
+}
+
 #rainButton {
+    border: 2px solid #AAA;
     background-color: #fff;
     color: #444;
 }
 
 /* ------------------------------------------------------------ */
-
 .clock {
     border: 0px solid gray;
     padding-top: 5px;
@@ -244,3 +248,4 @@ img {
     }
 
 /* ------------------------------------------------------------ */
+
