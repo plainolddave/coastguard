@@ -63,14 +63,14 @@ class TrackLayer extends Component {
                 // make sure the vessel positions are sorted by time, in reverse order
                 let tracks = response.data.tracks;
                 tracks.forEach((vessel) => {
-                    let track = vessel.track.sort((a, b) => b.dt - a.dt);
+                    vessel.track.sort((a, b) => b.dt - a.dt);
                     let line = [];
-                    track.forEach(t => {
+                    vessel.track.forEach(t => {
                         let p = [t.lat, t.lon];
                         line.push(p);
                     });
                     vessel.line = line;
-                    vessel.pos = track[0];
+                    vessel.pos = vessel.track[0];
                 });
 
                 this.setState({
@@ -110,35 +110,39 @@ class TrackLayer extends Component {
         return (
             <LayerGroup>
                 {this.state.tracks.map((vessel, index) =>
-                    <LayerGroup key={`lg-${vessel.mmsi}`}>
+                    <LayerGroup key={`lg_${vessel.mmsi}`}>
                         <Polyline
-                            key={`tk-${vessel.mmsi}`}
+                            key={`tk_${vessel.mmsi}`}
                             pathOptions={{ weight: settings.track.weight, opacity: settings.track.opacity, color: GetColor(vessel) }}
                             positions={vessel.line}
                         />
-                        {vessel.line.map((point, index) =>
+                        {vessel.track.map((point, index) =>
                             <CircleMarker
+                                key={`cm_${vessel.mmsi}_${point.dt}`}
                                 center={point}
                                 radius={settings.mark.radius}
                                 pathOptions={{ weight: settings.mark.weight, opacity: settings.mark.opacity, color: GetColor(vessel) }}
                             >
-                                <Popup key={`pp-${vessel.mmsi}`}>
+                                <Popup key={`pu_${vessel.mmsi}`}>
                                     Name: {this.getName(vessel)}<br />
                                     MMSI: {vessel.mmsi}<br />
+                                    Time: {dayjs.unix(point.dt).format("HH:mm")}<br />
+                                    Course: {point.cog}<br />
+                                    Speed: {point.sog} kts<br />
                                 </Popup>
                             </CircleMarker>
                         )}
                         <Marker
-                            key={`mk-${vessel.mmsi}`}
+                            key={`mk_${vessel.mmsi}`}
                             position={[vessel.pos.lat, vessel.pos.lon]}
                             icon={GetIcon(vessel)}>
                             <Tooltip
-                                key={`tt-${vessel.mmsi}`}
+                                key={`tt_${vessel.mmsi}`}
                                 opacity={settings.markerOpacity}
                                 permanent>
                                 {this.getName(vessel)}
                             </Tooltip>
-                            <Popup key={`pp-${vessel.mmsi}`}>
+                            <Popup key={`pp_${vessel.mmsi}`}>
                                 Name: {this.getName(vessel)}<br />
                                 MMSI: {vessel.mmsi}<br />
                                 Time: {dayjs.unix(vessel.pos.dt).format("HH:mm")}<br />
