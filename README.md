@@ -46,7 +46,7 @@ Issues and improvements are:
 - ~~change the colors to be driven from the database~~
 - shorten the variable names all round e.g. for wind
 - wind chart y axis labels are weird
-- check is the current weather obs actually the latest? i.e. is it sorting properly?
+- ~~check is the current weather obs actually the latest? i.e. is it sorting properly?~~
 - make the label next to each icon about midway up the bubble
 - add a menu and extra tab pages for historical tracks 
 - this mini-map is kind of cool https://react-leaflet.js.org/docs/example-react-control/
