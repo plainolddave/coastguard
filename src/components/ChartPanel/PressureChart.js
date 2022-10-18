@@ -13,6 +13,7 @@ import {
 } from "recharts";
 
 const settings = {
+    startupMillis: 3000,                // soft start
     refreshMillis: 1000 * 60 * 2,   // get new data every 2 minutes
     fromHours: -6,                  // use a window of tide information from 6 hours behind now()
     toHours: 0,                     // use a window of tide information to 6 hours ahead of now()
@@ -41,15 +42,17 @@ function PressureChart() {
 
     // ----------------------------------------------------------------------------------------------------
     // refresh data from the server
-
     useEffect(() => {
-        refresh();
-        const refreshTimer = setInterval(() => {
-            refresh();
-        }, settings.refreshMillis);
-        return () => {
-            clearInterval(refreshTimer);
-        };
+        setTimeout(
+            () => {
+                refresh();
+                const refreshTimer = setInterval(() => {
+                    refresh();
+                }, settings.refreshMillis);
+                return () => {
+                    clearInterval(refreshTimer);
+                };
+            }, settings.startupMillis);
     }, []);
 
     function refresh() {

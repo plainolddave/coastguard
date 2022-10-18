@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
 import { ClampAngle, Saturate } from "./../App/Helpers"
-
-/*import Border from "./Border"*/
 import { Dot, Numeral, Tick } from "./Components"
-import { TestData } from "./Data"
+/*import { TestData } from "./Data"*/
 
 const settings = {
     dotCount: 36,
@@ -184,7 +182,7 @@ class WindRose extends Component {
 }
 
 WindRose.defaultProps = {
-    data: TestData,
+    data: [{ "value": { "knots": 0, "direction": 0 }, "dt": 0 }],
     precision: 1,
     width: 300,
     height: 300

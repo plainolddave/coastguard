@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-/*import { Chart, caculateWindRose } from "react-windrose-chart";*/
 import axios from "axios";
 import * as dayjs from 'dayjs'
 import { GetTimeOffset, Log } from "./../App/Helpers"
@@ -15,6 +14,7 @@ import {
 } from "recharts";
 
 const settings = {
+    startupMillis: 1000,            // soft start
     refreshMillis: 1000 * 60 * 1,   // get new data every 1 hour
     fromHours: -6,                  // use a window of tide information from 6 hours behind now()
     toHours: 0,                     // use a window of tide information to 6 hours ahead of now()
@@ -27,12 +27,6 @@ const settings = {
     windRoswHeight: 350
 }
 
-/**
- * Displays wind
- *
- * @returns {JSX.Element} Wind component:
- * 
- * */
 function WindChart() {
 
     // ----------------------------------------------------------------------------------------------------
@@ -42,15 +36,17 @@ function WindChart() {
 
     // ----------------------------------------------------------------------------------------------------
     // refresh data from the server
-
     useEffect(() => {
-        refresh();
-        const refreshTimer = setInterval(() => {
-            refresh();
-        }, settings.refreshMillis);
-        return () => {
-            clearInterval(refreshTimer);
-        };
+        setTimeout(
+            () => {
+                refresh();
+                const refreshTimer = setInterval(() => {
+                    refresh();
+                }, settings.refreshMillis);
+                return () => {
+                    clearInterval(refreshTimer);
+                };
+            }, settings.startupMillis);
     }, []);
 
     function refresh() {
@@ -65,9 +61,7 @@ function WindChart() {
 
         axios.get(url)
             .then((response) => {
-                const data = response.data;
-                setData(data);
-                //Log("wind", data);
+                setData(response.data);
             })
             .catch((err) => {
                 Log("wind error", err);
@@ -103,7 +97,6 @@ function WindChart() {
 
     return (
         <div className="wrapper">
-{/*            <div className="label left">Wind</div>*/}
             <WindRose
                 data={data}
                 precision={settings.numberPrecision}

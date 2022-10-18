@@ -1,66 +1,26 @@
 import React, { Component } from 'react'
-import { LayerGroup, Polyline, Marker, Popup, Tooltip } from "react-leaflet";
-import * as L from "leaflet";
-import { GetTimeOffset, Log } from "./../App/Helpers"
-import axios from "axios";
+import { LayerGroup, Polyline, Marker, Popup, Tooltip, CircleMarker } from "react-leaflet";
 import * as dayjs from 'dayjs'
+import axios from "axios";
+import { GetTimeOffset, Log } from "./../App/Helpers"
+import { GetIcon, GetColor } from "./TrackIcon"
 
 const settings = {
     refreshMillis: 1000 * 60 * 2,   // updates every n minutes
     maxErrors: 5,                   // max errors before clearing tracks
-    fromHours: -12,                 // use a window of track info behind now()
+    fromHours: -24,                 // use a window of track info behind now()
     url: "https://coastguard.netlify.app/.netlify/functions/fleet",
     track: {
-        color: 'blue',
         weight: 3,
-        opacity: 0.1
+        opacity: 0.2
+    },
+    mark: {
+        radius: 3,
+        weight: 1,
+        opacity: 0.4
     },
     markerOpacity: 0.8
 }
-
-// -------------------------------------------------------------------------------
-
-const ChartIcon = L.Icon.extend({
-    options: {
-        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        shadowSize: [41, 41]
-    }
-});
-
-var greenIcon = new ChartIcon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png'
-});
-
-var blueIcon = new ChartIcon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png'
-});
-
-var goldIcon = new ChartIcon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png'
-});
-
-var violetIcon = new ChartIcon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png'
-});
-
-var greyIcon = new ChartIcon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png'
-});
-
-//var redIcon = new ChartIcon({
-//    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png'
-//});
-
-//var orangeIcon = new ChartIcon({
-//    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png'
-//});
-
-//var blackIcon = new ChartIcon({
-//    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-black.png'
-//});
 
 // -------------------------------------------------------------------------------
 
@@ -145,52 +105,33 @@ class TrackLayer extends Component {
         }
     }
 
-    // get the icon
-    getIcon = (vessel) => {
-
-        let org = "Other";
-        if (vessel.vessel.length > 0) {
-            org = vessel.vessel[0].org;
-        }
-
-        //greenIcon
-        //blueIcon
-        //goldIcon
-        //violetIcon
-        //greyIcon
-        //redIcon
-        //orangeIcon
-        //blackIcon
-        switch (org) {
-            case "QF2":
-                return goldIcon;
-            case "QPS":
-                return blueIcon
-            case "AVCG":
-                return greenIcon
-            case "VMR":
-                return violetIcon
-            default:
-                return greyIcon;
-        }
-    }
-
     render = () => {
-
         Log("track", "render");
         return (
-            <>
+            <LayerGroup>
                 {this.state.tracks.map((vessel, index) =>
                     <LayerGroup key={`lg-${vessel.mmsi}`}>
                         <Polyline
                             key={`tk-${vessel.mmsi}`}
-                            pathOptions={settings.track}
+                            pathOptions={{ weight: settings.track.weight, opacity: settings.track.opacity, color: GetColor(vessel) }}
                             positions={vessel.line}
                         />
+                        {vessel.line.map((point, index) =>
+                            <CircleMarker
+                                center={point}
+                                radius={settings.mark.radius}
+                                pathOptions={{ weight: settings.mark.weight, opacity: settings.mark.opacity, color: GetColor(vessel) }}
+                            >
+                                <Popup key={`pp-${vessel.mmsi}`}>
+                                    Name: {this.getName(vessel)}<br />
+                                    MMSI: {vessel.mmsi}<br />
+                                </Popup>
+                            </CircleMarker>
+                        )}
                         <Marker
                             key={`mk-${vessel.mmsi}`}
                             position={[vessel.pos.lat, vessel.pos.lon]}
-                            icon={this.getIcon(vessel)}>
+                            icon={GetIcon(vessel)}>
                             <Tooltip
                                 key={`tt-${vessel.mmsi}`}
                                 opacity={settings.markerOpacity}
@@ -207,7 +148,7 @@ class TrackLayer extends Component {
                         </Marker>
                     </LayerGroup>
                 )}
-            </>
+            </LayerGroup>
         )
     }
 }

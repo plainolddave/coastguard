@@ -15,7 +15,8 @@ import {
 } from "recharts";
 
 const settings = {
-    refreshMillis: 1000 * 60 * 60,      // get new data from the server once an hour
+    startupMillis: 2000,                // soft start
+    refreshMillis: 1000 * 60 * 30,      // get new data from the server once an hour
     recalcMillis: 1000 * 60,            // recalculate current tide height each 1/2 minute
     tickSeconds: 2 * 60 * 60,           // interval for chart ticks
     fromHours: -12,                     // use a window of tide information n hours behind now()
@@ -53,11 +54,14 @@ class TideChart extends React.Component {
 
     constructor(props) {
         super(props);
+        this.requestRef = axios.CancelToken.source();
+        this.refreshTimer = null;
+        this.recalcTimer = null;
         this.state = {
             date: new Date(),
             heights: [],    // tide data received from the server
             extremes: [],   // tide data received from the server
-            tideNow: { height: 0, dt: 0, type: ""},     // current height
+            tideNow: { height: 0, dt: 0, type: "" },     // current height
             prevTide: { height: 0, dt: 0, type: "" },   // previous tide state info
             nextTide: { height: 0, dt: 0, type: "" },   // next tide state info
             station: ""
@@ -131,7 +135,9 @@ class TideChart extends React.Component {
         let url = `${settings.url}?limit=100&from=${dtFrom}&to=${dtTo}&offset=${settings.heightOffset}`;
         Log("tide", url);
 
-        axios.get(url)
+        axios.get(url, {
+            cancelToken: this.requestRef.token,
+        })
             .then((response) => {
 
                 let data = response.data;
@@ -145,26 +151,40 @@ class TideChart extends React.Component {
             })
             .catch((err) => {
                 Log("tide error", err);
+            }).finally(() => {
+                this.requestRef = axios.CancelToken.source()
             });
     };
 
     // ----------------------------------------------------------------------------------------------------
 
     componentDidMount() {
-        this.recalcID = setInterval(
-            () => this.recalc(),
-            settings.recalcMillis
+        Log("tide", "mounted");
+        setTimeout(
+            () => {
+                // initial refresh
+                this.requestRef = axios.CancelToken.source();
+                this.refresh();
+                this.refreshTimer = setInterval(
+                    () => this.refresh(),
+                    settings.refreshMillis
+                );
+                this.recalcTimer = setInterval(
+                    () => this.recalc(),
+                    settings.recalcMillis
+                );
+            },
+            settings.startupMillis
         );
-        this.refreshID = setInterval(
-            () => this.refresh(),
-            settings.refreshMillis
-        );
-        this.refresh();
     }
 
     componentWillUnmount() {
-        clearInterval(this.refreshID);
-        clearInterval(this.recalcID);
+        this.requestRef.cancel();
+        clearInterval(this.refreshTimer);
+        clearInterval(this.recalcTimer);
+        this.refreshTimer = null;
+        this.recalcTimer = null;
+        Log("tide", "unmounted");
     }
 
     // ----------------------------------------------------------------------------------------------------
@@ -192,7 +212,7 @@ class TideChart extends React.Component {
         return tickArray;
     }
 
-    getTideHeightNow(){
+    getTideHeightNow() {
         //console.log(`tide now: ${JSON.stringify(this.state.tideNow)}`);
         return this.state.tideNow.height.toFixed(settings.numberPrecision);
     }

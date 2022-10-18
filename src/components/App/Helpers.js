@@ -1,4 +1,5 @@
 import * as dayjs from 'dayjs'
+import { stringify } from 'flatted';
 
 // calculate a time offset from the current time
 function GetTimeOffset(hours) {
@@ -16,7 +17,15 @@ function Clamp(num, min, max) {
 }
 
 function Log(from, message) {
-    console.log(`${dayjs(new Date()).format('HH:mm:ss')} ${from}: ${JSON.stringify(message)}`);
+    console.log(`${dayjs(new Date()).format('HH:mm:ss')} ${from}:`, message);
+};
+
+function LogJSON(from, obj) {
+    console.log(`${dayjs(new Date()).format('HH:mm:ss')} ${from}: ${JSON.stringify(obj)}`);
+};
+
+function LogReact(from, obj) {
+    console.log(`${dayjs(new Date()).format('HH:mm:ss')} ${from}: ${stringify(obj)}`);
 };
 
 // helper to fix negative angles
@@ -56,4 +65,4 @@ function Saturate(hexColor, satPercent = 0) {
     return (hash ? "#" : "") + rgb.join("");
 }
 
-export { Log, GetTimeOffset, RoundToPrecision, Clamp, ClampAngle, Saturate }
+export { Log, LogJSON, LogReact, GetTimeOffset, RoundToPrecision, Clamp, ClampAngle, Saturate }
