@@ -26,6 +26,9 @@ import {
     GoArrowUp,
     GoGlobe
 } from "react-icons/go";
+import {
+    GiPositionMarker
+} from "react-icons/gi";
 
 import { IconContext } from "react-icons";
 import * as dayjs from 'dayjs'
@@ -102,7 +105,7 @@ function DataRow({ label, value, styling="data-row" }) {
                 }
 
             case 'Place':
-                return <GoGlobe />;
+                return <GiPositionMarker />;
 
             default:
                 return <WiNa />;
@@ -117,8 +120,9 @@ function DataRow({ label, value, styling="data-row" }) {
                 return <>{Math.round(value)}&nbsp;</>;
             case 'Sunrise':
             case 'Sunset':
+                return <>{dayjs.unix(value).format("HH:mm")}</>;
             case 'Place':
-                return <>{dayjs.unix(value.time).format("HH:mm")}</>;
+                return <>{dayjs.unix(value.dt).format("HH:mm")}</>;
             case 'Tide':
                 // Tide value is passed as an object with properties:
                 // { "height": 0.274, "dt": 1665160299, "type": "Low" }

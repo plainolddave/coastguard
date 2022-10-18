@@ -84,8 +84,9 @@ class StatsPanel extends Component {
     };
 
     render = () => {
-        let wx = this.state.obs.weather;
-        let stats = this.state.obs.stats;
+        let obs = this.state.obs;
+        let wx = obs.weather;
+        let stats = obs.stats;
 
         return (
             <>
@@ -99,8 +100,8 @@ class StatsPanel extends Component {
                 />
                 <Spacer height={settings.spacerHeight1} width={settings.spacerWidth } />
                 <Stats
-                    place={stats.place}
-                    dt={stats.dt}
+                    place={obs.place}
+                    dt={obs.dt}
                     pressure={stats.pressure}
                     humidity={stats.humidity}
                     cloud={stats.cloud}
