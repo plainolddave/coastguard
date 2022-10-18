@@ -22,7 +22,7 @@ function Stats({ place, dt, pressure, humidity, cloud, sunrise, sunset }) {
 
 Stats.defaultProps = {
     place: "",
-    time: new Date(2022, 1, 1, 0, 0, 0, 0),
+    dt: new Date(2022, 1, 1, 0, 0, 0, 0),
     sunrise: new Date(2022, 1, 1, 0, 0, 0, 0),
     sunset: new Date(2022, 1, 1, 0, 0, 0, 0),
     pressure: 0,
