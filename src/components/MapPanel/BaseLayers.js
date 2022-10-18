@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { TileLayer, LayersControl } from "react-leaflet";
 const { BaseLayer } = LayersControl;
 

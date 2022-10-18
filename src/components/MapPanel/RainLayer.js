@@ -93,7 +93,7 @@ class RainLayer extends Component {
                     || timestamps.length === 0
                     || Number.isNaN(timestamps[0])
                     || Number.isNaN(timestamps[timestamps.length - 1])) {
-                    throw ("invalid response");
+                    throw new Error("invalid response");
                 }
                 timestamps.sort(function (a, b) { return a - b });
 

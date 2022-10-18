@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { LayersControl } from "react-leaflet";
 import RainLayer from "./RainLayer"
 import TrackLayer from "./TrackLayer"
