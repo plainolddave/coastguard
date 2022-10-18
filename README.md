@@ -37,13 +37,13 @@ npm i font-awesome TBC TBC
 For more instructions on the front-end React App [look here](Netlify_Instructions.md)  
 
 Issues and improvements are:
-- change to color for each track to match the icon
+- ~~change to color for each track to match the icon~~
 - ~~add an animate play/pause button~~
 - add a config button to switch between live and BOM data source
 - add pressure and wind direction to the forecast panels
 - add tooltips back into each chart
 - ~~remove the attribution on leaflet~~
-- change the colors to be driven from the database
+- ~~change the colors to be driven from the database~~
 - shorten the variable names all round e.g. for wind
 - wind chart y axis labels are weird
 - check is the current weather obs actually the latest? i.e. is it sorting properly?
@@ -53,4 +53,4 @@ Issues and improvements are:
 - add timestamps in the bottom corner of the map
 - add a button or something to the map to click and drag the screen up on a mobile
 - look at a higher contrast map or marine chart layer
-- add different color or line style to indicate where signal has been lost
+- ~~add different color or line style to indicate where signal has been lost~~
