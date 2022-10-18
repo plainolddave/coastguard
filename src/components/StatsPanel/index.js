@@ -22,7 +22,7 @@ const settings = {
  * url: https://coastguard.netlify.app/.netlify/functions/weather
  * data:
  *  [{  
- *      "dt": 1665206160, 
+ *      "dt": 1665206160, "name":"Manly",
  *      "wind": { "knots": 17.01, "direction": 30 }, 
  *      "weather": { "icon": "04d", "label": "Broken Clouds", "temp": 24.35 }, 
  *      "stats": { "sunrise_dt": 1665170347, "sunset_dt": 1665215425, "cloud": 75, "pressure": 1017, "humidity": 64, "temp": 24.35 } 
@@ -36,8 +36,9 @@ class StatsPanel extends Component {
         this.state = {
             obs: {
                 "dt": 0,
+                "name": "",
                 "wind": { "knots": 0, "direction": 0 },
-                "weather": { "icon": "01d", "label": "Fine", "temp": 0.0 },
+                "weather": { "icon": "01d", "label": "", "temp": 0.0 },
                 "stats": {
                     "sunrise": 0,
                     "sunset": 0,
@@ -98,6 +99,8 @@ class StatsPanel extends Component {
                 />
                 <Spacer height={settings.spacerHeight1} width={settings.spacerWidth } />
                 <Stats
+                    place={stats.place}
+                    dt={stats.dt}
                     pressure={stats.pressure}
                     humidity={stats.humidity}
                     cloud={stats.cloud}

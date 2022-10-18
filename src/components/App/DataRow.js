@@ -100,6 +100,10 @@ function DataRow({ label, value, styling="data-row" }) {
                 } else {
                     return <GoGlobe />; 
                 }
+
+            case 'Place':
+                return <GoGlobe />;
+
             default:
                 return <WiNa />;
         };
@@ -113,7 +117,8 @@ function DataRow({ label, value, styling="data-row" }) {
                 return <>{Math.round(value)}&nbsp;</>;
             case 'Sunrise':
             case 'Sunset':
-                return <>{dayjs.unix(value).format("HH:mm")}</>;
+            case 'Place':
+                return <>{dayjs.unix(value.time).format("HH:mm")}</>;
             case 'Tide':
                 // Tide value is passed as an object with properties:
                 // { "height": 0.274, "dt": 1665160299, "type": "Low" }
@@ -155,6 +160,8 @@ function DataRow({ label, value, styling="data-row" }) {
                 label += ` at ${dayjs.unix(value.dt).format("HH:mm")}`;
             }
             return label;
+        } else if (label === "Place") {
+            return value.place;
         } else {
             return label;
         }
