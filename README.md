@@ -33,19 +33,83 @@ npm i leaflet-easybutton
 npm i font-awesome TBC TBC
 
 ```
-
 For more instructions on the front-end React App [look here](Netlify_Instructions.md)  
 
-Issues and improvements are:
+##Setup for Android TV
+
+- Default AndroidTV resolution was 1280x720
+- ViewSonic 27in QHD VA 165Hz Curved Adaptive Sync Gaming Monitor (VX2718-2KPC-MHD) is 2560x1440
+- Using ADB:
+```bash
+adb connect [IP address]
+adb devices
+adb shell wm size 1920x1080
+adb shell wm density 164
+```
+Play around with the density number depending on the size of your tv (160 is ok on the viewsonic monitor)
+
+Then to update the splash screen:
+```bash
+adb remount
+adb shell ls -al /system/media
+
+	C:\Temp\ADB>adb shell ls -al /system/media
+	total 5939
+	drwxr-xr-x 3 root root    4096 2022-04-18 16:53 .
+	drwxr-xr-x 1 root root    3488 2022-10-20 19:19 ..
+	drwxr-xr-x 6 root root    4096 2022-04-18 15:52 audio
+	-rw-r--r-- 1 root root  475354 2022-04-18 16:53 boot.mp4
+	-rw-r--r-- 1 root root 5588643 2022-04-18 16:53 bootanimation.zip
+```
+Find the bootanimation file:
+adb shell find / -name "bootanimation*"
+Pull the old files:
+```bash
+adb pull /system/media/boot.mp4 c:\temp\boot.mp4
+adb pull /system/media/bootanimation.zip c:\temp\bootanimation.zip
+
+adb pull /data/media/0 c:\temp\0
+
+```
+Change them and push them back to the device:
+```bash
+adb push c:\temp\boot.mp4 /system/media/boot.mp4 
+adb push c:\temp\bootanimation.zip /system/media/bootanimation.zip 
+```
+
+For more info look at:
+- [Android Debug Bridge (adb)](https://github.com/K3V1991/ADB-and-FastbootPlusPlus)
+- [ADB setup instructions](https://www.makeuseof.com/how-to-use-adb-on-android-tv/)
+- [ADB commands](https://devhints.io/adb)
+- [ADB reference guide](https://developer.android.com/studio/command-line/adb)
+- [Useful info on screen resolution](https://www.reddit.com/r/AndroidTV/comments/rmqsvq/so_i_have_a_4k_android_tv_but_when_checking_stats/)
+- [Useful info on screen resolution](https://www.reddit.com/r/AndroidTV/comments/rmqsvq/so_i_have_a_4k_android_tv_but_when_checking_stats/)
+
+
+## Issues and improvements
+
+- really hate the splash screen for IOTWE
+- relook whether to ad a label for the wind panel
+- look at adding a legend for each color
+- default to rain animation off - it doesntrender cleanly enough on AndroidTV
+- sequence the soft start delay (weather & stats & forecast -> wind -> pressure -> tide -> tracks -> rain)
+- shorten the variable names all round e.g. for wind
+- change the default height to the viewport (i.e. excluding menu bars etc, instead of the whole screen)
+- add pressure and wind direction to the forecast panels
+- play with the track dots - they look old fashioned
+- fix the scales and labels on the wind and pressure charts (e.g. wind should not go to -0.1)
+- put the 'weather refreshed' time somewhere inconspicuous
+- add tooltips back into each chart
+- change the default time to 12 hours or so (play around with this)
+- "other" tracks can go back to grey?
+- the clock font can be slightly bigger, and ad a little margin between it and the weather 
+- experiment with adding all other AIS tracks in view
+- experimet with adding operational areas
 - ~~change to color for each track to match the icon~~
 - ~~add an animate play/pause button~~
 - add a config button to switch between live and BOM data source
-- add pressure and wind direction to the forecast panels
-- add tooltips back into each chart
 - ~~remove the attribution on leaflet~~
 - ~~change the colors to be driven from the database~~
-- shorten the variable names all round e.g. for wind
-- wind chart y axis labels are weird
 - ~~check is the current weather obs actually the latest? i.e. is it sorting properly?~~
 - make the label next to each icon about midway up the bubble
 - add a menu and extra tab pages for historical tracks 
