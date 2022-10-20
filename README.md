@@ -67,9 +67,6 @@ Pull the old files:
 ```bash
 adb pull /system/media/boot.mp4 c:\temp\boot.mp4
 adb pull /system/media/bootanimation.zip c:\temp\bootanimation.zip
-
-adb pull /data/media/0 c:\temp\0
-
 ```
 Change them and push them back to the device:
 ```bash
@@ -91,7 +88,8 @@ For more info look at:
 - really hate the splash screen for IOTWE
 - relook whether to ad a label for the wind panel
 - look at adding a legend for each color
-- default to rain animation off - it doesntrender cleanly enough on AndroidTV
+- ~~default to rain animation off - it doesnt render cleanly enough on AndroidTV~~
+- add a button to animate rain
 - sequence the soft start delay (weather & stats & forecast -> wind -> pressure -> tide -> tracks -> rain)
 - shorten the variable names all round e.g. for wind
 - change the default height to the viewport (i.e. excluding menu bars etc, instead of the whole screen)
