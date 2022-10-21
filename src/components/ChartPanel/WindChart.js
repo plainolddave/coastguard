@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import * as dayjs from 'dayjs'
-import { GetTimeOffset, Log } from "./../App/Helpers"
+import { GetTimeOffset, Log, RoundUpToMultiple, RoundDownToMultiple } from "./../App/Helpers"
 import WindRose from "./../WindRose"
 import {
     AreaChart,
@@ -14,7 +14,7 @@ import {
 } from "recharts";
 
 const settings = {
-    startupMillis: 1000,            // soft start
+    startupMillis: 3000,            // soft start
     refreshMillis: 1000 * 60 * 1,   // get new data every 1 hour
     fromHours: -6,                  // use a window of tide information from 6 hours behind now()
     toHours: 0,                     // use a window of tide information to 6 hours ahead of now()
@@ -75,7 +75,7 @@ function WindChart() {
     }
 
     const formatYAxis = item => {
-        return item.toFixed(1);
+        return item.toFixed(settings.numberPrecision);
     }
 
     const formatTicks = () => {
@@ -126,9 +126,9 @@ function WindChart() {
                     <YAxis
                         type="number"
                         tick={{ fontSize: settings.fontSize, fill: settings.fontColor }}
-                        domain={['dataMin-1', 'dataMax+1']}
+                        domain={[dataMin => RoundDownToMultiple(dataMin - 1, 2), dataMax => RoundUpToMultiple(dataMax + 1, 2)]}
                         tickFormatter={formatYAxis}
-                        interval={'preserveStart'}
+                        interval={'preserveStartEnd'}
                         allowDataOverflow={true}
                     >
                         <Label

@@ -4,12 +4,12 @@ import { Log, LogJSON } from "./../App/Helpers"
 import axios from "axios";
 
 const settings = {
-    startupMillis: 5000,            // soft start
+    startupMillis: 10000,           // soft start
     refreshMillis: 1000 * 60 * 5,   // updates
     animateMillis: 500,             // animation
-    animateFrames: 5,
+    animateFrames: 1,               // 5, TODO animation is disabled temporarily
     animateTotal: 10,
-    rainOn: 0.4,
+    rainOn: 0.2,
     rainOff: 0.0,
     rainSize: 512,
     rainColor: 6,
@@ -41,7 +41,7 @@ class RainLayer extends Component {
             return;
         }
         this.mounted = true;
-        Log("rain", "mounted");
+        //Log("rain", "mounted");
 
         this.startupTimer = setTimeout(
             () => {
@@ -56,10 +56,12 @@ class RainLayer extends Component {
                 );
 
                 // start the animation timer
-                this.animateTimer = setInterval(
-                    () => this.animate(),
-                    settings.animateMillis
-                );
+                if (settings.animateFrames > 1) {
+                    this.animateTimer = setInterval(
+                        () => this.animate(),
+                        settings.animateMillis
+                    );
+                }
             },
             settings.startupMillis
         );
@@ -73,7 +75,7 @@ class RainLayer extends Component {
         this.refreshTimer = null;
         this.animateTimer = null;
         this.mounted = false;
-        Log("rain", "unmounted");
+        //Log("rain", "unmounted");
     }
 
     // -------------------------------------------------------------------------------
@@ -100,7 +102,7 @@ class RainLayer extends Component {
                 // reset the arrays holding opacity and timestamp values
                 let frames = [];
                 let opacity = [];
-                if (timestamps.length >= settings.animateFrames) {
+                if (timestamps.length >= settings.animateFrames && settings.animateFrames > 1) {
                     for (let i = timestamps.length - settings.animateFrames; i < timestamps.length; i++) {
                         frames.push(timestamps[i]);
                         opacity.push(settings.rainOff);
@@ -141,7 +143,7 @@ class RainLayer extends Component {
 
             // create an array of opacity values, with one on
             let opacity = new Array(this.state.frames.length).fill(settings.rainOff)
-            opacity[(this.animateFrame < this.state.frames.length ? this.animateFrame : this.state.frames.length -1)] = settings.rainOn;
+            opacity[(this.animateFrame < this.state.frames.length ? this.animateFrame : this.state.frames.length - 1)] = settings.rainOn;
             this.setState({
                 'opacity': opacity
             })

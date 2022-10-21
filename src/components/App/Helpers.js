@@ -11,7 +11,6 @@ function RoundToPrecision(value, precision) {
     return parseFloat(value.toFixed(precision));
 }
 
-
 function Clamp(num, min, max) {
     return Math.min(Math.max(num, min), max);
 }
@@ -65,4 +64,22 @@ function Saturate(hexColor, satPercent = 0) {
     return (hash ? "#" : "") + rgb.join("");
 }
 
-export { Log, LogJSON, LogReact, GetTimeOffset, RoundToPrecision, Clamp, ClampAngle, Saturate }
+function Viewport() {
+    var e = window
+        , a = 'inner';
+    if (!('innerWidth' in window)) {
+        a = 'client';
+        e = document.documentElement || document.body;
+    }
+    return { width: e[a + 'Width'], height: e[a + 'Height'] }
+}
+
+function RoundUpToMultiple(value, n) {
+    return Math.ceil(value / n) * n;
+}
+
+function RoundDownToMultiple(value, n) {
+    return Math.floor(value / n) * n;
+}
+
+export { Log, LogJSON, LogReact, GetTimeOffset, RoundToPrecision, Clamp, ClampAngle, Saturate, Viewport, RoundUpToMultiple, RoundDownToMultiple }

@@ -122,6 +122,7 @@ function DataRow({ label, value, styling="data-row" }) {
             case 'Sunset':
                 return <>{dayjs.unix(value).format("HH:mm")}</>;
             case 'Place':
+                if (value.dt == 0) return "";
                 return <>{dayjs.unix(value.dt).format("HH:mm")}</>;
             case 'Tide':
                 // Tide value is passed as an object with properties:

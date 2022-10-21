@@ -6,7 +6,7 @@ import * as dayjs from 'dayjs'
  *
  * @returns {JSX.Element} Clock component
  */
-function Clock() { // { sunrise, sunset }) {
+function Clock() { 
 
     const [dateNow, setDateNow] = useState(new Date());
 
@@ -26,11 +26,5 @@ function Clock() { // { sunrise, sunset }) {
         </div>
     );
 }
-//{/*<div class="label">{`sunrise ${dayjs(sunrise).format("HH:mm")} sunset ${dayjs(sunset).format("HH:mm")}`}</div>*/ }
-
-//Clock.defaultProps = {
-//    sunrise: new Date(2022, 1, 1, 0, 0, 0, 0),
-//    sunset: new Date(2022, 1, 1, 0, 0, 0, 0)
-//}
 
 export default Clock;

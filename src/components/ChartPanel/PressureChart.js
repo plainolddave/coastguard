@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import * as dayjs from 'dayjs'
-import { GetTimeOffset, Log } from "./../App/Helpers"
+import { GetTimeOffset, Log, RoundUpToMultiple, RoundDownToMultiple } from "./../App/Helpers"
 import {
     AreaChart,
     Area,
@@ -13,7 +13,7 @@ import {
 } from "recharts";
 
 const settings = {
-    startupMillis: 3000,                // soft start
+    startupMillis: 4000,            // soft start
     refreshMillis: 1000 * 60 * 2,   // get new data every 2 minutes
     fromHours: -6,                  // use a window of tide information from 6 hours behind now()
     toHours: 0,                     // use a window of tide information to 6 hours ahead of now()
@@ -21,7 +21,7 @@ const settings = {
     url: "https://coastguard.netlify.app/.netlify/functions/weather",
     fontSize: 16,
     fontColor: "white",
-    numberPrecision: 2
+    numberPrecision: 1
 };
 
 const initialData = [{ "value": 1013.2, "dt": 0 }, { "value": 1013.2, "dt": 1000 }];
@@ -84,7 +84,7 @@ function PressureChart() {
         return Math.round(item);
     }
 
-    const formatTicks = () => {
+    const formatXTicks = () => {
 
         // get the start tick for the next even increment
         const dtFrom = GetTimeOffset(settings.fromHours).getTime() / 1000 + settings.tickSeconds;
@@ -123,15 +123,15 @@ function PressureChart() {
                         tickFormatter={formatXAxis}
                         angle={0}
                         tick={{ fontSize: settings.fontSize, fill: settings.fontColor }}
-                        ticks={formatTicks()}
+                        ticks={formatXTicks()}
                         allowDataOverflow={true}
                     />
                     <YAxis
                         type="number"
                         tick={{ fontSize: settings.fontSize, fill: settings.fontColor }}
-                        domain={['dataMin-5', 'dataMax+5']}
+                        domain={[dataMin => RoundDownToMultiple(dataMin - 1, 5), dataMax => RoundUpToMultiple(dataMax + 1, 5)]}
                         tickFormatter={formatYAxis}
-                        interval={0}
+                        interval={'preserveStartEnd'}
                         allowDecimals={false}
                         allowDataOverflow={true}
                     >

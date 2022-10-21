@@ -10,7 +10,7 @@ import DataRow from "./../App/DataRow"
 function Stats({ place, dt, pressure, humidity, cloud, sunrise, sunset }) {
     return (
         <div className="wrapper">
-            <DataRow label="Place" value={{ 'dt': dt, 'place': place }} />
+            <DataRow label="Place" value={{ 'dt': 0, 'place': place }} />
             <DataRow label="Sunrise" value={sunrise} />
             <DataRow label="Sunset" value={sunset} />
             <DataRow label="Pressure" value={pressure} />

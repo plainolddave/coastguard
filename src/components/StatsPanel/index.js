@@ -9,6 +9,7 @@ import axios from "axios";
 
 const settings = {
     url: "https://coastguard.netlify.app/.netlify/functions/weather",
+    startupMillis: 1000,           // soft start
     refreshMillis: 1000 * 60 * 1,  // 1 min
     maxErrors: 5,
     spacerHeight1: "10px",
@@ -32,6 +33,7 @@ class StatsPanel extends Component {
 
     constructor(props) {
         super(props);
+        this.statupTimer = null;
         this.refreshTimer = null;
         this.state = {
             obs: {
@@ -52,14 +54,24 @@ class StatsPanel extends Component {
     }
 
     componentDidMount() {
-        this.refresh();
-        this.refreshTimer = setInterval(
-            () => this.refresh(),
-            settings.refreshMillis
+
+        this.startupTimer = setTimeout(
+            () => {
+                // initial refresh
+                this.refresh();
+
+                // start the refresh timer 
+                this.refreshTimer = setInterval(
+                    () => this.refresh(),
+                    settings.refreshMillis
+                );
+            },
+            settings.startupMillis
         );
     }
 
     componentWillUnmount() {
+        clearInterval(this.startupTimer);
         clearInterval(this.refreshTimer);
         this.refreshTimer = null;
     }
@@ -98,7 +110,7 @@ class StatsPanel extends Component {
                     label={wx.label}
                     temperature={wx.temp}
                 />
-                <Spacer height={settings.spacerHeight1} width={settings.spacerWidth } />
+                <Spacer height={settings.spacerHeight1} width={settings.spacerWidth} />
                 <Stats
                     place={obs.place}
                     dt={obs.dt}

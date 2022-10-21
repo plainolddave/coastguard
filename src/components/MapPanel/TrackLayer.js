@@ -6,20 +6,21 @@ import { GetTimeOffset, Log } from "./../App/Helpers"
 import { GetIcon, GetColor } from "./TrackIcon"
 
 const settings = {
+    startupMillis: 5000,            // soft start
     refreshMillis: 1000 * 60 * 2,   // updates every n minutes
     maxErrors: 5,                   // max errors before clearing tracks
-    fromHours: -24,                 // use a window of track info behind now()
+    fromHours: -12,                 // use a window of track info behind now()
     url: "https://coastguard.netlify.app/.netlify/functions/fleet",
     track: {
-        weight: 3,
+        weight: 4,
         opacity: 0.2
     },
     mark: {
-        radius: 3,
+        radius: 2,
         weight: 1,
-        opacity: 0.4
+        opacity: 0.2
     },
-    markerOpacity: 0.8
+    markerOpacity: 0.7
 }
 
 // -------------------------------------------------------------------------------
@@ -28,6 +29,9 @@ class TrackLayer extends Component {
 
     constructor(props) {
         super(props);
+        this.mounted = false;
+        this.requestRef = axios.CancelToken.source();
+        this.statupTimer = null;
         this.refreshTimer = null;
         this.refreshErrors = 0;
         this.state = {
@@ -36,16 +40,35 @@ class TrackLayer extends Component {
     }
 
     componentDidMount() {
-        this.refresh();
-        this.refreshTimer = setInterval(
-            () => this.refresh(),
-            settings.refreshMillis
+        if (this.mounted) {
+            Log("tracks", "already mounted");
+            return;
+        }
+        this.mounted = true;
+
+        this.startupTimer = setTimeout(
+            () => {
+                // initial refresh
+                this.requestRef = axios.CancelToken.source();
+                this.refresh();
+
+                // start the refresh timer 
+                this.refreshTimer = setInterval(
+                    () => this.refresh(),
+                    settings.refreshMillis
+                );
+            },
+            settings.startupMillis
         );
     }
 
     componentWillUnmount() {
+        this.requestRef.cancel();
+        clearInterval(this.startupTimer);
         clearInterval(this.refreshTimer);
         this.refreshTimer = null;
+        this.mounted = false;
+        //Log("tracks", "unmounted");
     }
 
     // -------------------------------------------------------------------------------
@@ -57,7 +80,9 @@ class TrackLayer extends Component {
         let url = `${settings.url}?from=${dtFrom}`;
         Log("track", url);
 
-        axios.get(url)
+        axios.get(url, {
+            cancelToken: this.requestRef.token,
+        })
             .then((response) => {
 
                 // make sure the vessel positions are sorted by time, in reverse order
@@ -89,6 +114,9 @@ class TrackLayer extends Component {
                         tracks: []
                     })
                 }
+            })
+            .finally(() => {
+                this.requestRef = axios.CancelToken.source()
             });
     };
 
@@ -137,6 +165,7 @@ class TrackLayer extends Component {
                             position={[vessel.pos.lat, vessel.pos.lon]}
                             icon={GetIcon(vessel)}>
                             <Tooltip
+                                className="tooltip"
                                 key={`tt_${vessel.mmsi}`}
                                 opacity={settings.markerOpacity}
                                 permanent>

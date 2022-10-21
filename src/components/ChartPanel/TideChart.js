@@ -15,7 +15,7 @@ import {
 } from "recharts";
 
 const settings = {
-    startupMillis: 2000,                // soft start
+    startupMillis: 5000,                // soft start
     refreshMillis: 1000 * 60 * 30,      // get new data from the server once an hour
     recalcMillis: 1000 * 60,            // recalculate current tide height each 1/2 minute
     tickSeconds: 2 * 60 * 60,           // interval for chart ticks
@@ -26,6 +26,7 @@ const settings = {
     fontSize: 16,
     fontColor: "white",
     numberPrecision: 2,
+    chartPrecision: 1,
     yAxisTicks: [0.5, 1.0, 1.5, 2.0, 2.5]
 };
 
@@ -194,7 +195,7 @@ class TideChart extends React.Component {
     }
 
     formatYAxis = item => {
-        return item.toFixed(1);
+        return item.toFixed(settings.chartPrecision);
     }
 
     getXAxisTicks = () => {
@@ -246,7 +247,7 @@ class TideChart extends React.Component {
                             type="number"
                             ticks={settings.yAxisTicks}
                             tick={{ fontSize: settings.fontSize, fill: settings.fontColor }}
-                            domain={['dataMin-0.1', 'dataMax']}
+                            domain={[Math.max('dataMin-0.1',0), 'dataMax']}
                             tickFormatter={this.formatYAxis}
                             interval={0}
                             allowDataOverflow={true}

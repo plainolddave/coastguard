@@ -5,6 +5,7 @@ import DataRow from "./../App/DataRow"
 import { Log } from "./../App/Helpers"
 
 const settings = {
+    startupMillis: 2000,            // soft start
     refreshMillis: 1000 * 60 * 60,  // 1 hour
     url: "https://coastguard.netlify.app/.netlify/functions/forecast"
 }
@@ -24,13 +25,16 @@ function Forecast() {
     let [forecast, setForecast] = useState([]);
 
     useEffect(() => {
-        refresh();
-        const refreshTimer = setInterval(() => {
-            refresh();
-        }, settings.refreshMillis); // update once an hour
-        return () => {
-            clearInterval(refreshTimer);
-        };
+        setTimeout(
+            () => {
+                refresh();
+                const refreshTimer = setInterval(() => {
+                    refresh();
+                }, settings.refreshMillis); // update once an hour
+                return () => {
+                    clearInterval(refreshTimer);
+                };
+            }, settings.startupMillis);
     }, []);
 
     function refresh() {

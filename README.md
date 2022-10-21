@@ -86,33 +86,33 @@ For more info look at:
 ## Issues and improvements
 
 - really hate the splash screen for IOTWE
-- relook whether to ad a label for the wind panel
 - look at adding a legend for each color
-- ~~default to rain animation off - it doesnt render cleanly enough on AndroidTV~~
 - add a button to animate rain
-- sequence the soft start delay (weather & stats & forecast -> wind -> pressure -> tide -> tracks -> rain)
 - shorten the variable names all round e.g. for wind
 - change the default height to the viewport (i.e. excluding menu bars etc, instead of the whole screen)
 - add pressure and wind direction to the forecast panels
-- play with the track dots - they look old fashioned
-- fix the scales and labels on the wind and pressure charts (e.g. wind should not go to -0.1)
 - put the 'weather refreshed' time somewhere inconspicuous
 - add tooltips back into each chart
-- change the default time to 12 hours or so (play around with this)
 - "other" tracks can go back to grey?
-- the clock font can be slightly bigger, and ad a little margin between it and the weather 
 - experiment with adding all other AIS tracks in view
-- experimet with adding operational areas
-- ~~change to color for each track to match the icon~~
-- ~~add an animate play/pause button~~
+- experiment with adding operational areas
 - add a config button to switch between live and BOM data source
-- ~~remove the attribution on leaflet~~
-- ~~change the colors to be driven from the database~~
-- ~~check is the current weather obs actually the latest? i.e. is it sorting properly?~~
 - make the label next to each icon about midway up the bubble
 - add a menu and extra tab pages for historical tracks 
 - this mini-map is kind of cool https://react-leaflet.js.org/docs/example-react-control/
 - add timestamps in the bottom corner of the map
-- add a button or something to the map to click and drag the screen up on a mobile
 - look at a higher contrast map or marine chart layer
+- ~~add a button or something to the map to click and drag the screen up on a mobile~~
+- ~~change the default time to 12 hours or so (play around with this)~~
 - ~~add different color or line style to indicate where signal has been lost~~
+- ~~default to rain animation off - it doesnt render cleanly enough on AndroidTV~~
+- ~~remove the attribution on leaflet~~
+- ~~change the colors to be driven from the database~~
+- ~~check is the current weather obs actually the latest? i.e. is it sorting properly?~~
+- ~~change to color for each track to match the icon~~
+- ~~add an animate play/pause button~~
+- ~~the clock font can be slightly bigger, and add a little margin between it and the weather~~
+- ~~play with the track dots - they look old fashioned~~
+- ~~fix the scales and labels on the wind and pressure charts (e.g. wind should not go to -0.1)~~
+- ~~sequence the soft start delay (weather & stats & forecast -> wind -> pressure -> tide -> tracks -> rain)~~
+- ~~relook whether to add a label for the wind panel~~
