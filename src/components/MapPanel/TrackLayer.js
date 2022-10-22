@@ -21,8 +21,9 @@ const settings = {
         opacity: 0.5
     },
     tooltip: {
-        opacity: 0.8,
-        offset: [14, -28]
+        opacity: 1.0,
+        offset: [-14, -28],
+        direction: "left"
     },
     marker: {
         opacity: 1.0
@@ -177,6 +178,7 @@ class TrackLayer extends Component {
                                 offset={settings.tooltip.offset}
                                 key={`tt_${vessel.mmsi}`}
                                 opacity={settings.tooltip.opacity}
+                                direction={settings.tooltip.direction}
                                 permanent>
                                 {this.getName(vessel)}
                             </Tooltip>

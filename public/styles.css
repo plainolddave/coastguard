@@ -55,9 +55,8 @@ label {
 .tooltip {
     font-size: 16px;
     font-weight: 600;
-    color: dimgray;
+    color: #333333;
     padding: 0px 5px 0px 5px;
-/*    margin: 0;*/
 }
 
 #rainButton {
