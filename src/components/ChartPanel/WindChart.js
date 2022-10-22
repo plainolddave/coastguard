@@ -126,7 +126,7 @@ function WindChart() {
                     <YAxis
                         type="number"
                         tick={{ fontSize: settings.fontSize, fill: settings.fontColor }}
-                        domain={[dataMin => RoundDownToMultiple(dataMin - 1, 2), dataMax => RoundUpToMultiple(dataMax + 1, 2)]}
+                        domain={[dataMin => RoundDownToMultiple(dataMin, 2), dataMax => RoundUpToMultiple(dataMax + 1, 2)]}
                         tickFormatter={formatYAxis}
                         interval={'preserveStartEnd'}
                         allowDataOverflow={true}
