@@ -13,14 +13,20 @@ const settings = {
     url: "https://coastguard.netlify.app/.netlify/functions/fleet",
     track: {
         weight: 4,
-        opacity: 0.2
+        opacity: 0.5
     },
-    mark: {
+    circle: {
         radius: 2,
         weight: 1,
-        opacity: 0.2
+        opacity: 0.5
     },
-    markerOpacity: 0.7
+    tooltip: {
+        opacity: 0.8,
+        offset: [14, -28]
+    },
+    marker: {
+        opacity: 1.0
+    }
 }
 
 // -------------------------------------------------------------------------------
@@ -148,8 +154,8 @@ class TrackLayer extends Component {
                             <CircleMarker
                                 key={`cm_${vessel.mmsi}_${point.dt}`}
                                 center={point}
-                                radius={settings.mark.radius}
-                                pathOptions={{ weight: settings.mark.weight, opacity: settings.mark.opacity, color: GetColor(vessel) }}
+                                radius={settings.circle.radius}
+                                pathOptions={{ weight: settings.circle.weight, opacity: settings.circle.opacity, color: GetColor(vessel) }}
                             >
                                 <Popup key={`pu_${vessel.mmsi}`}>
                                     Name: {this.getName(vessel)}<br />
@@ -163,11 +169,14 @@ class TrackLayer extends Component {
                         <Marker
                             key={`mk_${vessel.mmsi}`}
                             position={[vessel.pos.lat, vessel.pos.lon]}
-                            icon={GetIcon(vessel)}>
+                            icon={GetIcon(vessel)}
+                            opacity={settings.marker.opacity}
+                        >
                             <Tooltip
                                 className="tooltip"
+                                offset={settings.tooltip.offset}
                                 key={`tt_${vessel.mmsi}`}
-                                opacity={settings.markerOpacity}
+                                opacity={settings.tooltip.opacity}
                                 permanent>
                                 {this.getName(vessel)}
                             </Tooltip>

@@ -52,6 +52,14 @@ label {
     text-align: left;
 }
 
+.tooltip {
+    font-size: 16px;
+    font-weight: 600;
+    color: dimgray;
+    padding: 0px 5px 0px 5px;
+/*    margin: 0;*/
+}
+
 #rainButton {
     border: 2px solid #AAA;
     background-color: #fff;
@@ -62,6 +70,7 @@ label {
 .clock {
     border: 0px solid gray;
     padding-top: 5px;
+    padding-bottom: 10px;
 }
 
     .clock > .label {
@@ -69,7 +78,7 @@ label {
     }
 
     .clock > .numeral {
-        font-size: 80px;
+        font-size: 88px;
         text-align: center;
     }
 
@@ -248,4 +257,3 @@ label {
     }
 
 /* ------------------------------------------------------------ */
-

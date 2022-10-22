@@ -1,16 +1,21 @@
 import React from "react";
-import { LayersControl } from "react-leaflet";
+import { LayersControl, TileLayer } from "react-leaflet";
 import RainLayer from "./RainLayer"
 import TrackLayer from "./TrackLayer"
 
 function OverLayers({ map }) {
     return (
         <>
-            <LayersControl.Overlay checked name="Rain">
+            <LayersControl.Overlay name="Rain">
                 <RainLayer map={map} />
             </LayersControl.Overlay>
-            <LayersControl.Overlay checked name="Vessels">
+            <LayersControl.Overlay name="Vessels" checked>
                 <TrackLayer map={map} />
+            </LayersControl.Overlay>
+            <LayersControl.Overlay name="Nav Marks" checked>
+                <TileLayer
+                    url="https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png"
+                />
             </LayersControl.Overlay>
         </>
     );

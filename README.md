@@ -97,13 +97,14 @@ For more info look at:
 - experiment with adding all other AIS tracks in view
 - experiment with adding operational areas
 - add a config button to switch between live and BOM data source
-- make the label next to each icon about midway up the bubble
+- ~~make the label next to each icon about midway up the bubble~~
 - add a menu and extra tab pages for historical tracks 
 - this mini-map is kind of cool https://react-leaflet.js.org/docs/example-react-control/
 - add timestamps in the bottom corner of the map
 - look at a higher contrast map or marine chart layer
+- sort out a mobile version
 - ~~add a button or something to the map to click and drag the screen up on a mobile~~
-- ~~change the default time to 12 hours or so (play around with this)~~
+- ~~change the default time to 24 hours or so (play around with this)~~
 - ~~add different color or line style to indicate where signal has been lost~~
 - ~~default to rain animation off - it doesnt render cleanly enough on AndroidTV~~
 - ~~remove the attribution on leaflet~~

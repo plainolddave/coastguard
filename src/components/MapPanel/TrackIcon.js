@@ -56,7 +56,8 @@ const blackIcon = new ChartIcon({
 //  blackIcon
 
 const colorMap = new Map([
-    ['gold', '#FFD700'],
+/*    ['gold', '#FFD700'],*/
+    ['gold', '#FBBC05'],
     ['blue', '#0000FF'],
     ['green', '#00FF00'],
     ['violet', '#8F00FF'],

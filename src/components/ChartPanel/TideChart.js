@@ -2,7 +2,7 @@ import React from "react";
 import axios from "axios";
 import * as dayjs from 'dayjs'
 import DataRow from "./../App/DataRow";
-import { GetTimeOffset, RoundToPrecision, Log } from "./../App/Helpers";
+import { GetTimeOffset, RoundToPrecision, Log, RoundDownToMultiple, RoundUpToMultiple } from "./../App/Helpers";
 import {
     AreaChart,
     Area,
@@ -247,7 +247,7 @@ class TideChart extends React.Component {
                             type="number"
                             ticks={settings.yAxisTicks}
                             tick={{ fontSize: settings.fontSize, fill: settings.fontColor }}
-                            domain={[Math.max('dataMin-0.1',0), 'dataMax']}
+                            domain={[dataMin => RoundDownToMultiple(dataMin - 0.1, 0.5), dataMax => RoundUpToMultiple(dataMax + 0.1, 0.5)]}
                             tickFormatter={this.formatYAxis}
                             interval={0}
                             allowDataOverflow={true}

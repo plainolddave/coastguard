@@ -59,3 +59,9 @@
         order: 3;
     }
 }
+
+@media (max-height: 1000px) {
+    .panel {
+        overflow:scroll;
+    }
+}

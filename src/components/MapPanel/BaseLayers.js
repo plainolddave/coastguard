@@ -15,7 +15,7 @@ function JawgLight() {
     );
 }
 
-function CartoCDN() {
+function CartoDB() {
     return (
         <TileLayer
             url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
@@ -34,18 +34,43 @@ function OpenStreetMap() {
     );
 }
 
+function Satellite() {
+    return (
+        <TileLayer
+            url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+            attribution="&copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
+        />
+    );
+}
+
+function Terrain() {
+    return (
+        <TileLayer
+            url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}"
+            attribution="Tiles &copy; Esri &mdash; Source: Esri"
+            maxZoom={13}
+        />
+    );
+}
+
 function BaseLayers({ map }) {
 
     return (
         <>
-            <BaseLayer name="CartoCDN" className="left">
-                <CartoCDN />
+            <BaseLayer name="CartoDB">
+                <CartoDB />
             </BaseLayer>
-            <BaseLayer checked name="JawgLight">
+            <BaseLayer name="Jawg Light">
                 <JawgLight />
             </BaseLayer>
-            <BaseLayer name="OpenStreetMap">
+            <BaseLayer name="Streets">
                 <OpenStreetMap />
+            </BaseLayer>
+            <BaseLayer name="Satellite" checked>
+                <Satellite />
+            </BaseLayer>
+            <BaseLayer name="Terrain">
+                <Terrain />
             </BaseLayer>
         </>
     );
