@@ -10,6 +10,7 @@ const settings = {
     refreshMillis: 1000 * 60 * 2,   // updates every n minutes
     maxErrors: 5,                   // max errors before clearing tracks
     fromHours: -12,                 // use a window of track info behind now()
+    sog: 0.5,                       // minimum speed over ground
     url: "https://coastguard.netlify.app/.netlify/functions/fleet",
     track: {
         weight: 4,
@@ -84,7 +85,7 @@ class TrackLayer extends Component {
 
         const timeFrom = GetTimeOffset(settings.fromHours);
         const dtFrom = Math.floor(timeFrom.getTime() / 1000);
-        let url = `${settings.url}?from=${dtFrom}`;
+        let url = `${settings.url}?from=${dtFrom}&"sog=${settings.sog}`;
         Log("track", url);
 
         axios.get(url, {

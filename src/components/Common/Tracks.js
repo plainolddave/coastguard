@@ -2,44 +2,23 @@ import React, { useState, useRef, useEffect, useMemo } from "react";
 import { LayerGroup, Polyline, Marker, Popup, Tooltip, CircleMarker } from "react-leaflet";
 import axios from "axios";
 import * as dayjs from 'dayjs'
-import { Log, GetTimeOffset } from "./Utils"
+import { Log, GetTimeOffsetUnix } from "./Utils"
 import { GetIcon, GetColor } from "./../MapPanel/TrackIcon"
 
-//const settings_old = {
-//    position: [-27.33, 153.27],
-//    zoom: 10.5,
-//    useScrollWheel: true,
-//    maxZoom: 20,
-//    style: { height: "100%", width: "100%" },
-//    attribution: false,
-//    fleets: [
-//        { value: 'QF2', label: 'QF2 Brisbane' },
-//        { value: 'SAR', label: 'Marine Rescue' },
-//        { value: 'All', label: 'All other vessels' }
-//    ],
-//    timeframes: [
-//        { value: { from: '7D', to: '' }, label: '7 days' },
-//        { value: { from: '30D', to: '' }, label: '30 days' },
-//        { value: { from: '0M', to: '' }, label: 'This month' },
-//        { value: { from: '1M', to: '0M' }, label: 'Last month' },
-//        { value: { from: '2M', to: '' }, label: 'Last 2 months' }
-//    ]
-//}
-
-// default props
 const settings = {
-    startupMillis: 2000,            // soft start (mutable) 
-    refreshMillis: 1000 * 60 * 5,   // updates every n minutes (mutable) 
-    maxErrors: 5,                   // max errors before clearing tracks
-    fromHours: -12,                 // use a window of track info behind now() (mutable) 
-    toHours: 0,                     // (mutable) 
+    defaultStartupMillis: 1000,             // (mutable) soft start timer
+    defaultRefreshMillis: 1000 * 60 * 5,    // (mutable) updates every n minutes 
+    defaultTimeframe: '12H',                // (mutable) use a window of track info from this time behind now() 
+    defaultOrg: "QF2",                      // (mutable) default organisation - QF2, SAR, ALL 
+    defaultMinimumSOG: 0.2,                 // (mutable) minimum speed over ground
+    defaultMinuteBins: "auto",              // (mutable) group positions into bins of n minutes
     url: "https://coastguard.netlify.app/.netlify/functions/fleet",
     track: {
-        weight: 4,
-        opacity: 0.5
+        weight: 5,
+        opacity: 0.3
     },
     circle: {
-        radius: 2,
+        radius: 4,
         weight: 1,
         opacity: 0.5
     },
@@ -53,42 +32,70 @@ const settings = {
     }
 }
 
-/*
- * Org:
- *      QF2 (random colors)
- *      Marine Rescue (database colors)
- *      All (database colors)
- * Timeframe:
- *      7 days
- *      30 days
- *      this month
- *      last 2 months
- * */
-
 function Tracks({
     map = null,
     showIcon = true,
-    startupMillis = settings.startupMillis,
-    refreshMillis = settings.refreshMillis,
-    fromHours = settings.fromHours,
-    toHours = settings.toHours,
+    startupMillis = settings.defaultStartupMillis,
+    refreshMillis = settings.defaultRefreshMillis,
+    timeframe = settings.defaultTimeframe,
+    org = settings.defaultOrg,
+    sog = settings.defaultMinimumSOG,
+    mins = settings.defaultMinuteBins,
     ...restProps }) {
 
-    //const [map, setMap] = useState(null);
-    //const mounted = useRef(false);
     const startupTimer = useRef(null);
     const refreshTimer = useRef(null);
     const requestRef = useRef(axios.CancelToken.source());
     const [tracks, setTracks] = useState([]);
 
     function refresh() {
-        Log("tracks", "refresh");
 
-        const fromTime = GetTimeOffset(fromHours);
-        const fromDt = Math.floor(fromTime.getTime() / 1000);
-        let url = `${settings.url}?from=${fromDt}`;
-        Log("track", url);
+        // from
+        let url = settings.url;
 
+        // timeframes use fixed intervals & bins 
+        let minVal = 1;
+        switch (timeframe) {
+            case '7D':  // last 7 days
+                url += `?from=${dayjs().subtract(7, "day").unix()}`;
+                minVal = 1;
+                break;
+            case '30D': // last 30 days
+                url += `?from=${dayjs().subtract(30, "day").unix()}`;
+                minVal = 2;
+                break;
+            case '0M':  // this month
+                url += `?from=${dayjs().startOf("month").unix()}`;
+                minVal = 2;
+                break;
+            case '1M':  // last calendar month
+                url += `?from=${dayjs().subtract(1, "month").startOf("month").unix()}`;
+                url += `?to=${dayjs().startOf("month").unix()}`;
+                minVal = 2;
+                break;
+            case '2M':  // last 2 calendar months
+                url += `?from=${dayjs().subtract(2, "month").startOf("month").unix()}`;
+                url += `?to=${dayjs().startOf("month").unix()}`;
+                minVal = 2;
+                break;
+            case 'All': // all time
+                minVal = 5;
+                break;
+            default:    // last 12 hours
+                url += `?from=${dayjs().subtract(12, 'hour').unix()}`;
+                minVal = 1;
+                break;
+        }
+        url += `?&mins=${ mins === "auto" ? minVal : mins }`
+
+        // sog
+        if (sog !== 0) {
+            url += `&sog=${sog}`;
+        }
+        // org
+        url += `&org=${org}`;
+
+        Log("tracks", `refresh org:${org} sog: ${sog} time: ${timeframe} mins: ${mins} url: ${url}`);
         requestRef.current.cancel();
         requestRef.current = axios.CancelToken.source();
 
@@ -109,84 +116,43 @@ function Tracks({
                     vessel.line = line;
                     vessel.pos = vessel.track[0];
                 });
-
                 setTracks(tracks);
+                Log("track", "refresh ok");
             })
             .catch((err) => {
-                Log("track error", err);
+                Log("track refresh error", err);
             })
             .finally(() => {
                 requestRef.current = axios.CancelToken.source()
             })
     };
 
-    // run once on initial render, to initiate a soft start
-    // i.e. allow a short delay to avoid hammering the server
+    // run once on initial render, to initiate a soft start, then start 
+    // a timer to fetch data periodically (i.e. after the soft start timer
+    // gives a short delay to avoid hammering the server on initial render)
     useEffect(() => {
-        //console.log("t2 start effect");
-        Log("tracks", "start");
+        //Log("tracks", "start");
         clearTimeout(startupTimer.current);
         startupTimer.current = setTimeout(() => {
-
-            //requestRef.current = axios.CancelToken.source();
-            //if (!mounted.current) {
-            //mounted.current = true;
-            Log("tracks", "mounted!");
-
             refresh();
-            // start a timer to fetch data periodically
-            // (i.e.after soft start timer)
             clearTimeout(refreshTimer.current);
             refreshTimer.current = setInterval(() => {
-                // requestRef.current = axios.CancelToken.source();
                 refresh();
             }, refreshMillis);
             return () => {
-                Log("tracks", "clear refresh");
                 clearTimeout(refreshTimer.current);
             }
-            //}
         }, startupMillis);
         return () => {
-            Log("tracks", "clear startup");
             clearTimeout(startupTimer.current);
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+        /*// xx-TODO-xx-eslint-disable-next-line react-hooks/exhaustive-deps*/
+    }, [startupMillis, refreshMillis]);
 
-    // get the vessel name, or MMSI if name is blank
-    //getName = (vessel) => {
-    //    if (vessel.vessel.length === 0) {
-    //        let name = "*"; // add a star to indicate its not a vessel in the database
-    //        name += vessel.name == null ? String(vessel.mmsi) : String(vessel.name);
-    //        return name;
-    //    } else {
-    //        return vessel.vessel[0].name;
-    //    }
-    //}
-
-    //const getName = React.memo(function getName({ name }) {
-    //    console.log("Skinny Jack")
-    //    return (
-    //        <div>{name}</div>
-    //    )
-    //})
-
-    //const getName = useMemo(
-    //    (vessel) => {
-    //        let name = "";
-    //        if (vessel.vessel.length === 0) {
-    //            name = "*"; // add a star to indicate its not a vessel in the database
-    //            name += vessel.name == null ? String(vessel.mmsi) : String(vessel.name);
-    //            //return name;
-    //        } else {
-    //            name = vessel.vessel[0].name;
-    //        }
-    //        vesselName.current = name;
-    //        return name;
-    //    },
-    //    [tracks],
-    //);
+    // refresh track data when org or timeframes change
+    useEffect(() => {
+        refresh();
+    }, [org, timeframe]);
 
     const displayTracks = useMemo(
         () => (

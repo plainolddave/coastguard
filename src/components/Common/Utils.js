@@ -6,6 +6,11 @@ function GetTimeOffset(hours) {
     return new Date(Date.now() + (hours * 60 * 60 * 1000))
 };
 
+// calculate a time offset from the current time as unix seconds
+function GetTimeOffsetUnix(hours) {
+    return Math.floor(GetTimeOffset(hours).getTime() / 1000);
+};
+
 // round a value to a specified precision 
 function RoundToPrecision(value, precision) {
     return parseFloat(value.toFixed(precision));
@@ -82,4 +87,4 @@ function RoundDownToMultiple(value, n) {
     return Math.floor(value / n) * n;
 }
 
-export { Log, LogJSON, LogReact, GetTimeOffset, RoundToPrecision, Clamp, ClampAngle, Saturate, Viewport, RoundUpToMultiple, RoundDownToMultiple }
+export { Log, LogJSON, LogReact, GetTimeOffset, GetTimeOffsetUnix, RoundToPrecision, Clamp, ClampAngle, Saturate, Viewport, RoundUpToMultiple, RoundDownToMultiple }

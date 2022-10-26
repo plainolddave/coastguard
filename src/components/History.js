@@ -9,7 +9,6 @@ import Next from "./Common/Next"
 import Tracks from "./Common/Tracks"
 import BaseLayers from "./MapPanel/BaseLayers";
 
-
 const settings = {
     position: [-27.33, 153.27],
     zoom: 10.5,
@@ -17,77 +16,88 @@ const settings = {
     maxZoom: 20,
     style: { height: "100%", width: "100%" },
     attribution: false,
+    startupMillis: 1000,             // (mutable) soft start timer
+    refreshMillis: 1000 * 60 * 5,    // (mutable) updates every n minutes 
+    fromHours: -72,                  // (mutable) use a window of track info from this time, relative to now()
+    toHours: 0,                      // (mutable) use a window of track info to this time, relative to now()  
+    minimumSOG: 0.2,                 // (mutable) minimum speed over ground
+    minuteBins: "auto",              // (mutable) group positions into bins of n minutes
     fleets: [
         { value: 'QF2', label: 'QF2 Brisbane' },
         { value: 'SAR', label: 'Marine Rescue' },
-        { value: 'All', label: 'All other vessels' }
+        { value: 'ALL', label: 'All Vessels' }
     ],
-    timeframes: [
+    timeframe: [
         { value: '7D', label: '7 days' },
         { value: '30D', label: '30 days' },
         { value: '0M', label: 'This month' },
         { value: '1M', label: 'Last month' },
-        { value: '2M', label: 'Last 2 months' }
+        { value: '2M', label: 'Last 2 months' },
+        { value: 'All', label: 'All time' }
     ]
 }
 
-/*
- * Org:
- *      QF2 (random colors)
- *      Marine Rescue (database colors)
- *      All (database colors)
- * Timeframe:
- *      7 days
- *      30 days
- *      this month
- *      last 2 months
- * */
-
 const animatedComponents = makeAnimated();
-
-function SideBar({ map }) {
-    const [position, setPosition] = useState(() => map.getCenter())
-
-    const onClick = useCallback(() => {
-        map.setView(settings.position, settings.zoom)
-    }, [map])
-
-    const onMove = useCallback(() => {
-        setPosition(map.getCenter())
-    }, [map])
-
-    useEffect(() => {
-        map.on('move', onMove)
-        return () => {
-            map.off('move', onMove)
-        }
-    }, [map, onMove])
-
-    return (
-        <div className="sidebar panel">
-            <p>lat: {position.lat.toFixed(4)}</p>
-            <p>lon: {position.lng.toFixed(4)}</p>
-            <p><button className="dropbtn" onClick={onClick}>Reset</button></p>
-            <p className="sidebar-label left">Fleet:</p>
-            <Select
-                className="select-btn left"
-                options={settings.fleets}
-                closeMenuOnSelect={false}
-                components={animatedComponents}
-                defaultValue={[settings.fleets[0], settings.fleets[1], settings.fleets[2]]}
-                isMulti
-            />
-            <p className="sidebar-label left">Timeframe:</p>
-            <p className="sidebar-label left">From: 1 Jan 1970 20:30</p>
-            <p className="sidebar-label left">To: 23 Jan 1970 22:30</p>
-            <Select className="select-btn left" options={settings.timeframes} />
-        </div>
-    )
-}
 
 function History() {
 
     const [map, setMap] = useState(null);
+    const [org, setOrg] = useState(settings.fleets[0]);
+    const [timeframe, setTimeframe] = useState(settings.timeframe[0]);
+
+    function SideBar({ map }) {
+        const [position, setPosition] = useState(() => map.getCenter())
+
+        const onClick = useCallback(() => {
+            map.setView(settings.position, settings.zoom)
+        }, [map])
+
+        const onMove = useCallback(() => {
+            setPosition(map.getCenter())
+        }, [map])
+
+        useEffect(() => {
+            map.on('move', onMove)
+            return () => {
+                map.off('move', onMove)
+            }
+        }, [map, onMove])
+
+        const handleOrgChange = (selected) => {
+            setOrg(selected);
+            // console.log(`Org selected:`, JSON.stringify(selected));
+        }
+
+        const handleTimeChange = (selected) => {
+            setTimeframe(selected);
+            // console.log(`Time selected:`, JSON.stringify(selected));
+        }
+
+        return (
+            <div className="sidebar panel">
+                <p>lat: {position.lat.toFixed(4)}</p>
+                <p>lon: {position.lng.toFixed(4)}</p>
+                <p><button className="dropbtn" onClick={onClick}>Reset</button></p>
+                <p className="sidebar-label left">Fleet:</p>
+                <Select
+                    className="select-btn left"
+                    options={settings.fleets}
+                    closeMenuOnSelect={true}
+                    components={animatedComponents}
+                    defaultValue={org}
+                    onChange={handleOrgChange}
+                />
+                <p className="sidebar-label left">Timeframe:</p>
+                <Select className="select-btn left"
+                    options={settings.timeframe}
+                    closeMenuOnSelect={true}
+                    components={animatedComponents}
+                    defaultValue={timeframe}
+                    onChange={handleTimeChange}
+                />
+            </div>
+        )
+    }
 
     const displayMap = useMemo(
         () => (
@@ -105,9 +115,15 @@ function History() {
                         <LayersControl.Overlay name="Vessels" checked>
                             <Tracks
                                 map={map}
+                                startupMillis={settings.startupMillis}
+                                refreshMillis={settings.refreshMillis}
+                                timeframe={timeframe.value}
+                                org={org.value}
+                                sog={settings.minimumSOG}
+                                mins={settings.minuteBins}
                             />
                         </LayersControl.Overlay>
-                        <LayersControl.Overlay name="Nav Marks" checked>
+                        <LayersControl.Overlay name="Nav Marks">
                             <TileLayer
                                 url="https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png"
                             />
@@ -119,7 +135,7 @@ function History() {
                 </MapContainer>
             </div>
         ),
-        [map],
+        [map, org, timeframe],
     );
 
     return (
