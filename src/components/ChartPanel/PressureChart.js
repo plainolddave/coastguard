@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import * as dayjs from 'dayjs'
-import { GetTimeOffset, Log, RoundUpToMultiple, RoundDownToMultiple } from "./../App/Helpers"
+import { GetTimeOffset, Log, RoundUpToMultiple, RoundDownToMultiple } from "./../Common/Utils"
 import {
     AreaChart,
     Area,
@@ -14,7 +14,7 @@ import {
 
 const settings = {
     startupMillis: 4000,            // soft start
-    refreshMillis: 1000 * 60 * 2,   // get new data every 2 minutes
+    refreshMillis: 1000 * 60 * 5,   // get new data every 5 minutes
     fromHours: -6,                  // use a window of tide information from 6 hours behind now()
     toHours: 0,                     // use a window of tide information to 6 hours ahead of now()
     tickSeconds: 1 * 60 * 60,       // interval for chart ticks

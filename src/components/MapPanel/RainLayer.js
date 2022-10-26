@@ -1,6 +1,6 @@
 import React, { Component, createRef } from 'react'
 import { LayerGroup, TileLayer } from "react-leaflet";
-import { Log, LogJSON } from "./../App/Helpers"
+import { Log, LogJSON } from "./../Common/Utils"
 import axios from "axios";
 
 const settings = {

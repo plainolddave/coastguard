@@ -15,15 +15,15 @@ function JawgLight() {
     );
 }
 
-function CartoDB() {
-    return (
-        <TileLayer
-            url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-            subdomains="abcd"
-            maxZoom={22}
-        />
-    );
-}
+//function CartoDB() {
+//    return (
+//        <TileLayer
+//            url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+//            subdomains="abcd"
+//            maxZoom={22}
+//        />
+//    );
+//}
 
 function OpenStreetMap() {
     return (
@@ -53,23 +53,20 @@ function Terrain() {
     );
 }
 
-function BaseLayers({ map }) {
+function BaseLayers({ map, isChecked }) {
 
     return (
         <>
-            <BaseLayer name="CartoDB">
-                <CartoDB />
-            </BaseLayer>
-            <BaseLayer name="Jawg Light">
+            <BaseLayer name="Simple" checked={("Simple" === isChecked ? true : false)} >
                 <JawgLight />
             </BaseLayer>
-            <BaseLayer name="Streets">
+            <BaseLayer name="Streets" checked={("Streets" === isChecked ? true : false)} >
                 <OpenStreetMap />
             </BaseLayer>
-            <BaseLayer name="Satellite" checked>
+            <BaseLayer name="Satellite" checked={("Satellite" === isChecked ? true : false)} >
                 <Satellite />
             </BaseLayer>
-            <BaseLayer name="Terrain">
+            <BaseLayer name="Terrain" checked={("Terrain" === isChecked ? true : false)} >
                 <Terrain />
             </BaseLayer>
         </>
@@ -77,7 +74,8 @@ function BaseLayers({ map }) {
 }
 
 BaseLayers.defaultProps = {
-    map: null
+    map: null,
+    isChecked: "Satellite"
 }
 
 export default BaseLayers;

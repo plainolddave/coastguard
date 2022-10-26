@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import { ClampAngle, Saturate } from "./../App/Helpers"
+import { ClampAngle, Saturate } from "./../Common/Utils"
 import { Dot, Numeral, Tick } from "./Components"
-/*import { TestData } from "./Data"*/
 
 const settings = {
     dotCount: 36,

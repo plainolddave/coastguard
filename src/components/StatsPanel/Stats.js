@@ -1,5 +1,5 @@
 import React from "react";
-import DataRow from "./../App/DataRow"
+import Row from "./../Common/Row"
 
 /**
  * Displays weather statistics
@@ -10,12 +10,12 @@ import DataRow from "./../App/DataRow"
 function Stats({ place, dt, pressure, humidity, cloud, sunrise, sunset }) {
     return (
         <div className="wrapper">
-            <DataRow label="Place" value={{ 'dt': 0, 'place': place }} />
-            <DataRow label="Sunrise" value={sunrise} />
-            <DataRow label="Sunset" value={sunset} />
-            <DataRow label="Pressure" value={pressure} />
-            <DataRow label="Humidity" value={humidity} />
-            <DataRow label="Cloud" value={cloud} />
+            <Row label="Place" value={{ 'dt': 0, 'place': place }} />
+            <Row label="Sunrise" value={sunrise} />
+            <Row label="Sunset" value={sunset} />
+            <Row label="Pressure" value={pressure} />
+            <Row label="Humidity" value={humidity} />
+            <Row label="Cloud" value={cloud} />
         </div>
     );
 }

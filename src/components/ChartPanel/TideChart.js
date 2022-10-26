@@ -1,8 +1,8 @@
 import React from "react";
 import axios from "axios";
 import * as dayjs from 'dayjs'
-import DataRow from "./../App/DataRow";
-import { GetTimeOffset, RoundToPrecision, Log, RoundDownToMultiple, RoundUpToMultiple } from "./../App/Helpers";
+import Row from "./../Common/Row";
+import { GetTimeOffset, RoundToPrecision, Log, RoundDownToMultiple, RoundUpToMultiple } from "./../Common/Utils";
 import {
     AreaChart,
     Area,
@@ -16,7 +16,7 @@ import {
 
 const settings = {
     startupMillis: 5000,                // soft start
-    refreshMillis: 1000 * 60 * 30,      // get new data from the server once an hour
+    refreshMillis: 1000 * 60 * 30,      // get new data from the server once each half hour
     recalcMillis: 1000 * 60,            // recalculate current tide height each 1/2 minute
     tickSeconds: 2 * 60 * 60,           // interval for chart ticks
     fromHours: -12,                     // use a window of tide information n hours behind now()
@@ -286,9 +286,9 @@ class TideChart extends React.Component {
                         </ReferenceLine>
                     </AreaChart>
                 </ResponsiveContainer>
-                <DataRow label="Tide" value={this.state.tideNow} />
-                <DataRow label="Tide" value={this.state.prevTide} />
-                <DataRow label="Tide" value={this.state.nextTide} />
+                <Row label="Tide" value={this.state.tideNow} rowStyle="data-row" />
+                <Row label="Tide" value={this.state.prevTide} rowStyle="data-row" />
+                <Row label="Tide" value={this.state.nextTide} rowStyle="data-row" />
             </div>
         );
     }

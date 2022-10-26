@@ -1,5 +1,4 @@
 import * as L from "leaflet";
-//import colorString from "color-string";
 
 const ChartIcon = L.Icon.extend({
     options: {
@@ -43,18 +42,7 @@ const blackIcon = new ChartIcon({
     iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-black.png'
 });
 
-// colors are set in the database
-// track can be any web color
-// icon choices are:
-//  greenIcon
-//  blueIcon
-//  goldIcon
-//  violetIcon
-//  greyIcon
-//  redIcon
-//  orangeIcon
-//  blackIcon
-
+// color strings are provided from the database
 const colorMap = new Map([
 /*    ['gold', '#FFD700'],*/
     ['gold', '#FBBC05'],
@@ -78,67 +66,21 @@ const iconMap = new Map([
     ['gray', new ChartIcon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png' })]
 ]);
 
-// get the icon 
-function GetColor(vessel) {
-    let color = "gray";
-    if (vessel.vessel.length > 0) {
-        color = vessel.vessel[0].color;
-    }
-    if (colorMap.has(color))
+// get the color 
+function GetColor(color) {
+    //console.log("color " + color)
+    if (colorMap.has(color)) { 
         return colorMap.get(color);
-    else
-        return colorMap.get("gray");
-}
-
-// get the icon and color
-function GetIcon(vessel) {
-    let color = "gray";
-    if (vessel.vessel.length > 0) {
-        color = vessel.vessel[0].color;
     }
-    if (iconMap.has(color))
-        return iconMap.get(color);
-    else
-        return iconMap.get("gray");
+    return colorMap.get("gray");
 }
 
-//switch (org) {
-//    case "QF2":
-//        return goldIcon;
-//    case "QPS":
-//        return blueIcon
-//    case "AVCG":
-//        return greenIcon
-//    case "VMR":
-//        return violetIcon
-//    default:
-//        return greyIcon;
-//}
-
-//// get the icon 
-//function GetIcon(vessel) {
-//    let color = "gray";
-//    if (vessel.vessel.length > 0) {
-//        color = vessel.vessel[0].color;
-//    }
-//    switch (color) {
-//        case "gold":
-//            return { color: "#FFD700", icon: goldIcon };
-//        case "blue":
-//            return { color: "#0000FF", icon: blueIcon };
-//        case "green":
-//            return { color: "#00FF00", icon: greenIcon };
-//        case "violet":
-//            return { color: "#8F00FF", icon: violetIcon };
-//        case "red":
-//            return { color: "#FF0000", icon: redIcon };
-//        case "orange":
-//            return { color: "#FFA500", icon: orangeIcon };
-//        case "black":
-//            return { color: "#000000", icon: blackIcon };
-//        default:
-//            return { color: "#808080", icon: greyIcon };
-//    }
-//}
+// get the icon
+function GetIcon(color) {
+    if (iconMap.has(color)) {
+        return iconMap.get(color);
+    }
+    return iconMap.get("gray");
+}
 
 export { GetColor, GetIcon, greenIcon, blueIcon, goldIcon, violetIcon, greyIcon, redIcon, orangeIcon, blackIcon }

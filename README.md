@@ -27,10 +27,14 @@ npm install axios
 npm install datejs
 npm install react-icons --save
 npm install recharts
+npm install react-router-dom
+npm install react-select
+[TBC...
 npm install @mui/icons-material
 npm install @mui/material @emotion/react @emotion/styled
 npm i leaflet-easybutton
-npm i font-awesome TBC TBC
+npm i font-awesome 
+...]
 
 ```
 For more instructions on the front-end React App [look here](Netlify_Instructions.md)  

@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
+import React, { Component, memo } from 'react'
 import { LayerGroup, Polyline, Marker, Popup, Tooltip, CircleMarker } from "react-leaflet";
 import * as dayjs from 'dayjs'
 import axios from "axios";
-import { GetTimeOffset, Log } from "./../App/Helpers"
+import { GetTimeOffset, Log } from "./../Common/Utils"
 import { GetIcon, GetColor } from "./TrackIcon"
 
 const settings = {
@@ -129,26 +129,15 @@ class TrackLayer extends Component {
 
     // -------------------------------------------------------------------------------
 
-    // get the vessel name, or MMSI if name is blank
-    getName = (vessel) => {
-        if (vessel.vessel.length === 0) {
-            let name = "*"; // add a star to indicate its not a vessel in the database
-            name += vessel.name == null ? String(vessel.mmsi) : String(vessel.name);
-            return name;
-        } else {
-            return vessel.vessel[0].name;
-        }
-    }
-
     render = () => {
-        Log("track", "render");
+        //Log("track", "render");
         return (
             <LayerGroup>
                 {this.state.tracks.map((vessel, index) =>
                     <LayerGroup key={`lg_${vessel.mmsi}`}>
                         <Polyline
                             key={`tk_${vessel.mmsi}`}
-                            pathOptions={{ weight: settings.track.weight, opacity: settings.track.opacity, color: GetColor(vessel) }}
+                            pathOptions={{ weight: settings.track.weight, opacity: settings.track.opacity, color: GetColor(vessel.info.color) }}
                             positions={vessel.line}
                         />
                         {vessel.track.map((point, index) =>
@@ -156,10 +145,10 @@ class TrackLayer extends Component {
                                 key={`cm_${vessel.mmsi}_${point.dt}`}
                                 center={point}
                                 radius={settings.circle.radius}
-                                pathOptions={{ weight: settings.circle.weight, opacity: settings.circle.opacity, color: GetColor(vessel) }}
+                                pathOptions={{ weight: settings.circle.weight, opacity: settings.circle.opacity, color: GetColor(vessel.info.color) }}
                             >
                                 <Popup key={`pu_${vessel.mmsi}`}>
-                                    Name: {this.getName(vessel)}<br />
+                                    Name: {vessel.name}<br />
                                     MMSI: {vessel.mmsi}<br />
                                     Time: {dayjs.unix(point.dt).format("HH:mm")}<br />
                                     Course: {point.cog}<br />
@@ -170,7 +159,7 @@ class TrackLayer extends Component {
                         <Marker
                             key={`mk_${vessel.mmsi}`}
                             position={[vessel.pos.lat, vessel.pos.lon]}
-                            icon={GetIcon(vessel)}
+                            icon={GetIcon(vessel.info.color)}
                             opacity={settings.marker.opacity}
                         >
                             <Tooltip
@@ -180,10 +169,10 @@ class TrackLayer extends Component {
                                 opacity={settings.tooltip.opacity}
                                 direction={settings.tooltip.direction}
                                 permanent>
-                                {this.getName(vessel)}
+                                {vessel.info.name}
                             </Tooltip>
                             <Popup key={`pp_${vessel.mmsi}`}>
-                                Name: {this.getName(vessel)}<br />
+                                Name: {vessel.info.name}<br />
                                 MMSI: {vessel.mmsi}<br />
                                 Time: {dayjs.unix(vessel.pos.dt).format("HH:mm")}<br />
                                 Course: {vessel.pos.cog}<br />

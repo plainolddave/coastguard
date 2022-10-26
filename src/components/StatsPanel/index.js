@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
-import { Log } from "./../App/Helpers"
-import Spacer from "./../App/Spacer"
-import Forecast from "./Forecast.js"
-import Weather from "./Weather.js"
-import Clock from "./Clock.js"
-import Stats from "./Stats.js"
+import { Log } from "./../Common/Utils"
+import Spacer from "./../Common/Spacer"
+import Forecast from "./Forecast"
+import Weather from "./Weather"
+import Clock from "./Clock"
+import Stats from "./Stats"
 import axios from "axios";
 
 const settings = {
     url: "https://coastguard.netlify.app/.netlify/functions/weather",
     startupMillis: 1000,           // soft start
-    refreshMillis: 1000 * 60 * 1,  // 1 min
+    refreshMillis: 1000 * 60 * 2,  // 2 mins
     maxErrors: 5,
     spacerHeight1: "10px",
     spacerHeight2: "10px",

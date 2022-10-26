@@ -16,15 +16,15 @@ function Clamp(num, min, max) {
 }
 
 function Log(from, message) {
-    console.log(`${dayjs(new Date()).format('HH:mm:ss')} ${from}:`, message);
+    console.log(`${dayjs(new Date()).format('HH:mm:ss.SSS')} ${from}:`, message);
 };
 
 function LogJSON(from, obj) {
-    console.log(`${dayjs(new Date()).format('HH:mm:ss')} ${from}: ${JSON.stringify(obj)}`);
+    console.log(`${dayjs(new Date()).format('HH:mm:ss.SSS')} ${from}: ${JSON.stringify(obj)}`);
 };
 
 function LogReact(from, obj) {
-    console.log(`${dayjs(new Date()).format('HH:mm:ss')} ${from}: ${stringify(obj)}`);
+    console.log(`${dayjs(new Date()).format('HH:mm:ss.SSS')} ${from}: ${stringify(obj)}`);
 };
 
 // helper to fix negative angles

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import * as dayjs from 'dayjs'
 import axios from "axios";
-import DataRow from "./../App/DataRow"
-import { Log } from "./../App/Helpers"
+import Row from "./../Common/Row"
+import { Log } from "./../Common/Utils"
 
 const settings = {
     startupMillis: 2000,            // soft start
@@ -64,8 +64,8 @@ function Forecast() {
                         <div className="time label">{`${dayjs.unix(dt).format("HH:mm")}`}</div>
                         <div className="icon"><img src={`icons/${icon}.png`} alt={`${label}`} /></div>
                         <div className="desc label">{label}</div>
-                        <DataRow className="temp" label="Temp" value={temp} styling="forecast-row" />
-                        <DataRow className="wind" label="Wind" value={wind.knots} styling="forecast-row" />
+                        <Row className="temp" label="Temp" value={temp} rowStyle="forecast-row" />
+                        <Row className="wind" label="Wind" value={wind.knots} rowStyle="forecast-row" />
                     </div>
                 ))}
             </div>
