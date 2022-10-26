@@ -17,6 +17,7 @@ export async function handler(event, context) {
         let url = API_ENDPOINT + `?limit=${event.queryStringParameters.limit || "1000"}`;
         if (event.queryStringParameters.from) { url += `&from=${event.queryStringParameters.from}` };
         if (event.queryStringParameters.to) { url += `&to=${event.queryStringParameters.to}` };
+        if (event.queryStringParameters.org) { url += `&org=${event.queryStringParameters.org}` };
 
         const response = await axios.get(url, API_CONFIG);
         const data = JSON.stringify(response.data);
