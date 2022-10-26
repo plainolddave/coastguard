@@ -18,7 +18,7 @@ export async function handler(event, context) {
         if (event.queryStringParameters.from) { url += `&from=${event.queryStringParameters.from}` };
         if (event.queryStringParameters.to) { url += `&to=${event.queryStringParameters.to}` };
         if (event.queryStringParameters.min) { url += `&min=${event.queryStringParameters.min}` };
-        if (event.queryStringParameters.sog) { url += `&org=${event.queryStringParameters.sog}` };
+        if (event.queryStringParameters.sog) { url += `&sog=${event.queryStringParameters.sog}` };
         if (event.queryStringParameters.org) { url += `&org=${event.queryStringParameters.org}` };
 
         const response = await axios.get(url, API_CONFIG);
