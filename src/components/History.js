@@ -17,9 +17,7 @@ const settings = {
     style: { height: "100%", width: "100%" },
     attribution: false,
     startupMillis: 1000,             // (mutable) soft start timer
-    refreshMillis: 1000 * 60 * 5,    // (mutable) updates every n minutes 
-    fromHours: -72,                  // (mutable) use a window of track info from this time, relative to now()
-    toHours: 0,                      // (mutable) use a window of track info to this time, relative to now()  
+    refreshMillis: 1000 * 60 * 10,   // (mutable) updates every n minutes 
     minimumSOG: 0.2,                 // (mutable) minimum speed over ground
     minuteBins: "auto",              // (mutable) group positions into bins of n minutes
     fleets: [
@@ -42,7 +40,7 @@ const animatedComponents = makeAnimated();
 function History() {
 
     const [map, setMap] = useState(null);
-    const [org, setOrg] = useState(settings.fleets[0]);
+    const [org, setOrg] = useState(settings.fleets[1]);
     const [timeframe, setTimeframe] = useState(settings.timeframe[0]);
 
     function SideBar({ map }) {
