@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useMemo } from "react";
 import { LayerGroup, Polyline, Marker, Popup, Tooltip, CircleMarker } from "react-leaflet";
 import axios from "axios";
 import * as dayjs from 'dayjs'
-import { Log, GetTimeOffsetUnix } from "./Utils"
+import { Log } from "./Utils"
 import { GetIcon, GetColor } from "./../MapPanel/TrackIcon"
 
 const settings = {
@@ -146,12 +146,13 @@ function Tracks({
         return () => {
             clearTimeout(startupTimer.current);
         }
-        /*// xx-TODO-xx-eslint-disable-next-line react-hooks/exhaustive-deps*/
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [startupMillis, refreshMillis]);
 
     // refresh track data when org or timeframes change
     useEffect(() => {
         refresh();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [org, timeframe]);
 
     const displayTracks = useMemo(
