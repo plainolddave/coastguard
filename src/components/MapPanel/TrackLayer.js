@@ -1,4 +1,4 @@
-import React, { Component, memo } from 'react'
+import React, { Component } from 'react'
 import { LayerGroup, Polyline, Marker, Popup, Tooltip, CircleMarker } from "react-leaflet";
 import * as dayjs from 'dayjs'
 import axios from "axios";

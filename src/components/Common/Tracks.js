@@ -151,6 +151,7 @@ function Tracks({
             Log("tracks", "clear startup");
             clearTimeout(startupTimer.current);
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // get the vessel name, or MMSI if name is blank

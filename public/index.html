@@ -14,14 +14,29 @@
           href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
           integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
           crossorigin="" />
-    <link rel="stylesheet" href="%PUBLIC_URL%/styles.css" />
+    <!--<link rel="stylesheet" href="%PUBLIC_URL%/styles.css" />-->
     <title>Coastguard Brisbane</title>
 </head>
+<!--<body onload="getViewport()" onresize="getViewport()">-->
 <body>
     <noscript>
         You need to enable JavaScript to run this app.
     </noscript>
     <div id="root"></div>
+    <!--<p id="viewportInfo" style="position:fixed;bottom:10px;left:10px;z-index:999;color:red"></p>
+    <script type="text/javascript">
+        function getViewport() {
+            var e = window, a = 'inner';
+            if (!('innerWidth' in window)) {
+                a = 'client';
+                e = document.documentElement || document.body;
+            }
+            const w = e[a + 'Width'];
+            const h = e[a + 'Height'];
+            const viewportInfo = document.querySelector('#viewportInfo');
+            viewportInfo.textContent = `${w}x${h}`;
+            return { width: e[a + 'Width'], height: e[a + 'Height'] }
+        }
+    </script>-->
 </body>
 </html>
-
