@@ -32,7 +32,50 @@ npm install react-select
 ```
 For more instructions on the front-end React App [look here](Netlify_Instructions.md)  
 
-##Setup for Android TV
+## Issues and improvements
+
+To do now:
+- remove API keys from lambda function
+- add a legend key and different icon colors on the history page 
+- expand the capacity of the positions collection in mongoDB to 3 months
+- add a config setting to switch between live and BOM data source
+- the degrees celcius symbol is seperated from the numerals for some reason
+
+Maybe later:
+- shorten the variable names all round e.g. for wind
+- put the 'weather refreshed' time somewhere inconspicuous
+- add tooltips back into each chart
+- experiment with adding all other AIS tracks in view
+- experiment with adding operational areas 
+- this mini-map is kind of cool https://react-leaflet.js.org/docs/example-react-control/
+- look at a higher contrast map or marine chart layer
+
+Done:
+- ~~add position in the bottom corner of the map~~
+- ~~add a menu and extra tab pages for historical tracks~~
+- ~~fix the default routing to point to the dashboard page~~
+- ~~add a button to animate rain~~
+- ~~change the default height to the viewport (i.e. excluding menu bars etc, instead of the whole screen)~~
+- ~~add pressure and wind direction to the forecast panels~~
+- ~~add the full date and time for tooltips on the history page~~
+- ~~"other" tracks can go back to grey?~~
+- ~~sort out a mobile version~~
+- ~~make the label next to each icon about midway up the bubble~~
+- ~~add a button or something to the map to click and drag the screen up on a mobile~~
+- ~~change the default time to 24 hours or so (play around with this)~~
+- ~~add different color or line style to indicate where signal has been lost~~
+- ~~default to rain animation off - it doesnt render cleanly enough on AndroidTV~~
+- ~~remove the attribution on leaflet~~
+- ~~change the colors to be driven from the database~~
+- ~~check is the current weather obs actually the latest? i.e. is it sorting properly?~~
+- ~~change to color for each track to match the icon~~
+- ~~add an animate play/pause button~~
+- ~~the clock font can be slightly bigger, and add a little margin between it and the weather~~
+- ~~play with the track dots - they look old fashioned~~
+- ~~fix the scales and labels on the wind and pressure charts (e.g. wind should not go to -0.1)~~
+- ~~sequence the soft start delay (weather & stats & forecast -> wind -> pressure -> tide -> tracks -> rain)~~
+
+## Setup for Android TV
 
 - Default AndroidTV resolution was 1280x720
 - ViewSonic 27in QHD VA 165Hz Curved Adaptive Sync Gaming Monitor (VX2718-2KPC-MHD) is 2560x1440
@@ -79,45 +122,4 @@ For more info look at:
 - [Useful info on screen resolution](https://www.reddit.com/r/AndroidTV/comments/rmqsvq/so_i_have_a_4k_android_tv_but_when_checking_stats/)
 - [Useful info on screen resolution](https://www.reddit.com/r/AndroidTV/comments/rmqsvq/so_i_have_a_4k_android_tv_but_when_checking_stats/)
 
-## Issues and improvements
-
-To do now:
-- remove API keys from lambda function
-- add a legend key and different icon colors on the history page 
-- expand the capacity of the positions collection in mongoDB to 3 months
-- add a config setting to switch between live and BOM data source
-
-Maybe later:
-- shorten the variable names all round e.g. for wind
-- put the 'weather refreshed' time somewhere inconspicuous
-- add tooltips back into each chart
-- experiment with adding all other AIS tracks in view
-- experiment with adding operational areas 
-- this mini-map is kind of cool https://react-leaflet.js.org/docs/example-react-control/
-- look at a higher contrast map or marine chart layer
-
-Done:
-- ~~add position in the bottom corner of the map~~
-- ~~add a menu and extra tab pages for historical tracks~~
-- ~~fix the default routing to point to the dashboard page~~
-- ~~add a button to animate rain~~
-- ~~change the default height to the viewport (i.e. excluding menu bars etc, instead of the whole screen)~~
-- ~~add pressure and wind direction to the forecast panels~~
-- ~~add the full date and time for tooltips on the history page~~
-- ~~"other" tracks can go back to grey?~~
-- ~~sort out a mobile version~~
-- ~~make the label next to each icon about midway up the bubble~~
-- ~~add a button or something to the map to click and drag the screen up on a mobile~~
-- ~~change the default time to 24 hours or so (play around with this)~~
-- ~~add different color or line style to indicate where signal has been lost~~
-- ~~default to rain animation off - it doesnt render cleanly enough on AndroidTV~~
-- ~~remove the attribution on leaflet~~
-- ~~change the colors to be driven from the database~~
-- ~~check is the current weather obs actually the latest? i.e. is it sorting properly?~~
-- ~~change to color for each track to match the icon~~
-- ~~add an animate play/pause button~~
-- ~~the clock font can be slightly bigger, and add a little margin between it and the weather~~
-- ~~play with the track dots - they look old fashioned~~
-- ~~fix the scales and labels on the wind and pressure charts (e.g. wind should not go to -0.1)~~
-- ~~sequence the soft start delay (weather & stats & forecast -> wind -> pressure -> tide -> tracks -> rain)~~
 - ~~relook whether to add a label for the wind panel~~

@@ -16,7 +16,7 @@ import {
 
 const settings = {
     startupMillis: 5000,                // soft start
-    refreshMillis: 1000 * 60 * 30,      // get new data from the server once each half hour
+    refreshMillis: 1000 * 60 * 60,      // get new data from the server once each hour
     recalcMillis: 1000 * 60,            // recalculate current tide height each 1/2 minute
     tickSeconds: 2 * 60 * 60,           // interval for chart ticks
     fromHours: -12,                     // use a window of tide information n hours behind now()

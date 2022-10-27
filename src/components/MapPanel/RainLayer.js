@@ -5,7 +5,7 @@ import axios from "axios";
 
 const settings = {
     startupMillis: 10000,           // soft start
-    refreshMillis: 1000 * 60 * 5,   // updates
+    refreshMillis: 1000 * 60 * 10,  // updates
     animateMillis: 500,             // animation
     animateFrames: 1,               // 5, TODO animation is disabled temporarily
     animateTotal: 10,
