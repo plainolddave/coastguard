@@ -2,12 +2,12 @@ import React from 'react';
 import { useMapEvents } from 'react-leaflet';
 import { PositionString } from './Utils'
 
-function round(number, precision = 0) {
-    return (
-        Math.round(number * Math.pow(10, precision) + Number.EPSILON) /
-        Math.pow(10, precision)
-    );
-}
+//function round(number, precision = 0) {
+//    return (
+//        Math.round(number * Math.pow(10, precision) + Number.EPSILON) /
+//        Math.pow(10, precision)
+//    );
+//}
 
 //function formatLatitude(latitude) {
 //    const direction = latitude > 0 ? 'N' : 'S';
