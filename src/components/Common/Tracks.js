@@ -188,7 +188,6 @@ function Tracks({
                             opacity={settings.marker.opacity}
                         >
                             <Tooltip
-                                className="tooltip"
                                 offset={settings.tooltip.offset}
                                 key={`tt_${vessel.mmsi}`}
                                 opacity={settings.tooltip.opacity}
