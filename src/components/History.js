@@ -1,4 +1,5 @@
-import React, { useState, useCallback, useEffect, useMemo } from "react";
+import React, { useState, useCallback, useMemo } from "react";
+//import React, { useState, useCallback, useEffect, useMemo } from "react";
 import { MapContainer, LayersControl, TileLayer } from "react-leaflet";
 import Control from "react-leaflet-custom-control";
 import Select from 'react-select'
@@ -44,7 +45,8 @@ function History() {
     const [timeframe, setTimeframe] = useState(settings.timeframe[0]);
 
     function SideBar({ map }) {
-        const [position, setPosition] = useState(() => map.getCenter())
+
+        //const [position, setPosition] = useState(() => map.getCenter())
 
         const onClick = useCallback(() => {
             map.setView(settings.position, settings.zoom)
