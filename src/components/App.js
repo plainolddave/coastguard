@@ -14,7 +14,7 @@ function App() {
                     <Route index element={<Dashboard />} />
                     <Route path="dashboard" element={<Dashboard />} />
                     <Route path="history" element={<History />} />
-                    <Route path="*" element={<NotFound />} />
+                    <Route path="*" element={<Dashboard />} />
                 </Route>
             </Routes>
         </BrowserRouter>

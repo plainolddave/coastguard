@@ -2,10 +2,9 @@ import React, { useState } from "react";
 import { MapContainer, LayersControl } from "react-leaflet";
 import Control from "react-leaflet-custom-control";
 import Next from "./../Common/Next"
+import Coords from "./../Common/Coords"
 import BaseLayers from "./BaseLayers";
 import OverLayers from "./OverLayers";
-
-
 
 const settings = {
     position: { lat: -27.33, lng: 153.27 },
@@ -44,6 +43,9 @@ function MapPanel(props) {
             <Control position="bottomleft">
                 <Next link="/history" icon="Globe" classes="next-button" styles={{ color: "#999", size: "30px" }}/>
             </Control>
+            <div className="leaflet-bottom leaflet-right">
+                <Coords />
+            </div>
         </MapContainer >
     )
 }

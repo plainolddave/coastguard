@@ -8,6 +8,7 @@ import { IconContext } from "react-icons";
 import Icon from "./Common/Icon"
 import Next from "./Common/Next"
 import Tracks from "./Common/Tracks"
+import Coords from './Common/Coords';
 import BaseLayers from "./MapPanel/BaseLayers";
 
 const settings = {
@@ -27,6 +28,7 @@ const settings = {
         { value: 'ALL', label: 'All Vessels' }
     ],
     timeframe: [
+        { value: '24H', label: '24 hours' },
         { value: '7D', label: '7 days' },
         { value: '30D', label: '30 days' },
         { value: '0M', label: 'This month' },
@@ -139,6 +141,9 @@ function History() {
                     <Control position="bottomleft">
                         <Next key="btn-index" link="/dashboard" icon="Globe" classes="next-button" styles={{ color: "#999", size: "30px" }} />
                     </Control>
+                    <div className="leaflet-bottom leaflet-right">
+                        <Coords />
+                    </div>
                 </MapContainer>
             </div>
         ),

@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useMemo } from "react";
 import { LayerGroup, Polyline, Marker, Popup, Tooltip, CircleMarker } from "react-leaflet";
 import axios from "axios";
 import * as dayjs from 'dayjs'
-import { Log } from "./Utils"
+import { Log, PositionString } from "./Utils"
 import { GetIcon, GetColor } from "./../MapPanel/TrackIcon"
 
 const settings = {
@@ -56,6 +56,10 @@ function Tracks({
         // timeframes use fixed intervals & bins 
         let minVal = 1;
         switch (timeframe) {
+            case '24H':  // last day
+                url += `?from=${dayjs().subtract(24, "hour").unix()}`;
+                minVal = 1;
+                break;
             case '7D':  // last 7 days
                 url += `?from=${dayjs().subtract(7, "day").unix()}`;
                 minVal = 1;
@@ -70,12 +74,12 @@ function Tracks({
                 break;
             case '1M':  // last calendar month
                 url += `?from=${dayjs().subtract(1, "month").startOf("month").unix()}`;
-                url += `?to=${dayjs().startOf("month").unix()}`;
+                url += `&to=${dayjs().startOf("month").unix()}`;
                 minVal = 2;
                 break;
             case '2M':  // last 2 calendar months
                 url += `?from=${dayjs().subtract(2, "month").startOf("month").unix()}`;
-                url += `?to=${dayjs().startOf("month").unix()}`;
+                url += `&to=${dayjs().startOf("month").unix()}`;
                 minVal = 2;
                 break;
             case 'All': // all time
@@ -86,7 +90,7 @@ function Tracks({
                 minVal = 1;
                 break;
         }
-        url += `?&mins=${ mins === "auto" ? minVal : mins }`
+        url += `&mins=${mins === "auto" ? minVal : mins}`;
 
         // sog
         if (sog !== 0) {
@@ -175,7 +179,8 @@ function Tracks({
                                 <Popup key={`pu_${vessel.mmsi}`}>
                                     Name: {vessel.name}<br />
                                     MMSI: {vessel.mmsi}<br />
-                                    Time: {dayjs.unix(point.dt).format("HH:mm")}<br />
+                                    Time: {dayjs.unix(point.dt).format("DD MMM YYYY HH:mm")}<br />
+                                    Pos: {PositionString(point.lat, point.lon)}<br />
                                     Course: {point.cog}<br />
                                     Speed: {point.sog} kts<br />
                                 </Popup>

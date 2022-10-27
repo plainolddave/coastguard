@@ -33,7 +33,8 @@ body {
     border-radius: 10px;
     background-color: black;
     overflow: hidden;
-/*    background-color: #282c34;*/
+    min-height: 900px;
+    /*    background-color: #282c34;*/
 }
 
 .map {
@@ -48,6 +49,7 @@ body {
     order: 3;
     z-index: 10;
     width: 350px;
+    min-height: 900px;
 }
 
 .chart {
@@ -68,13 +70,13 @@ body {
     .page {
         flex-wrap: wrap;
         flex-direction: column;
+        align-items: center;
         /*border: solid 1px red;*/
     }
 
-    .panel {
+    .map {
         width: calc(100vw - (100vw - 100%) - 6px);
     }
-
     .stats {
         flex: 1 1 auto;
         order: 2;

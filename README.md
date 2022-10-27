@@ -29,13 +29,6 @@ npm install react-icons --save
 npm install recharts
 npm install react-router-dom
 npm install react-select
-[TBC...
-npm install @mui/icons-material
-npm install @mui/material @emotion/react @emotion/styled
-npm i leaflet-easybutton
-npm i font-awesome 
-...]
-
 ```
 For more instructions on the front-end React App [look here](Netlify_Instructions.md)  
 
@@ -86,18 +79,20 @@ For more info look at:
 - [Useful info on screen resolution](https://www.reddit.com/r/AndroidTV/comments/rmqsvq/so_i_have_a_4k_android_tv_but_when_checking_stats/)
 - [Useful info on screen resolution](https://www.reddit.com/r/AndroidTV/comments/rmqsvq/so_i_have_a_4k_android_tv_but_when_checking_stats/)
 
-
 ## Issues and improvements
 
-- really hate the splash screen for IOTWE
-- look at adding a legend for each color
-- add a button to animate rain
+- ~~fix the default routing to point to the dashboard page~~
+- remove API keys from lambda function
+- add a legend key and different colors for QF2 selection on history page 
+- expand the capacity of the positions collection in mongoDB
+- ~~add a button to animate rain~~
 - shorten the variable names all round e.g. for wind
-- change the default height to the viewport (i.e. excluding menu bars etc, instead of the whole screen)
-- add pressure and wind direction to the forecast panels
+- ~~change the default height to the viewport (i.e. excluding menu bars etc, instead of the whole screen)~~
+- ~~add pressure and wind direction to the forecast panels~~
 - put the 'weather refreshed' time somewhere inconspicuous
 - add tooltips back into each chart
-- "other" tracks can go back to grey?
+- ~~add the full date and time for tooltips on the history page~~
+- ~~"other" tracks can go back to grey?~~
 - experiment with adding all other AIS tracks in view
 - experiment with adding operational areas
 - add a config button to switch between live and BOM data source
@@ -105,7 +100,7 @@ For more info look at:
 - this mini-map is kind of cool https://react-leaflet.js.org/docs/example-react-control/
 - add timestamps in the bottom corner of the map
 - look at a higher contrast map or marine chart layer
-- sort out a mobile version
+- ~~sort out a mobile version~~
 - ~~make the label next to each icon about midway up the bubble~~
 - ~~add a button or something to the map to click and drag the screen up on a mobile~~
 - ~~change the default time to 24 hours or so (play around with this)~~

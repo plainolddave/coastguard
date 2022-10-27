@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { LayerGroup, Polyline, Marker, Popup, Tooltip, CircleMarker } from "react-leaflet";
 import * as dayjs from 'dayjs'
 import axios from "axios";
-import { GetTimeOffset, Log } from "./../Common/Utils"
+import { GetTimeOffset, Log, PositionString } from "./../Common/Utils"
 import { GetIcon, GetColor } from "./TrackIcon"
 
 const settings = {
@@ -10,7 +10,7 @@ const settings = {
     refreshMillis: 1000 * 60 * 2,   // updates every n minutes
     maxErrors: 5,                   // max errors before clearing tracks
     fromHours: -12,                 // use a window of track info behind now()
-    sog: 0.5,                       // minimum speed over ground
+    sog: 0.2,                       // minimum speed over ground
     url: "https://coastguard.netlify.app/.netlify/functions/fleet",
     track: {
         weight: 4,
@@ -85,7 +85,7 @@ class TrackLayer extends Component {
 
         const timeFrom = GetTimeOffset(settings.fromHours);
         const dtFrom = Math.floor(timeFrom.getTime() / 1000);
-        let url = `${settings.url}?from=${dtFrom}&"sog=${settings.sog}`;
+        let url = `${settings.url}?from=${dtFrom}&sog=${settings.sog}`;
         Log("track", url);
 
         axios.get(url, {
@@ -152,6 +152,7 @@ class TrackLayer extends Component {
                                     Name: {vessel.name}<br />
                                     MMSI: {vessel.mmsi}<br />
                                     Time: {dayjs.unix(point.dt).format("HH:mm")}<br />
+                                    Pos: {PositionString(point.lat, point.lon)}<br />
                                     Course: {point.cog}<br />
                                     Speed: {point.sog} kts<br />
                                 </Popup>
