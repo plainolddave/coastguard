@@ -81,25 +81,30 @@ For more info look at:
 
 ## Issues and improvements
 
-- ~~fix the default routing to point to the dashboard page~~
+To do now:
 - remove API keys from lambda function
-- add a legend key and different colors for QF2 selection on history page 
-- expand the capacity of the positions collection in mongoDB
-- ~~add a button to animate rain~~
+- add a legend key and different icon colors on the history page 
+- expand the capacity of the positions collection in mongoDB to 3 months
+- add a config setting to switch between live and BOM data source
+
+Maybe later:
 - shorten the variable names all round e.g. for wind
-- ~~change the default height to the viewport (i.e. excluding menu bars etc, instead of the whole screen)~~
-- ~~add pressure and wind direction to the forecast panels~~
 - put the 'weather refreshed' time somewhere inconspicuous
 - add tooltips back into each chart
+- experiment with adding all other AIS tracks in view
+- experiment with adding operational areas 
+- this mini-map is kind of cool https://react-leaflet.js.org/docs/example-react-control/
+- look at a higher contrast map or marine chart layer
+
+Done:
+- ~~add position in the bottom corner of the map~~
+- ~~add a menu and extra tab pages for historical tracks~~
+- ~~fix the default routing to point to the dashboard page~~
+- ~~add a button to animate rain~~
+- ~~change the default height to the viewport (i.e. excluding menu bars etc, instead of the whole screen)~~
+- ~~add pressure and wind direction to the forecast panels~~
 - ~~add the full date and time for tooltips on the history page~~
 - ~~"other" tracks can go back to grey?~~
-- experiment with adding all other AIS tracks in view
-- experiment with adding operational areas
-- add a config button to switch between live and BOM data source
-- add a menu and extra tab pages for historical tracks 
-- this mini-map is kind of cool https://react-leaflet.js.org/docs/example-react-control/
-- add timestamps in the bottom corner of the map
-- look at a higher contrast map or marine chart layer
 - ~~sort out a mobile version~~
 - ~~make the label next to each icon about midway up the bubble~~
 - ~~add a button or something to the map to click and drag the screen up on a mobile~~
