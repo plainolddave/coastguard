@@ -222,7 +222,7 @@ class TideChart extends React.Component {
         return (
             <div className="wrapper">
                 <div className="label left">Tide</div>
-                <ResponsiveContainer width="100%" height={150}>
+                <ResponsiveContainer width="100%" height={this.props.chartHeight}>
                     <AreaChart data={this.state.heights}
                         margin={{ top: 20, right: 10, left: 0, bottom: 0 }}>
                         <defs>
@@ -293,5 +293,9 @@ class TideChart extends React.Component {
         );
     }
 }
+
+TideChart.defaultProps = {
+    chartHeight: 200
+};
 
 export default TideChart;

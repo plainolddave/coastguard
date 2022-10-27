@@ -3,8 +3,8 @@ import { MapContainer, LayersControl, TileLayer } from "react-leaflet";
 import Control from "react-leaflet-custom-control";
 import Select from 'react-select'
 import makeAnimated from 'react-select/animated';
-//import AsyncSelect from 'react-select/async';
-
+import { IconContext } from "react-icons";
+import Icon from "./Common/Icon"
 import Next from "./Common/Next"
 import Tracks from "./Common/Tracks"
 import BaseLayers from "./MapPanel/BaseLayers";
@@ -50,16 +50,16 @@ function History() {
             map.setView(settings.position, settings.zoom)
         }, [map])
 
-        const onMove = useCallback(() => {
-            setPosition(map.getCenter())
-        }, [map])
+        //const onMove = useCallback(() => {
+        //    setPosition(map.getCenter())
+        //}, [map])
 
-        useEffect(() => {
-            map.on('move', onMove)
-            return () => {
-                map.off('move', onMove)
-            }
-        }, [map, onMove])
+        //useEffect(() => {
+        //    map.on('move', onMove)
+        //    return () => {
+        //        map.off('move', onMove)
+        //    }
+        //}, [map, onMove])
 
         const handleOrgChange = (selected) => {
             setOrg(selected);
@@ -71,11 +71,13 @@ function History() {
             // console.log(`Time selected:`, JSON.stringify(selected));
         }
 
+        //<p>lat: {position.lat.toFixed(4)}</p>
+        //<p>lon: {position.lng.toFixed(4)}</p>
+        //<p><button className="dropbtn" onClick={onClick}>Reset</button></p>
+
         return (
             <div className="sidebar panel">
-                <p>lat: {position.lat.toFixed(4)}</p>
-                <p>lon: {position.lng.toFixed(4)}</p>
-                <p><button className="dropbtn" onClick={onClick}>Reset</button></p>
+
                 <p className="sidebar-label left">Fleet:</p>
                 <Select
                     className="select-btn left"
@@ -93,6 +95,11 @@ function History() {
                     defaultValue={timeframe}
                     onChange={handleTimeChange}
                 />
+                <button className="sidebar-reset" onClick={onClick}>
+                    <IconContext.Provider value={{ color: "#999", size: "16px" }}>
+                        <Icon name={"Undo"} />
+                    </IconContext.Provider>
+                </button>
             </div>
         )
     }
@@ -145,39 +152,3 @@ function History() {
 }
 
 export default History;
-
-
-//function History(props) {
-
-//    const [map, setMap] = useState(null);
-
-//    return (
-//        < MapContainer
-//            ref={setMap}
-//            zoom={settings.zoom}
-//            center={settings.position}
-//            attributionControl={settings.attribution}
-//            style={settings.style}
-//            scrollWheelZoom={settings.useScrollWheel} >
-//            <LayersControl position="topright">
-//                <BaseLayers />
-//                <LayersControl.Overlay name="QF2" checked>
-//                    <TrackLayer org="QF2" />
-//                </LayersControl.Overlay>
-//                <LayersControl.Overlay name="Marine Rescue" checked>
-//                    <TrackLayer org="QF2" />
-//                </LayersControl.Overlay>
-//                <LayersControl.Overlay name="All" checked>
-//                    <TrackLayer org="QF2" />
-//                </LayersControl.Overlay>
-//                <LayersControl.Overlay name="Nav Marks">
-//                    <TileLayer
-//                        url="https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png"
-//                    />
-//                </LayersControl.Overlay>
-//            </LayersControl>
-//        </MapContainer >
-//    )
-//}
-
-

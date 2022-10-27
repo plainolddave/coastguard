@@ -21,7 +21,8 @@ const settings = {
     url: "https://coastguard.netlify.app/.netlify/functions/weather",
     fontSize: 16,
     fontColor: "white",
-    numberPrecision: 1
+    numberPrecision: 1,
+    chartHeight: 200
 };
 
 const initialData = [{ "value": 1013.2, "dt": 0 }, { "value": 1013.2, "dt": 1000 }];
@@ -33,7 +34,9 @@ const initialData = [{ "value": 1013.2, "dt": 0 }, { "value": 1013.2, "dt": 1000
  * data: [{"value":1021,"dt":1665185100},{"value":1022,"dt":1665185580},... ]
  *
  * */
-function PressureChart() {
+function PressureChart({
+    chartHeight = settings.chartHeight,
+    ...restProps }) {
 
     // ----------------------------------------------------------------------------------------------------
     // props, state, refs
@@ -105,7 +108,7 @@ function PressureChart() {
     return (
         <div className="wrapper">
             <div className="label left">Pressure</div>
-            <ResponsiveContainer width="100%" height={150}>
+            <ResponsiveContainer width="100%" height={chartHeight}>
                 <AreaChart data={data}
                     margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                     <defs>

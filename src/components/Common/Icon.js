@@ -35,6 +35,10 @@ import {
 } from "react-icons/go";
 
 import {
+	FaUndo
+} from "react-icons/fa";
+
+import {
 	GiPositionMarker
 } from "react-icons/gi";
 
@@ -101,6 +105,8 @@ function Icon({ name }) {
 					return <GoHistory />;
 				case 'Calendar':
 					return <GoCalendar />;
+				case 'Undo':
+					return <FaUndo />;
 				default:
 					return <GoBug />;
 			}

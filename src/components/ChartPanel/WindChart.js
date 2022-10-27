@@ -23,11 +23,16 @@ const settings = {
     fontSize: 16,
     fontColor: "white",
     numberPrecision: 0,
-    windRoseWidth: 350,
-    windRoswHeight: 350
+    windRoseWidth: 400,
+    windRoseHeight: 400,
+    chartHeight: 200
 }
 
-function WindChart() {
+function WindChart({
+    windRoseWidth = settings.windRoseWidth,
+    windRoseHeight = settings.windRoseHeight,
+    chartHeight = settings.chartHeight,
+    ...restProps }) {
 
     // ----------------------------------------------------------------------------------------------------
     // props, state, refs
@@ -100,9 +105,9 @@ function WindChart() {
             <WindRose
                 data={data}
                 precision={settings.numberPrecision}
-                width={settings.windRoseWidth}
-                height={settings.windRoseHeight} />
-            <ResponsiveContainer width="100%" height={150}>
+                width={windRoseWidth}
+                height={windRoseHeight} />
+            <ResponsiveContainer width="100%" height={chartHeight}>
                 <AreaChart data={data}
                     margin={{ top: 0, right: 10, left: 0, bottom: 0 }}>
                     <defs>

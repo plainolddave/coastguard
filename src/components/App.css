@@ -277,14 +277,30 @@ label {
 /* ------------------------------------------------------------ */
 
 .sidebar {
-    font-size: 16px;
+    font-size: 12px;
     font-weight: 500;
-    line-height: 110%;
+    line-height: 100%;
     color: #333;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    position: relative;
 }
 
 .sidebar-label {
     color: #FFF;
 }
+
+.sidebar-reset {
+    width: 30px;
+    height: 30px;
+    margin: 0px;
+    padding: 3px;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+
+/* ------------------------------------------------------------ */
+
 
 
