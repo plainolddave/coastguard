@@ -19,7 +19,7 @@ const settings = {
     style: { height: "100%", width: "100%" },
     attribution: false,
     startupMillis: 1000,             // (mutable) soft start timer
-    refreshMillis: 1000 * 60 * 5,    // (mutable) updates every n minutes 
+    refreshMillis: 1000 * 60 * 10,   // (mutable) updates every n minutes 
     minimumSOG: 0.2,                 // (mutable) minimum speed over ground
     minuteBins: "auto",              // (mutable) group positions into bins of n minutes
     fleets: [

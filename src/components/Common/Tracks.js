@@ -83,6 +83,7 @@ function Tracks({
                 minVal = 2;
                 break;
             case 'All': // all time
+                url += `?from=0`;
                 minVal = 5;
                 break;
             default:    // last 12 hours
@@ -99,7 +100,7 @@ function Tracks({
         // org
         url += `&org=${org}`;
 
-        Log("tracks", `refresh org:${org} sog: ${sog} time: ${timeframe} mins: ${mins} url: ${url}`);
+        Log("history", `refresh org:${org} sog: ${sog} time: ${timeframe} mins: ${mins} url: ${url}`);
         requestRef.current.cancel();
         requestRef.current = axios.CancelToken.source();
 
@@ -121,10 +122,10 @@ function Tracks({
                     vessel.pos = vessel.track[0];
                 });
                 setTracks(tracks);
-                Log("track", "refresh ok");
+                Log("history", "refresh ok");
             })
             .catch((err) => {
-                Log("track refresh error", err);
+                Log("history refresh error", err);
             })
             .finally(() => {
                 requestRef.current = axios.CancelToken.source()
