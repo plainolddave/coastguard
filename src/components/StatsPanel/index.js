@@ -80,6 +80,9 @@ class StatsPanel extends Component {
 
     refresh = () => {
 
+        // suspend refresh when page is not visible
+        if (!this.props.isVisible) return;
+
         //Get the current weather observations
         Log("stats", settings.url);
         axios.get(settings.url)
@@ -121,7 +124,7 @@ class StatsPanel extends Component {
                     sunset={stats.sunset_dt}
                 />
                 <Spacer height={settings.spacerHeight2} width={settings.spacerWidth} />
-                <Forecast />
+                <Forecast isVisible={this.props.isVisible} />
             </>
         )
     }

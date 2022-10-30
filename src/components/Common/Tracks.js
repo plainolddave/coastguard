@@ -41,6 +41,7 @@ function Tracks({
     org = settings.defaultOrg,
     sog = settings.defaultMinimumSOG,
     mins = settings.defaultMinuteBins,
+    isVisible = true,
     ...restProps }) {
 
     const startupTimer = useRef(null);
@@ -49,6 +50,9 @@ function Tracks({
     const [tracks, setTracks] = useState([]);
 
     function refresh() {
+
+        // only animate if the page is active
+        if (!isVisible) return;
 
         // from
         let url = settings.url;
@@ -91,7 +95,8 @@ function Tracks({
                 minVal = 1;
                 break;
         }
-        url += `&mins=${mins === "auto" ? minVal : mins}`;
+        minVal = mins === "auto" ? minVal : mins;
+        url += `&mins=${minVal}`;
 
         // sog
         if (sog !== 0) {
@@ -113,13 +118,36 @@ function Tracks({
                 let tracks = response.data.tracks;
                 tracks.forEach((vessel) => {
                     vessel.track.sort((a, b) => b.dt - a.dt);
-                    let line = [];
-                    vessel.track.forEach(t => {
-                        let p = [t.lat, t.lon];
-                        line.push(p);
-                    });
-                    vessel.line = line;
                     vessel.pos = vessel.track[0];
+
+                    // check track, and if more than three missed transmissions break
+                    // the track into individual segments to avoid large jumps in pos
+                    let lines = [];
+                    let segment = null;
+                    let segmentDt = 0;
+                    const segmentMax = 3 * minVal * 60;
+                    vessel.track.forEach(t => {
+
+                        // start a new line segment
+                        const interval = Math.abs(t.dt - segmentDt); 
+                        if (interval > segmentMax) {
+                            if (segment != null && segment.length > 1) {
+                                lines.push(segment);
+                            }
+                            segment = [];
+                        }
+
+                        // push the point to a segment
+                        let p = [t.lat, t.lon];
+                        segmentDt = t.dt;
+                        segment.push(p);
+                    });
+
+                    // clean up
+                    if (segment != null && segment.length > 1) {
+                        lines.push(segment);
+                    }
+                    vessel.lines = lines;
                 });
                 setTracks(tracks);
                 Log("history", "refresh ok");
@@ -151,13 +179,13 @@ function Tracks({
         return () => {
             clearTimeout(startupTimer.current);
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [startupMillis, refreshMillis]);
 
     // refresh track data when org or timeframes change
     useEffect(() => {
         refresh();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [org, timeframe]);
 
     const displayTracks = useMemo(
@@ -165,11 +193,13 @@ function Tracks({
             <LayerGroup>
                 {tracks.map((vessel, index) =>
                     <LayerGroup key={`lg_${vessel.mmsi}`}>
-                        <Polyline
-                            key={`tk_${vessel.mmsi}`}
-                            pathOptions={{ weight: settings.track.weight, opacity: settings.track.opacity, color: GetColor(vessel.info.color) }}
-                            positions={vessel.line}
-                        />
+                        {vessel.lines.map((segment, index) =>
+                            <Polyline
+                                key={`tk_${vessel.mmsi}_${index}`}
+                                pathOptions={{ weight: settings.track.weight, opacity: settings.track.opacity, color: GetColor(vessel.info.color) }}
+                                positions={segment}
+                            />
+                        )}
                         {vessel.track.map((point, index) =>
                             <CircleMarker
                                 key={`cm_${vessel.mmsi}_${point.dt}`}
@@ -204,7 +234,7 @@ function Tracks({
                             <Popup key={`pp_${vessel.mmsi}`}>
                                 Name: {vessel.info.name}<br />
                                 MMSI: {vessel.mmsi}<br />
-                                Time: {dayjs.unix(vessel.pos.dt).format("HH:mm")}<br />
+                                Time: {dayjs.unix(vessel.pos.dt).format("DD MMM YYYY HH:mm")}<br />
                                 Course: {vessel.pos.cog}<br />
                                 Speed: {vessel.pos.sog} kts<br />
                             </Popup>
@@ -222,8 +252,5 @@ function Tracks({
         </div>
     )
 }
-
-//{/*{displayMap}*/ }
-//{/*{map ? <SideBar map={map} /> : null}*/ }
 
 export default Tracks;

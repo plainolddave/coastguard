@@ -1,20 +1,24 @@
 import React from "react"
+import { usePageVisibility } from 'react-page-visibility';
 import MapPanel from "./../components/MapPanel";
 import StatsPanel from "./../components/StatsPanel";
 import ChartPanel from "./../components/ChartPanel";
 import "./../index.css"
 
 function Dashboard() {
+
+    const isVisible = usePageVisibility();
+
     return (
         <div className="page">
             <div className="map panel">
-                <MapPanel />
+                <MapPanel isVisible={isVisible} />
             </div>
             <div className="chart panel">
-                <ChartPanel />
+                <ChartPanel isVisible={isVisible} />
             </div>
             <div className="stats panel">
-                <StatsPanel />
+                <StatsPanel isVisible={isVisible} />
             </div>
         </div>
     );

@@ -15,17 +15,11 @@ const settings = {
     attribution: false
 }
 
-function MapPanel(props) {
+function MapPanel({
+    isVisible = true,
+    ...restProps }) {
 
     const [map, setMap] = useState(null)
-
-    //const handleClick = (name) => {
-    //    if (active === name) {
-    //        setActive(null);
-    //    } else {
-    //        setActive(name);
-    //    }
-    //};
 
     return (
         < MapContainer
@@ -38,7 +32,7 @@ function MapPanel(props) {
         >
             <LayersControl position="topright">
                 <BaseLayers /> 
-                {map ? <OverLayers map={map} isChecked="Satellite" /> : <></>} 
+                {map ? <OverLayers map={map} isChecked="Satellite" isVisible={isVisible} /> : <></>} 
             </LayersControl>
             <Control position="bottomleft">
                 <Next link="/history" icon="Globe" classes="next-button" styles={{ color: "#999", size: "30px" }}/>

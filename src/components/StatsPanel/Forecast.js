@@ -20,7 +20,7 @@ const settings = {
  * "gust":14.7}},...etc...]
  * 
  * */
-function Forecast() {
+function Forecast({ isVisible = true }) {
 
     let [forecast, setForecast] = useState([]);
 
@@ -38,6 +38,9 @@ function Forecast() {
     }, []);
 
     function refresh() {
+
+        // suspend refresh when page is not visible
+        if (!isVisible) return;
 
         const dtFrom = Math.floor(Date.now() / 1000 - 60 * 60 * 3); // now minus 3 hours
         const dtTo = Math.floor(Date.now() / 1000 + 60 * 60 * 6); // now plus 6 hours

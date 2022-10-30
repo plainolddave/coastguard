@@ -83,6 +83,9 @@ class TrackLayer extends Component {
 
     refresh = () => {
 
+        // suspend refresh when page is not visible
+        if (!this.props.isVisible) return;
+
         const timeFrom = GetTimeOffset(settings.fromHours);
         const dtFrom = Math.floor(timeFrom.getTime() / 1000);
         let url = `${settings.url}?from=${dtFrom}&sog=${settings.sog}`;
@@ -97,13 +100,36 @@ class TrackLayer extends Component {
                 let tracks = response.data.tracks;
                 tracks.forEach((vessel) => {
                     vessel.track.sort((a, b) => b.dt - a.dt);
-                    let line = [];
-                    vessel.track.forEach(t => {
-                        let p = [t.lat, t.lon];
-                        line.push(p);
-                    });
-                    vessel.line = line;
                     vessel.pos = vessel.track[0];
+
+                    // check track, and if more than three missed transmissions break
+                    // the track into individual segments to avoid large jumps in pos
+                    let lines = [];
+                    let segment = null;
+                    let segmentDt = 0;
+                    const segmentMax = 3 * 1 * 60;
+                    vessel.track.forEach(t => {
+
+                        // start a new line segment
+                        const interval = Math.abs(t.dt - segmentDt);
+                        if (interval > segmentMax) {
+                            if (segment != null && segment.length > 1) {
+                                lines.push(segment);
+                            }
+                            segment = [];
+                        }
+
+                        // push the point to a segment
+                        let p = [t.lat, t.lon];
+                        segmentDt = t.dt;
+                        segment.push(p);
+                    });
+
+                    // clean up
+                    if (segment != null && segment.length > 1) {
+                        lines.push(segment);
+                    }
+                    vessel.lines = lines;
                 });
 
                 this.setState({
@@ -136,14 +162,16 @@ class TrackLayer extends Component {
             <LayerGroup>
                 {this.state.tracks.map((vessel, index) =>
                     <LayerGroup key={`lg_${vessel.mmsi}`}>
-                        <Polyline
-                            key={`tk_${vessel.mmsi}`}
-                            pathOptions={{ weight: settings.track.weight, opacity: settings.track.opacity, color: GetColor(vessel.info.color) }}
-                            positions={vessel.line}
-                        />
+                        {vessel.lines.map((segment, index) =>
+                            <Polyline
+                                key={`tk_${vessel.mmsi}_${index}`}
+                                pathOptions={{ weight: settings.track.weight, opacity: settings.track.opacity, color: GetColor(vessel.info.color) }}
+                                positions={segment}
+                            />
+                        )}
                         {vessel.track.map((point, index) =>
                             <CircleMarker
-                                key={`cm_${vessel.mmsi}_${point.dt}`}
+                                key={`cm_${vessel.mmsi}_${index}`}
                                 center={point}
                                 radius={settings.circle.radius}
                                 pathOptions={{ weight: settings.circle.weight, opacity: settings.circle.opacity, color: GetColor(vessel.info.color) }}

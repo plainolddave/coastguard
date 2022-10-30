@@ -13,6 +13,10 @@ const settings = {
 
 class ChartPanel extends Component {
 
+    constructor(props) {
+        super(props);
+    }
+
     render = () => {
         return (
             <>
@@ -20,9 +24,16 @@ class ChartPanel extends Component {
                     windRoseWidth={settings.windRoseWidth}
                     windRoseHeight={settings.windRoseHeight}
                     chartHeight={settings.chartHeight}
+                    isVisible={this.props.isVisible} 
                 />
-                <PressureChart chartHeight={settings.chartHeight} />
-                <TideChart chartHeight={settings.tideHeight} />
+                <PressureChart
+                    chartHeight={settings.chartHeight}
+                    isVisible={this.props.isVisible}
+                />
+                <TideChart
+                    chartHeight={settings.tideHeight}
+                    isVisible={this.props.isVisible} 
+                />
             </>
         )
     }

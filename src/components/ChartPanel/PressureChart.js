@@ -36,6 +36,7 @@ const initialData = [{ "value": 1013.2, "dt": 0 }, { "value": 1013.2, "dt": 1000
  * */
 function PressureChart({
     chartHeight = settings.chartHeight,
+    isVisible = true,
     ...restProps }) {
 
     // ----------------------------------------------------------------------------------------------------
@@ -59,6 +60,9 @@ function PressureChart({
     }, []);
 
     function refresh() {
+
+        // suspend refresh when page is not visible
+        if (!isVisible) return;
 
         const timeFrom = GetTimeOffset(settings.fromHours);
         const dtFrom = Math.floor(timeFrom.getTime() / 1000);

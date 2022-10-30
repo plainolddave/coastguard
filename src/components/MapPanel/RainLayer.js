@@ -82,6 +82,9 @@ class RainLayer extends Component {
 
     refresh = () => {
 
+        // suspend refresh when page is not visible
+        if (!this.props.isVisible) return;
+
         // Get the current timestamps from https://api.rainviewer.com/public/maps.json
         // as an array of unix timestamps like [1662181200, 1662181800, 1662182400 ... ]
         axios.get("https://api.rainviewer.com/public/maps.json", {

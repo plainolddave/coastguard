@@ -128,6 +128,9 @@ class TideChart extends React.Component {
 
     refresh() {
 
+        // suspend refresh when page is not visible
+        if (!this.props.isVisible) return;
+
         const timeFrom = GetTimeOffset(settings.fromHours);
         const dtFrom = Math.floor(timeFrom.getTime() / 1000);
         const timeTo = GetTimeOffset(settings.toHours);
@@ -160,7 +163,7 @@ class TideChart extends React.Component {
     // ----------------------------------------------------------------------------------------------------
 
     componentDidMount() {
-        Log("tide", "mounted");
+        //Log("tide", "mounted");
         setTimeout(
             () => {
                 // initial refresh
@@ -185,7 +188,7 @@ class TideChart extends React.Component {
         clearInterval(this.recalcTimer);
         this.refreshTimer = null;
         this.recalcTimer = null;
-        Log("tide", "unmounted");
+        //Log("tide", "unmounted");
     }
 
     // ----------------------------------------------------------------------------------------------------

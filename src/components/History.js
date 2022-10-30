@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useMemo } from "react";
-//import React, { useState, useCallback, useEffect, useMemo } from "react";
 import { MapContainer, LayersControl, TileLayer } from "react-leaflet";
+import { usePageVisibility } from 'react-page-visibility';
 import Control from "react-leaflet-custom-control";
 import Select from 'react-select'
 import makeAnimated from 'react-select/animated';
@@ -42,42 +42,25 @@ const animatedComponents = makeAnimated();
 
 function History() {
 
+    const isVisible = usePageVisibility();
+
     const [map, setMap] = useState(null);
     const [org, setOrg] = useState(settings.fleets[1]);
     const [timeframe, setTimeframe] = useState(settings.timeframe[0]);
 
     function SideBar({ map }) {
 
-        //const [position, setPosition] = useState(() => map.getCenter())
-
         const onClick = useCallback(() => {
             map.setView(settings.position, settings.zoom)
         }, [map])
 
-        //const onMove = useCallback(() => {
-        //    setPosition(map.getCenter())
-        //}, [map])
-
-        //useEffect(() => {
-        //    map.on('move', onMove)
-        //    return () => {
-        //        map.off('move', onMove)
-        //    }
-        //}, [map, onMove])
-
         const handleOrgChange = (selected) => {
             setOrg(selected);
-            // console.log(`Org selected:`, JSON.stringify(selected));
         }
 
         const handleTimeChange = (selected) => {
             setTimeframe(selected);
-            // console.log(`Time selected:`, JSON.stringify(selected));
         }
-
-        //<p>lat: {position.lat.toFixed(4)}</p>
-        //<p>lon: {position.lng.toFixed(4)}</p>
-        //<p><button className="dropbtn" onClick={onClick}>Reset</button></p>
 
         return (
             <div className="sidebar panel">
@@ -130,6 +113,7 @@ function History() {
                                 org={org.value}
                                 sog={settings.minimumSOG}
                                 mins={settings.minuteBins}
+                                isVisible={isVisible}
                             />
                         </LayersControl.Overlay>
                         <LayersControl.Overlay name="Nav Marks">

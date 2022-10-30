@@ -3,14 +3,14 @@ import { LayersControl, TileLayer } from "react-leaflet";
 import RainLayer from "./RainLayer"
 import TrackLayer from "./TrackLayer"
 
-function OverLayers({ map }) {
+function OverLayers({ map, isVisible = true }) {
     return (
         <>
             <LayersControl.Overlay name="Rain">
-                <RainLayer map={map} />
+                <RainLayer map={map} isVisible={isVisible} />
             </LayersControl.Overlay>
             <LayersControl.Overlay name="Vessels" checked>
-                <TrackLayer map={map} />
+                <TrackLayer map={map} isVisible={isVisible} />
             </LayersControl.Overlay>
             <LayersControl.Overlay name="Nav Marks" checked>
                 <TileLayer

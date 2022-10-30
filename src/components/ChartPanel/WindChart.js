@@ -32,6 +32,7 @@ function WindChart({
     windRoseWidth = settings.windRoseWidth,
     windRoseHeight = settings.windRoseHeight,
     chartHeight = settings.chartHeight,
+    isVisible = true,
     ...restProps }) {
 
     // ----------------------------------------------------------------------------------------------------
@@ -55,6 +56,9 @@ function WindChart({
     }, []);
 
     function refresh() {
+
+        // suspend refresh when page is not visible
+        if (!isVisible) return;
 
         const timeFrom = GetTimeOffset(settings.fromHours);
         const dtFrom = Math.floor(timeFrom.getTime() / 1000);

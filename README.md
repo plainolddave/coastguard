@@ -29,6 +29,7 @@ npm install react-icons --save
 npm install recharts
 npm install react-router-dom
 npm install react-select
+npm install --save react-page-visibility
 ```
 For more instructions on the front-end React App [look here](Netlify_Instructions.md)  
 
@@ -37,11 +38,18 @@ For more instructions on the front-end React App [look here](Netlify_Instruction
 To do now:
 - remove API keys from lambda function
 - add a legend key and different icon colors on the history page 
-- expand the capacity of the positions collection in mongoDB to 3 months
 - add a config setting to switch between live and BOM data source
 - the degrees celcius symbol is seperated from the numerals for some reason
+- ~~turn off data refresh if the page is not visible~~
+- ~~expand the capacity of the positions collection in mongoDB to 3 months~~
+- ~~break up tracks into segments when signal is lost for a while~~
+- write a function to collect names and data of vessels not currently in the database
+- add AISHub data
 
 Maybe later:
+- add a TTL index to signalk->ais->positions to cap data at 3 months
+- allow history to be selected by date range
+- allow history to be selected per individual vessel or group of vessels
 - shorten the variable names all round e.g. for wind
 - put the 'weather refreshed' time somewhere inconspicuous
 - add tooltips back into each chart
