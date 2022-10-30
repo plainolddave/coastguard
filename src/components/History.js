@@ -43,7 +43,6 @@ const animatedComponents = makeAnimated();
 function History() {
 
     const isVisible = usePageVisibility();
-
     const [map, setMap] = useState(null);
     const [org, setOrg] = useState(settings.fleets[1]);
     const [timeframe, setTimeframe] = useState(settings.timeframe[0]);
@@ -131,7 +130,7 @@ function History() {
                 </MapContainer>
             </div>
         ),
-        [map, org, timeframe],
+        [map, org, timeframe, isVisible],
     );
 
     return (

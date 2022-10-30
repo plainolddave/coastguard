@@ -35,6 +35,7 @@ function Forecast({ isVisible = true }) {
                     clearInterval(refreshTimer);
                 };
             }, settings.startupMillis);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     function refresh() {
