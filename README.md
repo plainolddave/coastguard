@@ -36,7 +36,7 @@ For more instructions on the front-end React App [look here](Netlify_Instruction
 ## Issues and improvements
 
 To do now:
-- remove API keys from lambda function
+- ~~remove API keys from lambda function~~
 - ~~add a legend key and different icon colors on the history page~~ 
 - add a config setting to switch between live and BOM data source
 - ~~the degrees celcius symbol is seperated from the numerals for some reason~~
@@ -86,6 +86,7 @@ Done:
 - ~~play with the track dots - they look old fashioned~~
 - ~~fix the scales and labels on the wind and pressure charts (e.g. wind should not go to -0.1)~~
 - ~~sequence the soft start delay (weather & stats & forecast -> wind -> pressure -> tide -> tracks -> rain)~~
+- ~~relook whether to add a label for the wind panel~~
 
 ## Setup for Android TV
 
@@ -133,5 +134,3 @@ For more info look at:
 - [ADB reference guide](https://developer.android.com/studio/command-line/adb)
 - [Useful info on screen resolution](https://www.reddit.com/r/AndroidTV/comments/rmqsvq/so_i_have_a_4k_android_tv_but_when_checking_stats/)
 - [Useful info on screen resolution](https://www.reddit.com/r/AndroidTV/comments/rmqsvq/so_i_have_a_4k_android_tv_but_when_checking_stats/)
-
-- ~~relook whether to add a label for the wind panel~~

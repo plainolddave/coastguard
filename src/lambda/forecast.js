@@ -1,11 +1,13 @@
 import axios from "axios"
 const API_ENDPOINT = "https://ap-southeast-2.aws.data.mongodb-api.com/app/signalk-jtrvz/endpoint/forecast";
+
 const API_CONFIG = {
     headers: {
-        'api-key': 'Eik2e3WiQpKligCnVUJEOPtav9oUUwN8Ai4qEUmICdSc27Q9R6BmAiP94kaNekKi',
+        'api-key': `${process.env.REACT_APP_MONGO_API_KEY}`,
         'Accept': 'application/json'
     }
-}
+} 
+
 export async function handler(event, context) {
 
     try {
