@@ -26,7 +26,7 @@ body {
 
 .panel {
     margin: 3px 3px;
-    padding: 0px;
+    padding: 0px 5px;
     height: calc(100vh - 12px);
     font-size: 16px;
     text-align: center;

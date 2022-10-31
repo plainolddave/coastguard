@@ -37,14 +37,15 @@ For more instructions on the front-end React App [look here](Netlify_Instruction
 
 To do now:
 - remove API keys from lambda function
-- add a legend key and different icon colors on the history page 
+- ~~add a legend key and different icon colors on the history page~~ 
 - add a config setting to switch between live and BOM data source
-- the degrees celcius symbol is seperated from the numerals for some reason
+- ~~the degrees celcius symbol is seperated from the numerals for some reason~~
 - ~~turn off data refresh if the page is not visible~~
 - ~~expand the capacity of the positions collection in mongoDB to 3 months~~
 - ~~break up tracks into segments when signal is lost for a while~~
 - write a function to collect names and data of vessels not currently in the database
 - add AISHub data
+- ~~add a spinner to the history page while its fetchng data~~
 - ~~Fix redirects so browsing history works~~
 - ~~Fix position lat/lon display for track markers~~
 - ~~Make the course display as three digits and degrees symbol~~

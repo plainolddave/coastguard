@@ -9,8 +9,10 @@ function Weather({ icon, label, temperature }) {
         <div className="wrapper weather">
             <img className="icon" src={`icons/${icon}.png`} alt={label} />
             <div className="label">{label}</div>
-            <div className="numeral">{Math.round(temperature)}</div>
-            <div className="celcius">&#959; C</div>
+            <div className="value">
+                <div className="numeral">{Math.round(temperature)}</div>
+                <div className="units">&#959;C</div>
+            </div>
         </div>
     );
 }

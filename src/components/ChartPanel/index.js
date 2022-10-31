@@ -7,8 +7,8 @@ import "./../../index.css"
 const settings = {
     windRoseWidth: 300,
     windRoseHeight: 300,
-    chartHeight: 110,
-    tideHeight: 160
+    chartHeight: 120,
+    tideHeight: 180
 };
 
 class ChartPanel extends Component {

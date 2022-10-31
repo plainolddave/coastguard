@@ -2,19 +2,20 @@ import React, { useState, useCallback, useMemo, useRef, useEffect } from "react"
 import { MapContainer, LayersControl, TileLayer } from "react-leaflet";
 import { usePageVisibility } from 'react-page-visibility';
 import Control from "react-leaflet-custom-control";
+import { IconContext } from "react-icons";
 import Select from 'react-select'
 import makeAnimated from 'react-select/animated';
-import { IconContext } from "react-icons";
 import * as dayjs from 'dayjs'
 import * as axios from 'axios'
 
 import Icon from "./Common/Icon"
 import Next from "./Common/Next"
+import { Log } from "./Common/Utils"
 import Tracks from "./Common/Tracks"
 import Legend from "./Common/Legend"
-import Coords from './Common/Coords';
+import Coords from "./Common/Coords";
+import Loader from "./Common/Loader";
 import BaseLayers from "./MapPanel/BaseLayers";
-import { Log } from "./Common/Utils"
 import { GetColor, GetIcon } from "./MapPanel/TrackIcon"
 
 const settings = {
@@ -58,11 +59,13 @@ const animatedComponents = makeAnimated();
 function History() {
 
     const isVisible = usePageVisibility();
-    const [map, setMap] = useState(null);
-    const [org, setOrg] = useState(settings.fleets[1]);
+
     const [timeframe, setTimeframe] = useState(settings.timeframe[0]);
-    const [tracks, setTracks] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [org, setOrg] = useState(settings.fleets[1]);
     const [colors, setColors] = useState(new Map());
+    const [tracks, setTracks] = useState([]);
+    const [map, setMap] = useState(null);
 
     const startupTimer = useRef(null);
     const refreshTimer = useRef(null);
@@ -73,7 +76,7 @@ function History() {
         // only animate if the page is active
         if (!isVisible) return;
 
-        // from
+        setIsLoading(true);
         let url = settings.url;
 
         // timeframes use fixed intervals & bins 
@@ -133,7 +136,7 @@ function History() {
                     // the track into individual segments to avoid large jumps in pos
 
                     let lines = [];
-                    if (timeframe.lines) {
+                    if (timeframe.line) {
                         let segment = null;
                         let segmentDt = 0;
                         const segmentMax = 3 * timeframe.mins * 60;
@@ -189,6 +192,7 @@ function History() {
             })
             .finally(() => {
                 requestRef.current = axios.CancelToken.source()
+                setIsLoading(false);
             })
     };
 
@@ -307,6 +311,7 @@ function History() {
 
     return (
         <div className="page">
+            <Loader isLoading={isLoading}/>
             {displayMap}
             {map ? <SideBar map={map} /> : null}
         </div>

@@ -96,7 +96,7 @@ label {
     }
 
     .clock > .numeral {
-        font-size: 88px;
+        font-size: 80px;
         text-align: center;
     }
 
@@ -105,13 +105,13 @@ label {
 .weather {
     display: grid;
     border: 0px solid gray;
-    grid-template-columns: 120px auto 30px;
+    grid-template-columns: 120px auto;
     align-items: center;
     justify-items: stretch;
     grid-template-areas:
-        "icon numeral celcius"
-        "icon numeral celcius"
-        "label label label";
+        "icon value"
+        "icon value"
+        "label label";
 }
 
     .weather > .icon {
@@ -130,26 +130,34 @@ label {
         white-space: nowrap;
     }
 
-    .weather > .numeral {
-        grid-area: numeral;
+    .weather > .value {
+        padding-left: 10px;
+        grid-area: value;
         font-size: 120px;
         white-space: nowrap;
+        display: grid;
+        grid-template-areas:
+            "numeral units";
+        align-items: start;
+        justify-items: stretch;
     }
 
-    .weather > .degrees {
-        grid-area: degrees;
-        font-size: 40px;
-    }
+        .weather > .value > .units {
+            grid-area: numeral;
+            font-size: 120px;
+        }
 
-    .weather > .celcius {
-        grid-area: celcius;
-    }
-
+        .weather > .value > .units {
+            padding-top: 16px;
+            grid-area: units;
+            font-size: 32px;
+        }
 /* ------------------------------------------------------------ */
 
 .data-row {
     display: grid;
     border: 0px solid gray;
+    align-items: center;
     grid-template-columns: fit-content(1%) 1fr fit-content(1%) 30px;
     grid-template-areas:
         "icon label value unit";
@@ -203,6 +211,7 @@ label {
         "temp"
         "wind";
     border-top: 1px solid gray;
+    padding-top: 10px;
 }
 
     .forecast-column:nth-of-type(1) {
@@ -308,5 +317,53 @@ label {
 
 /* ------------------------------------------------------------ */
 
+.solid {
+    opacity: 1;
+}
 
+.loader-wrapper {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 990;
+}
 
+.loader-background {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 990;
+    opacity: 0.4;
+    background-color: #3366cc;
+}
+
+.loader-spinner {
+    width: 140px;
+    height: 140px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 995;
+    overflow: hidden;
+}
+
+.loader-div {
+    width: calc(100% - 16px);
+    height: calc(100% - 16px);
+    border: 8px solid rgba(0,0,0,0.05);
+    border-top: 8px solid #0096FF;
+    border-radius: 50%;
+    z-index: 995;
+    animation: rotate 5s linear infinite;
+}
+
+@keyframes rotate {
+    100% {
+        transform: rotate(360deg);
+    }
+}
