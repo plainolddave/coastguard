@@ -1,6 +1,6 @@
 import React from 'react';
 import { useMapEvents } from 'react-leaflet';
-import { PositionString } from './Utils'
+import { PositionToString } from './Utils'
 
 //function round(number, precision = 0) {
 //    return (
@@ -25,7 +25,7 @@ function Coords() {
     const formattedCoordinates =
         mousePoint === null
             ? ''
-            : PositionString(mousePoint.lat, mousePoint.lng);
+            : PositionToString(mousePoint.lat, mousePoint.lng);
             //: `${formatLatitude(mousePoint.lat)} ${formatLongitude(mousePoint.lng)}`;
 
     React.useEffect(

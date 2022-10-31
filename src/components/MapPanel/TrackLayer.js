@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { LayerGroup, Polyline, Marker, Popup, Tooltip, CircleMarker } from "react-leaflet";
 import * as dayjs from 'dayjs'
 import axios from "axios";
-import { GetTimeOffset, Log, PositionString } from "./../Common/Utils"
+import { GetTimeOffset, Log, PositionToString, CogToString } from "./../Common/Utils"
 import { GetIcon, GetColor } from "./TrackIcon"
 
 const settings = {
@@ -180,8 +180,8 @@ class TrackLayer extends Component {
                                     Name: {vessel.name}<br />
                                     MMSI: {vessel.mmsi}<br />
                                     Time: {dayjs.unix(point.dt).format("HH:mm")}<br />
-                                    Pos: {PositionString(point.lat, point.lon)}<br />
-                                    Course: {point.cog}<br />
+                                    Pos: {PositionToString(point.lat, point.lon)}<br />
+                                    Course: {CogToString(point.cog)}<br />
                                     Speed: {point.sog} kts<br />
                                 </Popup>
                             </CircleMarker>
@@ -205,7 +205,8 @@ class TrackLayer extends Component {
                                 Name: {vessel.info.name}<br />
                                 MMSI: {vessel.mmsi}<br />
                                 Time: {dayjs.unix(vessel.pos.dt).format("HH:mm")}<br />
-                                Course: {vessel.pos.cog}<br />
+                                Pos: {PositionToString(vessel.pos.lat, vessel.pos.lon)}<br />
+                                Course: {CogToString(vessel.pos.cog)}<br />
                                 Speed: {vessel.pos.sog} kts<br />
                             </Popup>
                         </Marker>

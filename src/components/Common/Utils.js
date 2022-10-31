@@ -87,10 +87,14 @@ function RoundDownToMultiple(value, n) {
     return Math.floor(value / n) * n;
 }
 
-function PositionString(lat, lon) {
+function PositionToString(lat, lon) {
     let posStr = `${Math.floor(Math.abs(lat))}\u00B0${(Math.abs(lat % 1) * 60).toFixed(3)}'${(lat >= 0 ? "N" : "S")}`;
     posStr += ` ${Math.floor(Math.abs(lon))}\u00B0${(Math.abs(lon % 1) * 60).toFixed(3)}'${(lon >= 0 ? "E" : "W")}`;
     return posStr;
 }
 
-export { Log, LogJSON, PositionString, LogReact, GetTimeOffset, GetTimeOffsetUnix, RoundToPrecision, Clamp, ClampAngle, Saturate, Viewport, RoundUpToMultiple, RoundDownToMultiple }
+function CogToString(cog) {
+    return String(cog).padStart(3, '0') + "\u00B0";
+}
+
+export { Log, LogJSON, PositionToString, CogToString, LogReact, GetTimeOffset, GetTimeOffsetUnix, RoundToPrecision, Clamp, ClampAngle, Saturate, Viewport, RoundUpToMultiple, RoundDownToMultiple }

@@ -41,22 +41,22 @@ body {
     flex: 1 0 auto;
     order: 1;
     z-index: 10;
-    width: 350px;
+    width: 380px;
 }
 
 .stats {
-    flex: 0 0 350px;
+    flex: 0 0 380px;
     order: 3;
     z-index: 10;
-    width: 350px;
+    width: 380px;
     min-height: 900px;
 }
 
 .chart {
-    flex: 0 0 350px;
+    flex: 0 0 380px;
     order: 2;
     z-index: 10;
-    width: 350px;
+    width: 380px;
 }
 
 .sidebar {

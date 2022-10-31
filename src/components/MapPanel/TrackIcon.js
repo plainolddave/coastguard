@@ -10,37 +10,25 @@ const ChartIcon = L.Icon.extend({
     }
 });
 
-const greenIcon = new ChartIcon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png'
-});
+const urlMap = new Map([
+    ['gold', 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png'],
+    ['blue', 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png'],
+    ['green', 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png'],
+    ['violet', 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png'],
+    ['red', 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png'],
+    ['orange', 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png'],
+    ['black', 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-black.png'],
+    ['gray', 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png'],
+    ['grey', 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png']
+    ]);
 
-const blueIcon = new ChartIcon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png'
-});
-
-const goldIcon = new ChartIcon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png'
-});
-
-const violetIcon = new ChartIcon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png'
-});
-
-const greyIcon = new ChartIcon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png'
-});
-
-const redIcon = new ChartIcon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png'
-});
-
-const orangeIcon = new ChartIcon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png'
-});
-
-const blackIcon = new ChartIcon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-black.png'
-});
+// get the url 
+function GetUrl(color) {
+    if (urlMap.has(color)) {
+        return urlMap.get(color);
+    }
+    return urlMap.get("gray");
+}
 
 // color strings are provided from the database
 const colorMap = new Map([
@@ -52,8 +40,18 @@ const colorMap = new Map([
     ['red', '#FF0000'],
     ['orange', '#FFA500'],
     ['black', '#000000'],
-    ['gray', '#808080']
+    ['gray', '#808080'],
+    ['grey', '#808080']
 ]);
+
+// get the color 
+function GetColor(color) {
+    //console.log("color " + color)
+    if (colorMap.has(color)) {
+        return colorMap.get(color);
+    }
+    return colorMap.get("gray");
+}
 
 const iconMap = new Map([
     ['gold', new ChartIcon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png' })],
@@ -63,24 +61,53 @@ const iconMap = new Map([
     ['red', new ChartIcon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png' })],
     ['orange', new ChartIcon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png' })],
     ['black', new ChartIcon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-black.png' })],
-    ['gray', new ChartIcon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png' })]
+    ['gray', new ChartIcon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png' })],
+    ['grey', new ChartIcon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png' })]
 ]);
 
-// get the color 
-function GetColor(color) {
-    //console.log("color " + color)
-    if (colorMap.has(color)) { 
-        return colorMap.get(color);
-    }
-    return colorMap.get("gray");
-}
-
-// get the icon
+// get the icon and url
 function GetIcon(color) {
-    if (iconMap.has(color)) {
-        return iconMap.get(color);
+    if (!iconMap.has(color)) {
+        color = "gray";
     }
-    return iconMap.get("gray");
+    let icon = iconMap.get(color);
+    icon.url = urlMap.get(color);
+    return icon;
 }
 
-export { GetColor, GetIcon, greenIcon, blueIcon, goldIcon, violetIcon, greyIcon, redIcon, orangeIcon, blackIcon }
+export { GetColor, GetIcon, GetUrl }
+
+//, greenIcon, blueIcon, goldIcon, violetIcon, greyIcon, redIcon, orangeIcon, blackIcon }
+
+//const greenIcon = new ChartIcon({
+//    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png'
+//});
+
+//const blueIcon = new ChartIcon({
+//    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png'
+//});
+
+//const goldIcon = new ChartIcon({
+//    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png'
+//});
+
+//const violetIcon = new ChartIcon({
+//    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png'
+//});
+
+//const greyIcon = new ChartIcon({
+//    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png'
+//});
+
+//const redIcon = new ChartIcon({
+//    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png'
+//});
+
+//const orangeIcon = new ChartIcon({
+//    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png'
+//});
+
+//const blackIcon = new ChartIcon({
+//    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-black.png'
+//});
+
