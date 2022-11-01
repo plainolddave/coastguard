@@ -29,7 +29,9 @@ const settings = {
     refreshMillis: 1000 * 60 * 10,   // updates every n minutes 
     minimumSOG: 0.2,                 // minimum speed over ground
     url: "https://coastguard.netlify.app/.netlify/functions/fleet",
-    defaultOrg: "QF2",
+    defaultFleet: 0,
+    defaultTimeframe: 2,
+    showMarkers: false,
     fleets: [
         { value: 'QF2', label: 'QF2 Brisbane' },
         { value: 'SAR', label: 'Marine Rescue' },
@@ -40,8 +42,8 @@ const settings = {
         { value: '7D', mins: 1, line: true, label: '7 days' },
         { value: '30D', mins: 2, line: true, label: '30 days' },
         { value: '0M', mins: 2, line: false, label: 'This month' },
-        { value: '1M', mins: 2, line: false, label: 'Last month' },
-        { value: '2M', mins: 2, line: false, label: 'Last 2 months' },
+        { value: '1M', mins: 2, line: false, label: 'Last full month' },
+        { value: '2M', mins: 2, line: false, label: 'Last 2 full months' },
         { value: 'All', mins: 3, line: false, label: 'All time' }
     ],
     colors: new Map([
@@ -60,9 +62,9 @@ function History() {
 
     const isVisible = usePageVisibility();
 
-    const [timeframe, setTimeframe] = useState(settings.timeframe[0]);
+    const [timeframe, setTimeframe] = useState(settings.timeframe[settings.defaultTimeframe]);
     const [isLoading, setIsLoading] = useState(false);
-    const [org, setOrg] = useState(settings.fleets[1]);
+    const [org, setOrg] = useState(settings.fleets[settings.defaultFleet]);
     const [colors, setColors] = useState(new Map());
     const [tracks, setTracks] = useState([]);
     const [map, setMap] = useState(null);
@@ -125,9 +127,11 @@ function History() {
         })
             .then((response) => {
 
-                // make sure the vessel positions are sorted by time, in reverse order
                 let newTracks = response.data.tracks;
                 let newColors = new Map();
+                const defaultOrg = (settings.fleets[settings.defaultFleet]).value;
+
+                // make sure the vessel positions are sorted by time, in reverse order
                 newTracks.forEach((vessel) => {
                     vessel.track.sort((a, b) => b.dt - a.dt);
                     vessel.pos = vessel.track[0];
@@ -167,7 +171,7 @@ function History() {
                     // select color based on the org - if QF2 then
                     // use multicolors otherwise use default color
                     // thats been set from the database
-                    if (org.value === settings.defaultOrg) {
+                    if (org.value === defaultOrg) {
                         vessel.info.icon = GetIcon(settings.colors.get(vessel.info.name));
                         vessel.info.color = GetColor(settings.colors.get(vessel.info.name));
                         newColors.set(vessel.info.name, { label: vessel.info.name, icon: vessel.info.icon, color: vessel.info.color });
@@ -289,6 +293,7 @@ function History() {
                                 map={map}
                                 tracks={tracks}
                                 isVisible={isVisible}
+                                showMarkers={settings.showMarkers}
                             />
                         </LayersControl.Overlay>
                         <LayersControl.Overlay name="Nav Marks">

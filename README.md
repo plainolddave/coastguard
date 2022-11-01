@@ -40,7 +40,7 @@ To do now:
 - ~~add a legend key and different icon colors on the history page~~ 
 - add a config setting to switch between live and BOM data source
 - ~~the degrees celcius symbol is seperated from the numerals for some reason~~
-- ~~turn off data refresh if the page is not visible~~
+- turn off data refresh if the page is not visible
 - ~~expand the capacity of the positions collection in mongoDB to 3 months~~
 - ~~break up tracks into segments when signal is lost for a while~~
 - write a function to collect names and data of vessels not currently in the database

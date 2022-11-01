@@ -26,7 +26,7 @@ body {
 
 .panel {
     margin: 3px 3px;
-    padding: 0px 5px;
+    padding: 0px;
     height: calc(100vh - 12px);
     font-size: 16px;
     text-align: center;
@@ -50,6 +50,7 @@ body {
     z-index: 10;
     width: 380px;
     min-height: 900px;
+    padding: 0px 10px;
 }
 
 .chart {
@@ -57,6 +58,7 @@ body {
     order: 2;
     z-index: 10;
     width: 380px;
+    padding: 0px 10px;
 }
 
 .sidebar {
@@ -64,6 +66,7 @@ body {
     order: 2;
     z-index: 10;
     width: 200px;
+    padding: 0px 10px;
 }
 
 @media (max-width: 1100px) {

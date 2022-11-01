@@ -26,8 +26,36 @@ const settings = {
 function Tracks({
     map = null,
     tracks = [],
-    showIcon = true, // TODO
+    showMarkers = true,
     ...restProps }) {
+
+    function displayMarker(vessel) {
+        if (!showMarkers) return (<></>)
+        return (
+            <Marker
+                key={`mk_${vessel.mmsi}`}
+                position={[vessel.pos.lat, vessel.pos.lon]}
+                icon={vessel.info.icon}
+                opacity={settings.marker.opacity}
+            >
+                <Tooltip
+                    offset={settings.tooltip.offset}
+                    key={`tt_${vessel.mmsi}`}
+                    opacity={settings.tooltip.opacity}
+                    direction={settings.tooltip.direction}
+                    permanent>
+                    {vessel.info.name}
+                </Tooltip>
+                <Popup key={`pp_${vessel.mmsi}`}>
+                    Name: {vessel.info.name}<br />
+                    MMSI: {vessel.info.mmsi}<br />
+                    Time: {dayjs.unix(vessel.pos.dt).format("DD MMM YYYY HH:mm")}<br />
+                    Pos: {PositionToString(vessel.pos.lat, vessel.pos.lon)}<br />
+                    Course: {CogToString(vessel.pos.cog)}<br />
+                    Speed: {vessel.pos.sog} kts<br />
+                </Popup>
+            </Marker>)
+    };
 
     const displayTracks = useMemo(
         () => (
@@ -58,33 +86,12 @@ function Tracks({
                                 </Popup>
                             </CircleMarker>
                         )}
-                        <Marker
-                            key={`mk_${vessel.mmsi}`}
-                            position={[vessel.pos.lat, vessel.pos.lon]}
-                            icon={vessel.info.icon}
-                            opacity={settings.marker.opacity}
-                        >
-                            <Tooltip
-                                offset={settings.tooltip.offset}
-                                key={`tt_${vessel.mmsi}`}
-                                opacity={settings.tooltip.opacity}
-                                direction={settings.tooltip.direction}
-                                permanent>
-                                {vessel.info.name}
-                            </Tooltip>
-                            <Popup key={`pp_${vessel.mmsi}`}>
-                                Name: {vessel.info.name}<br />
-                                MMSI: {vessel.info.mmsi}<br />
-                                Time: {dayjs.unix(vessel.pos.dt).format("DD MMM YYYY HH:mm")}<br />
-                                Pos: {PositionToString(vessel.pos.lat, vessel.pos.lon)}<br />
-                                Course: {CogToString(vessel.pos.cog)}<br />
-                                Speed: {vessel.pos.sog} kts<br />
-                            </Popup>
-                        </Marker>
+                        {displayMarker(vessel)}
                     </LayerGroup>
                 )}
             </LayerGroup>
         ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [tracks],
     );
 
