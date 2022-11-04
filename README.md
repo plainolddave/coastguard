@@ -38,6 +38,7 @@ For more instructions on the front-end React App [look here](Netlify_Instruction
 To do now:
 - ~~remove API keys from lambda function~~
 - ~~add a legend key and different icon colors on the history page~~ 
+- re-architect all API calls to remove unecessary requests
 - add a config setting to switch between live and BOM data source
 - ~~the degrees celcius symbol is seperated from the numerals for some reason~~
 - turn off data refresh if the page is not visible
