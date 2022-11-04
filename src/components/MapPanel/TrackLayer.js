@@ -9,7 +9,7 @@ const settings = {
     startupMillis: 5000,            // soft start
     refreshMillis: 1000 * 60 * 2,   // updates every n minutes
     maxErrors: 5,                   // max errors before clearing tracks
-    fromHours: -24,                 // use a window of track info behind now()
+    fromHours: -12,                 // use a window of track info behind now()
     sog: 0.2,                       // minimum speed over ground
     url: "https://coastguard.netlify.app/.netlify/functions/fleet",
     track: {
