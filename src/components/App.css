@@ -96,7 +96,7 @@ label {
     }
 
     .clock > .numeral {
-        font-size: 80px;
+        font-size: 100px;
         text-align: center;
     }
 
@@ -124,7 +124,7 @@ label {
 
     .weather > .label {
         grid-area: label;
-        font-size: 28px;
+        font-size: 32px;
         font-weight: 600;
         text-align: center;
         white-space: normal;
