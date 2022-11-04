@@ -15,15 +15,15 @@ function JawgLight() {
     );
 }
 
-//function CartoDB() {
-//    return (
-//        <TileLayer
-//            url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-//            subdomains="abcd"
-//            maxZoom={22}
-//        />
-//    );
-//}
+function CartoDB() {
+    return (
+        <TileLayer
+            url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+            subdomains="abcd"
+            maxZoom={22}
+        />
+    );
+}
 
 function OpenStreetMap() {
     return (
@@ -57,6 +57,9 @@ function BaseLayers({ map, isChecked }) {
 
     return (
         <>
+            <BaseLayer name="Default" checked={("Default" === isChecked ? true : false)} >
+                <CartoDB />
+            </BaseLayer>
             <BaseLayer name="Simple" checked={("Simple" === isChecked ? true : false)} >
                 <JawgLight />
             </BaseLayer>

@@ -127,7 +127,7 @@ label {
         font-size: 28px;
         font-weight: 600;
         text-align: center;
-        white-space: nowrap;
+        white-space: normal;
     }
 
     .weather > .value {

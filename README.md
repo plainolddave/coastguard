@@ -45,6 +45,7 @@ To do now:
 - ~~break up tracks into segments when signal is lost for a while~~
 - write a function to collect names and data of vessels not currently in the database
 - add AISHub data
+- ~~"Light Intensity Shower Rain" is too long for the display~~
 - ~~add a spinner to the history page while its fetchng data~~
 - ~~Fix redirects so browsing history works~~
 - ~~Fix position lat/lon display for track markers~~
