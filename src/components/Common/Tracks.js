@@ -9,7 +9,7 @@ const settings = {
         opacity: 0.3
     },
     circle: {
-        radius: 4,
+        radius: 5,
         weight: 1,
         opacity: 0.5
     },

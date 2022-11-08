@@ -1,28 +1,36 @@
-import React, { useState, useCallback, useMemo, useRef, useEffect } from "react";
-import { MapContainer, LayersControl, TileLayer } from "react-leaflet";
-import { usePageVisibility } from 'react-page-visibility';
-import Control from "react-leaflet-custom-control";
-import { IconContext } from "react-icons";
+import React, { useState, useCallback, useMemo, useRef, useEffect } from "react"
+import { MapContainer, LayersControl, TileLayer } from "react-leaflet"
+import Control from "react-leaflet-custom-control"
+import { IconContext } from "react-icons"
 import Select from 'react-select'
-import makeAnimated from 'react-select/animated';
+import makeAnimated from 'react-select/animated'
 import * as dayjs from 'dayjs'
 import * as axios from 'axios'
 
 import Icon from "./Common/Icon"
 import Next from "./Common/Next"
-import { Log } from "./Common/Utils"
 import Tracks from "./Common/Tracks"
 import Legend from "./Common/Legend"
-import Coords from "./Common/Coords";
-import Loader from "./Common/Loader";
-import BaseLayers from "./MapPanel/BaseLayers";
+import Coords from "./Common/Coords"
+import Loader from "./Common/Loader"
+import LocalIP from "./Common/LocalIP"
+import BaseLayers from "./MapPanel/BaseLayers"
+import { Log, PositionBounds } from "./Common/Utils"
 import { GetColor, GetIcon } from "./MapPanel/TrackIcon"
 
 const settings = {
-    position: [-27.33, 153.27],
-    zoom: 10.5,
+    //position: [-27.33, 153.27],
+    //zoom: 10.5,
     useScrollWheel: true,
-    maxZoom: 20,
+    maxZoom: 15,
+    mapBounds: [[-27.0, 153.0], [-27.6, 153.6]],
+    mapBoundsOptions: {
+        maxZoom: 15,
+        padding: [0, 0],
+        animate: true,
+        duration: 1.0,
+        easeLinearity: 0.1
+    },
     style: { height: "100%", width: "100%" },
     attribution: false,
     startupMillis: 1000,             // soft start timer
@@ -40,10 +48,10 @@ const settings = {
     timeframe: [
         { value: '24H', mins: 1, line: true, label: '24 hours' },
         { value: '7D', mins: 1, line: true, label: '7 days' },
-        { value: '30D', mins: 2, line: true, label: '30 days' },
-        { value: '0M', mins: 2, line: false, label: 'This month' },
-        { value: '1M', mins: 2, line: false, label: 'Last full month' },
-        { value: '2M', mins: 2, line: false, label: 'Last 2 full months' },
+        { value: '30D', mins: 1, line: true, label: '30 days' },
+        { value: '0M', mins: 1, line: true, label: 'This month' },
+        { value: '1M', mins: 1, line: false, label: 'Last month' },
+        { value: '2M', mins: 2, line: false, label: 'Last 2 months' },
         { value: 'All', mins: 3, line: false, label: 'All time' }
     ],
     colors: new Map([
@@ -58,13 +66,14 @@ const settings = {
 
 const animatedComponents = makeAnimated();
 
-function History() {
-
-    const isVisible = usePageVisibility();
+function History({ isVisible }) {
 
     const [timeframe, setTimeframe] = useState(settings.timeframe[settings.defaultTimeframe]);
-    const [isLoading, setIsLoading] = useState(false);
+    const [bounds, setBounds] = useState(new PositionBounds(settings.mapBounds));
     const [org, setOrg] = useState(settings.fleets[settings.defaultFleet]);
+    const [fromDate, setFromDate] = useState(new Date());
+    const [toDate, setToDate] = useState(new Date());
+    const [isLoading, setIsLoading] = useState(false);
     const [colors, setColors] = useState(new Map());
     const [tracks, setTracks] = useState([]);
     const [map, setMap] = useState(null);
@@ -97,11 +106,11 @@ function History() {
                 break;
             case '1M':  // last calendar month
                 url += `?from=${dayjs().subtract(1, "month").startOf("month").unix()}`;
-                url += `&to=${dayjs().startOf("month").unix()}`;
+                url += `&to=${dayjs().startOf("month").unix()-1}`;
                 break;
             case '2M':  // last 2 calendar months
                 url += `?from=${dayjs().subtract(2, "month").startOf("month").unix()}`;
-                url += `&to=${dayjs().startOf("month").unix()}`;
+                url += `&to=${dayjs().startOf("month").unix()-1}`;
                 break;
             case 'All': // all time
                 url += `?from=0`;
@@ -129,6 +138,7 @@ function History() {
 
                 let newTracks = response.data.tracks;
                 let newColors = new Map();
+                let newBounds = new PositionBounds();
                 const defaultOrg = (settings.fleets[settings.defaultFleet]).value;
 
                 // make sure the vessel positions are sorted by time, in reverse order
@@ -138,14 +148,12 @@ function History() {
 
                     // check track, and if more than three missed transmissions break
                     // the track into individual segments to avoid large jumps in pos
-
                     let lines = [];
-                    if (timeframe.line) {
-                        let segment = null;
-                        let segmentDt = 0;
-                        const segmentMax = 3 * timeframe.mins * 60;
-                        vessel.track.forEach(t => {
-
+                    let segment = null;
+                    let segmentDt = 0;
+                    const segmentMax = 3 * timeframe.mins * 60;
+                    vessel.track.forEach(t => {
+                        if (timeframe.line) {
                             // start a new line segment
                             const interval = Math.abs(t.dt - segmentDt);
                             if (interval > segmentMax) {
@@ -159,12 +167,14 @@ function History() {
                             let p = [t.lat, t.lon];
                             segmentDt = t.dt;
                             segment.push(p);
-                        });
-
-                        // clean up
-                        if (segment != null && segment.length > 1) {
-                            lines.push(segment);
                         }
+                        // keep track of the map bounds
+                        newBounds.push(t.lat, t.lon);
+                    });
+
+                    // clean up
+                    if (segment != null && segment.length > 1) {
+                        lines.push(segment);
                     }
                     vessel.lines = lines;
 
@@ -189,7 +199,14 @@ function History() {
                 // store for ron
                 setTracks(newTracks);
                 setColors(newColors);
-                Log("history", "refresh ok");
+                setFromDate(new Date(response.data.from));
+                setToDate(new Date(response.data.to));
+
+                // set the map bounds
+                if (newBounds.isSensible) {
+                    setBounds(newBounds);
+                }
+                //Log("history", "refresh completed ok");
             })
             .catch((err) => {
                 Log("history refresh error", err);
@@ -199,6 +216,14 @@ function History() {
                 setIsLoading(false);
             })
     };
+
+    function fitBounds(map, bounds) {
+        if (map) {
+            //Log("history fit bounds", bounds.toString());
+            map.flyToBounds(bounds.box, settings.mapBoundsOptions);
+            map.invalidateSize(true);
+        }
+    }
 
     // run once on initial render, to initiate a soft start, then start 
     // a timer to fetch data periodically (i.e. after the soft start timer
@@ -228,13 +253,18 @@ function History() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [org, timeframe]);
 
+    // automatically move the map boundaries when track data changes
+    useEffect(() => {
+        fitBounds(map, bounds);
+    }, [map, bounds]);
+
     // ----------------------------------------------------------------------------------------------------
 
-    function SideBar({ map }) {
+    function SideBar({ map, bounds }) {
 
         const onClick = useCallback(() => {
-            map.setView(settings.position, settings.zoom)
-        }, [map])
+            fitBounds(map, bounds);
+        }, [map, bounds])
 
         const handleOrgChange = (selected) => {
             setOrg(selected);
@@ -246,7 +276,6 @@ function History() {
 
         return (
             <div className="sidebar panel">
-
                 <p className="sidebar-label left">Fleet:</p>
                 <Select
                     className="select-btn left"
@@ -265,12 +294,15 @@ function History() {
                     onChange={handleTimeChange}
                 />
                 <br />
-                <Legend className="center" colors={colors} />
+                <br />
+                <Legend className="center" colors={colors} fromDate={fromDate} toDate={toDate} />
                 <button className="sidebar-reset" onClick={onClick}>
                     <IconContext.Provider value={{ color: "#999", size: "16px" }}>
                         <Icon name={"Undo"} />
                     </IconContext.Provider>
                 </button>
+                <br />
+                <LocalIP classes="sidebar-ip" />
             </div>
         )
     }
@@ -280,11 +312,13 @@ function History() {
             <div className="map panel">
                 <MapContainer
                     ref={setMap}
-                    zoom={settings.zoom}
-                    center={settings.position}
+                    bounds={bounds.box}
                     style={settings.style}
                     scrollWheelZoom={settings.useScrollWheel}
                     attributionControl={settings.attribution}
+                    trackResize={true}
+                    zoomSnap={0.5}
+                    className="map-container"
                 >
                     <LayersControl position="topright">
                         <BaseLayers isChecked="Simple" />
@@ -311,14 +345,15 @@ function History() {
                 </MapContainer>
             </div>
         ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [map, tracks, isVisible],
     );
 
     return (
         <div className="page">
-            <Loader isLoading={isLoading}/>
+            <Loader isLoading={isLoading} />
             {displayMap}
-            {map ? <SideBar map={map} /> : null}
+            {map ? <SideBar map={map} bounds={bounds} /> : null}
         </div>
     )
 }

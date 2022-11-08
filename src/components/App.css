@@ -40,6 +40,10 @@ img {
 
 /* ------------------------------------------------------------ */
 
+.map-container {
+    width: 100%;
+}
+
 .leaflet-container {
     margin: 0;
     min-width: 320px;
@@ -293,6 +297,7 @@ label {
     overflow-x: hidden;
     overflow-y: hidden;
     position: relative;
+    z-index: 100;
 }
 
 .sidebar-label {
@@ -307,16 +312,26 @@ label {
     position: absolute;
     bottom: 10px;
     right: 10px;
+    z-index: 120;
 }
 
 .sidebar-icon {
     width: 20px;
     height: 32px;
     margin-right: 10px;
+    z-index: 130;
+}
+
+.sidebar-ip {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    text-align: center;
+    z-index: 110;
 }
 
 /* ------------------------------------------------------------ */
-
 .solid {
     opacity: 1;
 }

@@ -37,7 +37,8 @@ For more instructions on the front-end React App [look here](Netlify_Instruction
 
 To do now:
 - ~~remove API keys from lambda function~~
-- ~~add a legend key and different icon colors on the history page~~ 
+- ~~add a legend key and different icon colors on the history page~~
+- sort out the mobile version
 - re-architect all API calls to remove unecessary requests
 - add a config setting to switch between live and BOM data source
 - ~~the degrees celcius symbol is seperated from the numerals for some reason~~
@@ -46,13 +47,17 @@ To do now:
 - ~~break up tracks into segments when signal is lost for a while~~
 - write a function to collect names and data of vessels not currently in the database
 - add AISHub data
+- add wind gusts
+- ~~auto scale the History page to the collected tracks~~
 - ~~"Light Intensity Shower Rain" is too long for the display~~
 - ~~add a spinner to the history page while its fetchng data~~
 - ~~Fix redirects so browsing history works~~
 - ~~Fix position lat/lon display for track markers~~
 - ~~Make the course display as three digits and degrees symbol~~
+- ~~add an indicator for local ip and remote address~~
 
 Maybe later:
+- still some annoying CSS alignment issues
 - add a TTL index to signalk->ais->positions to cap data at 3 months
 - allow history to be selected by date range
 - allow history to be selected per individual vessel or group of vessels

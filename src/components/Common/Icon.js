@@ -19,7 +19,8 @@ import {
 	WiWindBeaufort9,
 	WiWindBeaufort10,
 	WiWindBeaufort11,
-	WiWindBeaufort12
+	WiWindBeaufort12,
+	WiWindDeg
 } from "react-icons/wi";
 
 import {
@@ -73,6 +74,8 @@ function Icon({ name }) {
 					return <GoLocation />;
 				case 'Place':
 					return <GiPositionMarker />;
+				case 'Wind':
+					return <WiWindDeg />;
 				case 'Wind0':
 					return <WiWindBeaufort0 />;
 				case 'Wind1':

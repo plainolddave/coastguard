@@ -69,7 +69,8 @@ function Forecast({ isVisible = true }) {
                         <div className="icon"><img src={`icons/${icon}.png`} alt={`${label}`} /></div>
                         <div className="desc label">{label}</div>
                         <Row className="temp" label="Temp" value={temp} rowStyle="forecast-row" />
-                        <Row className="wind" label="Wind" value={wind.knots} rowStyle="forecast-row" />
+                        <Row className="wind" label="Wind" value={wind.knots} rowStyle="forecast-row" iconRotation={wind.direction} />
+                        <Row className="gust" label="Gust" value={wind.gust} rowStyle="forecast-row" />
                     </div>
                 ))}
             </div>
