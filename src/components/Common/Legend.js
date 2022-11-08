@@ -32,7 +32,7 @@ function Legend({
                 </tbody>
             </table>
         ),
-        [colors],
+        [colors, fromDate, toDate],
     );
 
     return (
