@@ -25,7 +25,7 @@ export async function handler(event, context) {
 
         let config = API_CONFIG;
         config.headers["true-client-ip"] = event.headers['x-nf-client-connection-ip']; 
-        config.headers["true-user-agent"] = event.headers['"user-agent'];
+        config.headers["true-user-agent"] = event.headers['user-agent'];
         const response = await axios.get(url, config);
         const data = JSON.stringify(response.data);
         //console.log(`url: ${url} exent: ${JSON.stringify(event)} context: ${JSON.stringify(context)}`)
