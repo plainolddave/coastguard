@@ -28,10 +28,6 @@ export async function handler(event, context) {
         config.headers["true-user-agent"] = event.headers['user-agent'];
         const response = await axios.get(url, config);
         const data = JSON.stringify(response.data);
-        //console.log(`url: ${url} exent: ${JSON.stringify(event)} context: ${JSON.stringify(context)}`)
-        //console.log(`url: ${url}`)
-        //console.log(`event: ${JSON.stringify(event)}`)
-        //console.log(`context: ${JSON.stringify(context)}`)
 
         return {
             statusCode: 200,

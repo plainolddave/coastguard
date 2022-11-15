@@ -21,9 +21,11 @@ export async function handler(event, context) {
         if (event.queryStringParameters.from) { url += `&from=${event.queryStringParameters.from}` };
         if (event.queryStringParameters.to) { url += `&to=${event.queryStringParameters.to}` };
 
-        const response = await axios.get(url, API_CONFIG);
+        let config = API_CONFIG;
+        config.headers["true-client-ip"] = event.headers['x-nf-client-connection-ip'];
+        config.headers["true-user-agent"] = event.headers['user-agent'];
+        const response = await axios.get(url, config);
         const data = JSON.stringify(response.data);
-        console.log(`url: ${url} response: ${data}`)
 
         return {
             statusCode: 200,
