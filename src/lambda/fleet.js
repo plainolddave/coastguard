@@ -24,8 +24,8 @@ export async function handler(event, context) {
         if (event.queryStringParameters.org) { url += `&org=${event.queryStringParameters.org}` };
 
         let config = API_CONFIG;
-        config.headers["proxied-ip"] = event.headers.client-ip; 
-        config.headers["proxied-agent"] = event.headers.user-agent; 
+        //config.headers["proxiedIp"] = event.headers.client-ip; 
+        //config.headers["proxiedAgent"] = event.headers.user-agent; 
 
         const response = await axios.get(url, config);
         const data = JSON.stringify(response.data);
