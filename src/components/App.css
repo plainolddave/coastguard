@@ -344,8 +344,10 @@ label {
     z-index: 110;
 }
 
-.legend {
-    margin-bottom: 60px;
+@media (max-width: 1100px) {
+    .sidebar-ip {
+        display: none;
+    }
 }
 
 /* ------------------------------------------------------------ */
