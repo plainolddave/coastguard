@@ -27,7 +27,8 @@ const settings = {
             "pressure": 0,
             "humidity": 0,
             "temp": 0
-        }
+        },
+        "default": true
     }
 }
 
@@ -46,7 +47,7 @@ function StatsPanel({
     const onRefresh = useCallback(() => {
 
         // suspend refresh when page is not visible
-        if (!isVisible) return;
+        if (!isVisible && obs.default !== true) return;
 
         // get the current weather observations
         Log("stats", settings.url);
@@ -84,7 +85,7 @@ function StatsPanel({
         }, settings.startupMillis);
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isVisible]);
+    }, []);
 
     // ----------------------------------------------------------------------------------------------------
     // return the component

@@ -58,7 +58,7 @@ function PressureChart({
     ...restProps }) {
 
     // data received from the server
-    let [data, setData] = useState([]); 
+    let [data, setData] = useState([]);
     const refreshTimer = useRef(null);
 
     // ----------------------------------------------------------------------------------------------------
@@ -66,7 +66,7 @@ function PressureChart({
     const onRefresh = useCallback(() => {
 
         // suspend refresh when page is not visible
-        if (!isVisible) return;
+        if (!isVisible && data.length > 0) return;
 
         const timeFrom = GetTimeOffset(settings.fromHours);
         const dtFrom = Math.floor(timeFrom.getTime() / 1000);
@@ -82,8 +82,8 @@ function PressureChart({
             .catch((err) => {
                 Log("pressure error", err);
             });
-
-    }, [isVisible]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     // ----------------------------------------------------------------------------------------------------
     // soft start a timer to periodically refresh data

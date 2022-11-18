@@ -77,8 +77,8 @@ function MapPanel({ isVisible, autoScale, ...restProps }) {
     const onRefresh = useCallback(() => {
 
         // suspend refresh when page is not visible
-        Log("track visibility", isVisible);
-        if (!isVisible) return;
+        // Log("track visibility", isVisible);
+        if (!isVisible && tracks.length > 0) return;
 
         const timeFrom = GetTimeOffset(settings.fromHours);
         const dtFrom = Math.floor(timeFrom.getTime() / 1000);

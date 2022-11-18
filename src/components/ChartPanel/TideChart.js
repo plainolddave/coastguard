@@ -103,6 +103,7 @@ function TideChart({
                 "dt": seconds,
                 "type": station  // just a label...
             });
+            Log("tide height", height.toFixed(2));
             break;
         }
 
@@ -132,7 +133,7 @@ function TideChart({
     const onRefresh = useCallback(() => {
 
         // suspend refresh when page is not visible
-        if (!isVisible) return;
+        if (!isVisible && heights.length > 0) return;
 
         const timeFrom = GetTimeOffset(settings.fromHours);
         const dtFrom = Math.floor(timeFrom.getTime() / 1000);
@@ -152,6 +153,7 @@ function TideChart({
             .catch((err) => {
                 Log("tide error", err);
             });
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isVisible]);
 
@@ -164,6 +166,11 @@ function TideChart({
             if (refreshTimer.current) {
                 clearInterval(refreshTimer.current);
                 refreshTimer.current = null;
+            }
+
+            if (recalcTimer.current) {
+                clearInterval(recalcTimer.current);
+                recalcTimer.current = null;
             }
 
             refreshTimer.current = setInterval(function refresh() {
@@ -186,7 +193,7 @@ function TideChart({
         }, settings.startupMillis);
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isVisible]);
+    },[]);
 
     // ----------------------------------------------------------------------------------------------------
     // return the component

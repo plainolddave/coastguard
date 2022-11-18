@@ -7,6 +7,8 @@ import { Log } from "./../Common/Utils"
 const settings = {
     startupMillis: 2000,            // soft start
     refreshMillis: 1000 * 60 * 60,  // 1 hour
+    hoursFrom: -3,                  // now minus n hours
+    hoursTo: 10,                    // now plus n hours
     url: "https://coastguard.netlify.app/.netlify/functions/forecast"
 }
 
@@ -25,8 +27,8 @@ function Forecast({ isVisible, ...restProps }) {
         // suspend refresh when page is not visible
         if (!isVisible) return;
 
-        const dtFrom = Math.floor(Date.now() / 1000 - 60 * 60 * 3); // now minus 3 hours
-        const dtTo = Math.floor(Date.now() / 1000 + 60 * 60 * 6); // now plus 6 hours
+        const dtFrom = Math.floor(Date.now() / 1000 + 60 * 60 * settings.hoursFrom); 
+        const dtTo = Math.floor(Date.now() / 1000 + 60 * 60 * settings.hoursTo); 
         let url = `${settings.url}?from=${dtFrom}&to=${dtTo}&limit=3`;
         Log("forecast", url);
 
@@ -39,7 +41,7 @@ function Forecast({ isVisible, ...restProps }) {
             .catch((err) => {
                 Log("forecast error", err);
             });
-
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isVisible]);
 
     // ----------------------------------------------------------------------------------------------------

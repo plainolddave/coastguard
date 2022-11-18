@@ -71,7 +71,7 @@ function WindChart({
     const onRefresh = useCallback(() => {
 
         // suspend refresh when page is not visible
-        if (!isVisible) return;
+        if (!isVisible && data.length > 0) return;
 
         const timeFrom = GetTimeOffset(settings.fromHours);
         const dtFrom = Math.floor(timeFrom.getTime() / 1000);
@@ -87,7 +87,7 @@ function WindChart({
             .catch((err) => {
                 Log("wind error", err);
             });
-
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isVisible]);
 
     // ----------------------------------------------------------------------------------------------------
@@ -114,7 +114,7 @@ function WindChart({
         }, settings.startupMillis);
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isVisible]);
+    }, []);
 
     // ----------------------------------------------------------------------------------------------------
     // return the component
