@@ -8,7 +8,7 @@ const settings = {
     startupMillis: 2000,            // soft start
     refreshMillis: 1000 * 60 * 60,  // 1 hour
     hoursFrom: -3,                  // now minus n hours
-    hoursTo: 10,                    // now plus n hours
+    hoursTo: 9.5,                   // now plus n hours
     url: "https://coastguard.netlify.app/.netlify/functions/forecast"
 }
 
