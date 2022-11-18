@@ -20,7 +20,7 @@ exports = function () {
     // constants - just get weather for Manly Queensland 
     const lat = -27.45;
     const lon = 153.20;
-    const key = [ADD OPENWEATHER API KEY HERE];
+    const key = "1a05271a346328ab3b6e25fa0143e9b3";
     const httpService = context.services.get('http');
 
     // helper functions

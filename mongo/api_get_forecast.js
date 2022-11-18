@@ -1,10 +1,9 @@
 // Send back an error message
-const handleError = (code, source, error, response) => {
-    const details = JSON.stringify({ code: code, source: source, error: JSON.stringify(error) });
+const handleError = (code, headers, error) => {
     response.setStatusCode(code);
     response.setHeader("Content-Type", "application/json");
-    response.setBody(details);
-    console.log(JSON.stringify(details));
+    response.setBody(JSON.stringify({ "code": code, "error": JSON.stringify(error) }));
+    context.functions.execute("api_log", "api_get_forecast", code, headers, error);
 }
 
 // This function is the endpoint's request handler.
@@ -85,12 +84,13 @@ exports = function ({ query, headers, body }, response) {
                     });
                 }
                 response.setBody(JSON.stringify(subset));
+                context.functions.execute("api_log", "api_get_forecast", 200, headers);
             })
             .catch(error => {
-                handleError(422, "api_get_forecast", error, response);
+                handleError(422, headers, error);
             });
 
     } catch (error) {
-        handleError(400, "api_get_forecast", error, response);
+        handleError(400, headers, error);
     }
 };
