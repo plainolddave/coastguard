@@ -43,11 +43,17 @@ import {
 	GiPositionMarker
 } from "react-icons/gi";
 
+import {
+	TbArrowsMaximize
+} from "react-icons/tb";
+
 function Icon({ name }) {
 
 	const getIcon = useMemo(
 		() => {
 			switch (name) {
+				case 'Resize':
+					return <TbArrowsMaximize />;
 				case 'Pressure':
 					return <WiBarometer />;
 				case 'Cloud':

@@ -1,27 +1,37 @@
-import React from "react"
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React, { useState, useEffect } from "react"
+import { Route, Routes, Outlet, Navigate, useLocation } from "react-router-dom";
 import { usePageVisibility } from 'react-page-visibility';
-import Layout from "./Layout";
+import { Log } from "./Common/Utils"
 import Dashboard from "./Dashboard";
 import History from "./History";
-//import NotFound from "./NotFound";
 import "./App.css"
+
+export const VisibilityContext = React.createContext();
 
 function App() {
 
-    const isVisible = usePageVisibility();
+    const [pageNow, setPageNow] = useState("none");
+    const location = useLocation();
+    const visible = usePageVisibility();
+
+    useEffect(() => {
+        let newPage = "none";
+        if (visible) {
+            newPage = location.pathname;
+        }
+        setPageNow(newPage);
+        Log("App", `visible: ${visible} page: ${newPage}`);
+    }, [location, visible]);
 
     return (
-        <BrowserRouter>
-            <Routes>
-                <Route path="/" element={<Layout />}>
-                    <Route index element={<Dashboard isVisible={isVisible} />} />
-                    <Route path="dashboard" element={<Dashboard isVisible={isVisible} />} />
-                    <Route path="history" element={<History isVisible={isVisible} />} />
-                    <Route path="*" element={<Dashboard isVisible={isVisible} />} />
-                </Route>
-            </Routes>
-        </BrowserRouter>
+        <Routes>
+            <Route path="/" element={<Outlet />}>
+                <Route index element={<Navigate to="dashboard" />} />
+                <Route path="dashboard" element={<Dashboard isVisible={(pageNow === "/dashboard" ? true : false)} />} />
+                <Route path="history" element={<History isVisible={(pageNow === "/history" ? true : false)} />} />
+                <Route path="*" element={<Navigate to="dashboard" />} />
+            </Route>
+        </Routes>
     );
 }
 

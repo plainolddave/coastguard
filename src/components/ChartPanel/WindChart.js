@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import axios from "axios";
 import * as dayjs from 'dayjs'
 import { GetTimeOffset, Log, RoundUpToMultiple, RoundDownToMultiple } from "./../Common/Utils"
@@ -28,35 +28,47 @@ const settings = {
     chartHeight: 200
 }
 
+// ----------------------------------------------------------------------------------------------------
+// helper functions
+const formatXAxis = item => {
+    return dayjs.unix(item).format('HH:mm');
+}
+
+const formatYAxis = item => {
+    return item.toFixed(settings.numberPrecision);
+}
+
+const formatTicks = () => {
+
+    // get the start tick for the next even increment
+    const dtFrom = GetTimeOffset(settings.fromHours).getTime() / 1000 + settings.tickSeconds;
+    const dtTo = GetTimeOffset(settings.toHours).getTime() / 1000;
+
+    let dtTick = Math.floor(dtFrom / settings.tickSeconds) * settings.tickSeconds;
+    let tickArray = [];
+    while (dtTick < dtTo) {
+        tickArray.push(dtTick);
+        dtTick += settings.tickSeconds;
+    }
+    return tickArray;
+}
+
+// ----------------------------------------------------------------------------------------------------
+// displays wind
 function WindChart({
+    isVisible,
     windRoseWidth = settings.windRoseWidth,
     windRoseHeight = settings.windRoseHeight,
     chartHeight = settings.chartHeight,
-    isVisible = true,
     ...restProps }) {
 
-    // ----------------------------------------------------------------------------------------------------
-    // props, state, refs
-
-    let [data, setData] = useState([]);                 // data received from the server
+    // data received from the server
+    const [data, setData] = useState([]);
+    const refreshTimer = useRef(null);
 
     // ----------------------------------------------------------------------------------------------------
     // refresh data from the server
-    useEffect(() => {
-        setTimeout(
-            () => {
-                refresh();
-                const refreshTimer = setInterval(() => {
-                    refresh();
-                }, settings.refreshMillis);
-                return () => {
-                    clearInterval(refreshTimer);
-                };
-            }, settings.startupMillis);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    function refresh() {
+    const onRefresh = useCallback(() => {
 
         // suspend refresh when page is not visible
         if (!isVisible) return;
@@ -65,7 +77,6 @@ function WindChart({
         const dtFrom = Math.floor(timeFrom.getTime() / 1000);
         const timeTo = GetTimeOffset(settings.toHours);
         const dtTo = Math.floor(timeTo.getTime() / 1000);
-
         let url = `${settings.url}?field=wind&limit=1000&from=${dtFrom}&to=${dtTo}`;
         Log("wind", url);
 
@@ -76,35 +87,37 @@ function WindChart({
             .catch((err) => {
                 Log("wind error", err);
             });
-    };
+
+    }, [isVisible]);
 
     // ----------------------------------------------------------------------------------------------------
+    // soft start a timer to periodically refresh data
+    useEffect(() => {
 
-    const formatXAxis = item => {
-        return dayjs.unix(item).format('HH:mm');
-    }
+        setTimeout(() => {
 
-    const formatYAxis = item => {
-        return item.toFixed(settings.numberPrecision);
-    }
+            if (refreshTimer.current) {
+                clearInterval(refreshTimer.current);
+                refreshTimer.current = null;
+            }
 
-    const formatTicks = () => {
+            refreshTimer.current = setInterval(function refresh() {
+                onRefresh();
+                return refresh;
+            }(), settings.refreshMillis);
 
-        // get the start tick for the next even increment
-        const dtFrom = GetTimeOffset(settings.fromHours).getTime() / 1000 + settings.tickSeconds;
-        const dtTo = GetTimeOffset(settings.toHours).getTime() / 1000;
+            return () => {
+                clearInterval(refreshTimer.current);
+                refreshTimer.current = null;
+            };
 
-        let dtTick = Math.floor(dtFrom / settings.tickSeconds) * settings.tickSeconds;
-        let tickArray = [];
-        while (dtTick < dtTo) {
-            tickArray.push(dtTick);
-            dtTick += settings.tickSeconds;
-        }
-        return tickArray;
-    }
+        }, settings.startupMillis);
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isVisible]);
 
     // ----------------------------------------------------------------------------------------------------
-
+    // return the component
     return (
         <div className="wrapper">
             <WindRose

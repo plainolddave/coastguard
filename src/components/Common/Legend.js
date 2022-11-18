@@ -10,7 +10,7 @@ function Legend({
 
     const displayLegend = useMemo(
         () => (
-            <table className="center">
+            <table className="center legend">
                 <thead><tr><td></td><td></td></tr></thead>
                 <tbody>
                     <tr>

@@ -146,7 +146,7 @@ class PositionBounds {
         try {
             // console.log(`bounds push lat: ${JSON.stringify(lat)} lon: ${JSON.stringify(lon)}`);
             // throw away invalid values and move on
-            if (!IsValidLat(lat) || !IsValidLon(lon)) {  return; }
+            if (!IsValidLat(lat) || !IsValidLon(lon)) { return; }
             this._minLat = Math.min(this._minLat, lat);
             this._maxLat = Math.max(this._maxLat, lat);
             this._minLon = Math.min(this._minLon, lon);
@@ -165,8 +165,16 @@ class PositionBounds {
     }
 
     toString() {
-        //return `corner1: ${this._minLat.toFixed(3)}, ${this._minLon.toFixed(3)} corner2: ${this._maxLat.toFixed(3)}, ${this._maxLon.toFixed(3)} sensible: ${this.isSensible ? "yes" : "no"}`
         return `corner1: ${LatToString(this._maxLat)}, ${LonToString(this._minLon)} corner2: ${LatToString(this._minLat)}, ${LonToString(this._maxLon)} sensible: ${(this.isSensible ? "yes" : "no")}`;
+    }
+
+    clip(clipbox) {
+        let newbox = [[0, 0], [0, 0]];
+        newbox[0][0] = this._maxLat < clipbox[0][0] ? this._maxLat : clipbox[0][0]; // NW LAT
+        newbox[1][0] = this._minLat > clipbox[1][0] ? this._minLat : clipbox[1][0]; // SE LAT
+        newbox[0][1] = this._minLon > clipbox[0][1] ? this._minLon : clipbox[0][1]; // NW LON
+        newbox[1][1] = this._maxLon < clipbox[1][1] ? this._maxLon : clipbox[1][1]; // SE LON
+        return newbox;
     }
 }
 

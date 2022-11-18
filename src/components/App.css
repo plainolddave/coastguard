@@ -72,9 +72,15 @@ label {
     width: 34px;
     height: 34px;
     border-radius: 4px;
-    margin: 0;
     padding: 0;
     border: 1px solid gray;
+}
+
+.reset-button {
+    padding: 0;
+    border-radius: 4px;
+    margin-top: 3px;
+    border: 0;
 }
 
 .next-icon {
@@ -103,6 +109,13 @@ label {
         font-size: 100px;
         text-align: center;
     }
+
+@media (max-width: 1100px) {
+    .clock > .numeral {
+        font-size: 80px;
+        text-align: center;
+    }
+}
 
 /* ------------------------------------------------------------ */
 
@@ -331,6 +344,10 @@ label {
     z-index: 110;
 }
 
+.legend {
+    margin-bottom: 60px;
+}
+
 /* ------------------------------------------------------------ */
 .solid {
     opacity: 1;
@@ -382,3 +399,4 @@ label {
         transform: rotate(360deg);
     }
 }
+

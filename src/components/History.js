@@ -1,13 +1,11 @@
 import React, { useState, useCallback, useMemo, useRef, useEffect } from "react"
 import { MapContainer, LayersControl, TileLayer } from "react-leaflet"
 import Control from "react-leaflet-custom-control"
-import { IconContext } from "react-icons"
 import Select from 'react-select'
 import makeAnimated from 'react-select/animated'
 import * as dayjs from 'dayjs'
 import * as axios from 'axios'
 
-import Icon from "./Common/Icon"
 import Next from "./Common/Next"
 import Tracks from "./Common/Tracks"
 import Legend from "./Common/Legend"
@@ -19,8 +17,6 @@ import { Log, PositionBounds } from "./Common/Utils"
 import { GetColor, GetIcon } from "./MapPanel/TrackIcon"
 
 const settings = {
-    //position: [-27.33, 153.27],
-    //zoom: 10.5,
     useScrollWheel: true,
     maxZoom: 15,
     mapBounds: [[-27.0, 153.0], [-27.6, 153.6]],
@@ -66,7 +62,15 @@ const settings = {
 
 const animatedComponents = makeAnimated();
 
-function History({ isVisible }) {
+function fitBounds(map, bounds) {
+    if (map) {
+        //Log("history fit bounds", bounds.toString());
+        map.flyToBounds(bounds.box, settings.mapBoundsOptions);
+        map.invalidateSize(true);
+    }
+}
+
+function History({ isVisible, ...restProps }) {
 
     const [timeframe, setTimeframe] = useState(settings.timeframe[settings.defaultTimeframe]);
     const [bounds, setBounds] = useState(new PositionBounds(settings.mapBounds));
@@ -77,14 +81,15 @@ function History({ isVisible }) {
     const [colors, setColors] = useState(new Map());
     const [tracks, setTracks] = useState([]);
     const [map, setMap] = useState(null);
-
-    const startupTimer = useRef(null);
     const refreshTimer = useRef(null);
     const requestRef = useRef(axios.CancelToken.source());
 
-    function refresh() {
+    // ----------------------------------------------------------------------------------------------------
+    // refresh data from the server
+    const onRefresh = useCallback(() => {
 
         // only animate if the page is active
+        Log("history visibility", isVisible);
         if (!isVisible) return;
 
         setIsLoading(true);
@@ -106,11 +111,11 @@ function History({ isVisible }) {
                 break;
             case '1M':  // last calendar month
                 url += `?from=${dayjs().subtract(1, "month").startOf("month").unix()}`;
-                url += `&to=${dayjs().startOf("month").unix()-1}`;
+                url += `&to=${dayjs().startOf("month").unix() - 1}`;
                 break;
             case '2M':  // last 2 calendar months
                 url += `?from=${dayjs().subtract(2, "month").startOf("month").unix()}`;
-                url += `&to=${dayjs().startOf("month").unix()-1}`;
+                url += `&to=${dayjs().startOf("month").unix() - 1}`;
                 break;
             case 'All': // all time
                 url += `?from=0`;
@@ -214,67 +219,72 @@ function History({ isVisible }) {
             .finally(() => {
                 requestRef.current = axios.CancelToken.source()
                 setIsLoading(false);
-            })
-    };
+            });
+    }, [isVisible, org, timeframe]);
 
-    function fitBounds(map, bounds) {
-        if (map) {
-            //Log("history fit bounds", bounds.toString());
-            map.flyToBounds(bounds.box, settings.mapBoundsOptions);
-            map.invalidateSize(true);
-        }
-    }
-
-    // run once on initial render, to initiate a soft start, then start 
-    // a timer to fetch data periodically (i.e. after the soft start timer
-    // gives a short delay to avoid hammering the server on initial render)
+    // ----------------------------------------------------------------------------------------------------
+    // soft start a timer to periodically refresh data
     useEffect(() => {
-        //Log("tracks", "start");
-        clearTimeout(startupTimer.current);
-        startupTimer.current = setTimeout(() => {
-            refresh();
-            clearTimeout(refreshTimer.current);
-            refreshTimer.current = setInterval(() => {
-                refresh();
-            }, settings.refreshMillis);
-            return () => {
-                clearTimeout(refreshTimer.current);
+        setTimeout(() => {
+
+            if (refreshTimer.current) {
+                clearInterval(refreshTimer.current);
+                refreshTimer.current = null;
             }
+
+            refreshTimer.current = setInterval(function refresh() {
+                onRefresh();
+                return refresh;
+            }(), settings.refreshMillis);
+
+            return () => {
+                clearInterval(refreshTimer.current);
+                refreshTimer.current = null;
+            };
+
         }, settings.startupMillis);
-        return () => {
-            clearTimeout(startupTimer.current);
-        }
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [isVisible]);
 
     // refresh track data when org or timeframes change
     useEffect(() => {
-        refresh();
+        //let data = { org: org, timeframe: timeframe };
+        //Log("history refresh", JSON.stringify(data));
+        onRefresh();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [org, timeframe]);
+
+    // refresh track data on startup
+    useEffect(() => {
+        onRefresh();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     // automatically move the map boundaries when track data changes
     useEffect(() => {
         fitBounds(map, bounds);
     }, [map, bounds]);
 
+    const handleBoundsChange = useCallback(() => {
+        //Log("history onclick", JSON.stringify(bounds));
+        fitBounds(map, bounds);
+    }, [map, bounds]);
+
+    const handleOrgChange = (selected) => {
+        //Log("history org", JSON.stringify(selected))
+        setOrg(selected);
+    };
+
+    const handleTimeChange = (selected) => {
+        //Log("history time", JSON.stringify(selected))
+        setTimeframe(selected);
+    };
+
     // ----------------------------------------------------------------------------------------------------
 
-    function SideBar({ map, bounds }) {
-
-        const onClick = useCallback(() => {
-            fitBounds(map, bounds);
-        }, [map, bounds])
-
-        const handleOrgChange = (selected) => {
-            setOrg(selected);
-        }
-
-        const handleTimeChange = (selected) => {
-            setTimeframe(selected);
-        }
-
-        return (
+    const sideBar = useMemo(
+        () => (
             <div className="sidebar panel">
                 <p className="sidebar-label left">Fleet:</p>
                 <Select
@@ -282,7 +292,7 @@ function History({ isVisible }) {
                     options={settings.fleets}
                     closeMenuOnSelect={true}
                     components={animatedComponents}
-                    defaultValue={org}
+                    defaultValue={settings.fleets[settings.defaultFleet]}
                     onChange={handleOrgChange}
                 />
                 <p className="sidebar-label left">Timeframe:</p>
@@ -290,22 +300,19 @@ function History({ isVisible }) {
                     options={settings.timeframe}
                     closeMenuOnSelect={true}
                     components={animatedComponents}
-                    defaultValue={timeframe}
+                    defaultValue={settings.timeframe[settings.defaultTimeframe]}
                     onChange={handleTimeChange}
                 />
                 <br />
                 <br />
                 <Legend className="center" colors={colors} fromDate={fromDate} toDate={toDate} />
-                <button className="sidebar-reset" onClick={onClick}>
-                    <IconContext.Provider value={{ color: "#999", size: "16px" }}>
-                        <Icon name={"Undo"} />
-                    </IconContext.Provider>
-                </button>
                 <br />
                 <LocalIP classes="sidebar-ip" />
             </div>
-        )
-    }
+        ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [colors, fromDate, toDate]
+    );
 
     const displayMap = useMemo(
         () => (
@@ -326,7 +333,6 @@ function History({ isVisible }) {
                             <Tracks
                                 map={map}
                                 tracks={tracks}
-                                isVisible={isVisible}
                                 showMarkers={settings.showMarkers}
                             />
                         </LayersControl.Overlay>
@@ -337,7 +343,10 @@ function History({ isVisible }) {
                         </LayersControl.Overlay>
                     </LayersControl>
                     <Control position="bottomleft">
-                        <Next key="btn-index" link="/dashboard" icon="Globe" classes="next-button" styles={{ color: "#999", size: "30px" }} />
+                        <button className="reset-button" onClick={handleBoundsChange} >
+                            <Next link="" icon="Resize" classes="next-button" styles={{ color: "#999", size: "30px" }} />
+                        </button>
+                        <Next link="/dashboard" icon="Globe" classes="next-button" styles={{ color: "#999", size: "30px" }} />
                     </Control>
                     <div className="leaflet-bottom leaflet-right">
                         <Coords />
@@ -346,16 +355,16 @@ function History({ isVisible }) {
             </div>
         ),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [map, tracks, isVisible],
+        [map, tracks, bounds]
     );
 
     return (
         <div className="page">
             <Loader isLoading={isLoading} />
             {displayMap}
-            {map ? <SideBar map={map} bounds={bounds} /> : null}
+            {map ? sideBar : null}
         </div>
-    )
+    );
 }
 
 export default History;

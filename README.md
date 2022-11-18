@@ -36,25 +36,12 @@ For more instructions on the front-end React App [look here](Netlify_Instruction
 ## Issues and improvements
 
 To do now:
-- ~~remove API keys from lambda function~~
-- ~~add a legend key and different icon colors on the history page~~
-- sort out the mobile version
-- re-architect all API calls to remove unecessary requests
-- add a config setting to switch between live and BOM data source
-- ~~the degrees celcius symbol is seperated from the numerals for some reason~~
-- turn off data refresh if the page is not visible
-- ~~expand the capacity of the positions collection in mongoDB to 3 months~~
-- ~~break up tracks into segments when signal is lost for a while~~
-- write a function to collect names and data of vessels not currently in the database
-- add AISHub data
 - add wind gusts
-- ~~auto scale the History page to the collected tracks~~
-- ~~"Light Intensity Shower Rain" is too long for the display~~
-- ~~add a spinner to the history page while its fetchng data~~
-- ~~Fix redirects so browsing history works~~
-- ~~Fix position lat/lon display for track markers~~
-- ~~Make the course display as three digits and degrees symbol~~
-- ~~add an indicator for local ip and remote address~~
+- re-architect API calls to remove unecessary requests
+- add a config setting to switch between live and BOM data source
+- write a function to collect names and data of vessels not currently in the database
+- add AISHub data / confrm Scarborough is feeding correctly (separate to Manly)
+- turn off data refresh if the page is not selected
 
 Maybe later:
 - still some annoying CSS alignment issues
@@ -64,6 +51,7 @@ Maybe later:
 - shorten the variable names all round e.g. for wind
 - put the 'weather refreshed' time somewhere inconspicuous
 - add tooltips back into each chart
+- experiment with serviceworker
 - experiment with adding all other AIS tracks in view
 - experiment with adding operational areas 
 - this mini-map is kind of cool https://react-leaflet.js.org/docs/example-react-control/
@@ -94,6 +82,20 @@ Done:
 - ~~fix the scales and labels on the wind and pressure charts (e.g. wind should not go to -0.1)~~
 - ~~sequence the soft start delay (weather & stats & forecast -> wind -> pressure -> tide -> tracks -> rain)~~
 - ~~relook whether to add a label for the wind panel~~
+- ~~sort out the mobile version~~
+- ~~turn off data refresh if the page is not visible~~
+- ~~remove API keys from lambda function~~
+- ~~add a legend key and different icon colors on the history page~~
+- ~~the degrees celcius symbol is seperated from the numerals for some reason~~
+- ~~expand the capacity of the positions collection in mongoDB to 3 months~~
+- ~~break up tracks into segments when signal is lost for a while~~
+- ~~auto scale the History page to the collected tracks~~
+- ~~"Light Intensity Shower Rain" is too long for the display~~
+- ~~add a spinner to the history page while its fetchng data~~
+- ~~fix redirects so browsing history works~~
+- ~~fix position lat/lon display for track markers~~
+- ~~make the course display as three digits and degrees symbol~~
+- ~~add an indicator for local ip and remote address~~
 
 ## Setup for Android TV
 

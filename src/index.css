@@ -34,7 +34,7 @@ html, body {
     border-radius: 10px;
     background-color: black;
     overflow: hidden;
-    min-height: 900px;
+    width: 380px;
     /*    background-color: #282c34;*/
 }
 
@@ -42,15 +42,12 @@ html, body {
     flex: 1 0 auto;
     order: 1;
     z-index: 10;
-    width: 380px;
 }
 
 .stats {
     flex: 0 0 380px;
     order: 3;
     z-index: 10;
-    width: 380px;
-    min-height: 900px;
     padding: 0px 10px;
 }
 
@@ -58,7 +55,6 @@ html, body {
     flex: 0 0 380px;
     order: 2;
     z-index: 10;
-    width: 380px;
     padding: 0px 10px;
 }
 
@@ -81,17 +77,20 @@ html, body {
     .map {
         width: calc(100vw - (100vw - 100%) - 6px);
     }
+
     .stats {
-        flex: 1 1 auto;
+        flex: 1 1 content;
         order: 2;
+        width: 320px;
     }
 
     .chart {
-        flex: 1 1 auto;
+        flex: 1 1 content;
         order: 3;
+        width: 320px;
     }
 
     .sidebar {
-        flex: 1 1 30em;
+        flex: 1 1 content;
     }
 }

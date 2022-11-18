@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import * as dayjs from 'dayjs'
 import axios from "axios";
 import Row from "./../Common/Row"
@@ -10,35 +10,17 @@ const settings = {
     url: "https://coastguard.netlify.app/.netlify/functions/forecast"
 }
 
-/**
- * Displays weather forecast
- *
- * @returns {JSX.Element} Forecast component
- * [{"dt":1664776800,"time":"2022-10-03T06:00:00.000Z",
- * "icon":"03d","label":"Scattered Clouds","temp":19.71,
- * "pressure":1018,"wind":{"knots":13.4,"direction":132,
- * "gust":14.7}},...etc...]
- * 
- * */
-function Forecast({ isVisible = true }) {
+// ----------------------------------------------------------------------------------------------------
+// displays weather forecast
+function Forecast({ isVisible, ...restProps }) {
 
+    // data received from the server
     let [forecast, setForecast] = useState([]);
+    const refreshTimer = useRef(null);
 
-    useEffect(() => {
-        setTimeout(
-            () => {
-                refresh();
-                const refreshTimer = setInterval(() => {
-                    refresh();
-                }, settings.refreshMillis); // update once an hour
-                return () => {
-                    clearInterval(refreshTimer);
-                };
-            }, settings.startupMillis);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    function refresh() {
+    // ----------------------------------------------------------------------------------------------------
+    // refresh data from the server
+    const onRefresh = useCallback(() => {
 
         // suspend refresh when page is not visible
         if (!isVisible) return;
@@ -57,8 +39,37 @@ function Forecast({ isVisible = true }) {
             .catch((err) => {
                 Log("forecast error", err);
             });
-    };
 
+    }, [isVisible]);
+
+    // ----------------------------------------------------------------------------------------------------
+    // soft start a timer to periodically refresh data
+    useEffect(() => {
+
+        setTimeout(() => {
+
+            if (refreshTimer.current) {
+                clearInterval(refreshTimer.current);
+                refreshTimer.current = null;
+            }
+
+            refreshTimer.current = setInterval(function refresh() {
+                onRefresh();
+                return refresh;
+            }(), settings.refreshMillis);
+
+            return () => {
+                clearInterval(refreshTimer.current);
+                refreshTimer.current = null;
+            };
+
+        }, settings.startupMillis);
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isVisible]);
+
+    // ----------------------------------------------------------------------------------------------------
+    // return the component
     return (
         <div className="wrapper">
             <div className="label center">Forecast</div>

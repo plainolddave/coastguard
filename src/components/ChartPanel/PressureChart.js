@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import axios from "axios";
 import * as dayjs from 'dayjs'
 import { GetTimeOffset, Log, RoundUpToMultiple, RoundDownToMultiple } from "./../Common/Utils"
@@ -25,42 +25,45 @@ const settings = {
     chartHeight: 200
 };
 
-const initialData = [{ "value": 1013.2, "dt": 0 }, { "value": 1013.2, "dt": 1000 }];
+// ----------------------------------------------------------------------------------------------------
+// helper functions
+const formatXAxis = item => {
+    return dayjs.unix(item).format('HH:mm');
+}
 
-/**
- * Displays pressure
- *
- * url: https://coastguard.netlify.app/.netlify/functions/weather?field=pressure&limit=1000&from=1665184647&to=1665206247
- * data: [{"value":1021,"dt":1665185100},{"value":1022,"dt":1665185580},... ]
- *
- * */
+const formatYAxis = item => {
+    return Math.round(item);
+}
+
+const formatXTicks = () => {
+
+    // get the start tick for the next even increment
+    const dtFrom = GetTimeOffset(settings.fromHours).getTime() / 1000 + settings.tickSeconds;
+    const dtTo = GetTimeOffset(settings.toHours).getTime() / 1000;
+
+    let dtTick = Math.floor(dtFrom / settings.tickSeconds) * settings.tickSeconds;
+    let tickArray = [];
+    while (dtTick < dtTo) {
+        tickArray.push(dtTick);
+        dtTick += settings.tickSeconds;
+    }
+    return tickArray;
+}
+
+// ----------------------------------------------------------------------------------------------------
+
 function PressureChart({
     chartHeight = settings.chartHeight,
     isVisible = true,
     ...restProps }) {
 
-    // ----------------------------------------------------------------------------------------------------
-    // props, state, refs
-
-    let [data, setData] = useState(initialData);    // data received from the server
+    // data received from the server
+    let [data, setData] = useState([]); 
+    const refreshTimer = useRef(null);
 
     // ----------------------------------------------------------------------------------------------------
     // refresh data from the server
-    useEffect(() => {
-        setTimeout(
-            () => {
-                refresh();
-                const refreshTimer = setInterval(() => {
-                    refresh();
-                }, settings.refreshMillis);
-                return () => {
-                    clearInterval(refreshTimer);
-                };
-            }, settings.startupMillis);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    function refresh() {
+    const onRefresh = useCallback(() => {
 
         // suspend refresh when page is not visible
         if (!isVisible) return;
@@ -69,7 +72,6 @@ function PressureChart({
         const dtFrom = Math.floor(timeFrom.getTime() / 1000);
         const timeTo = GetTimeOffset(settings.toHours);
         const dtTo = Math.floor(timeTo.getTime() / 1000);
-
         let url = `${settings.url}?field=pressure&limit=1000&from=${dtFrom}&to=${dtTo}`;
         Log("pressure", url);
 
@@ -80,36 +82,37 @@ function PressureChart({
             .catch((err) => {
                 Log("pressure error", err);
             });
-    };
+
+    }, [isVisible]);
 
     // ----------------------------------------------------------------------------------------------------
+    // soft start a timer to periodically refresh data
+    useEffect(() => {
 
-    const formatXAxis = item => {
-        return dayjs.unix(item).format('HH:mm');
-    }
+        setTimeout(() => {
 
-    const formatYAxis = item => {
-        return Math.round(item);
-    }
+            if (refreshTimer.current) {
+                clearInterval(refreshTimer.current);
+                refreshTimer.current = null;
+            }
 
-    const formatXTicks = () => {
+            refreshTimer.current = setInterval(function refresh() {
+                onRefresh();
+                return refresh;
+            }(), settings.refreshMillis);
 
-        // get the start tick for the next even increment
-        const dtFrom = GetTimeOffset(settings.fromHours).getTime() / 1000 + settings.tickSeconds;
-        const dtTo = GetTimeOffset(settings.toHours).getTime() / 1000;
+            return () => {
+                clearInterval(refreshTimer.current);
+                refreshTimer.current = null;
+            };
 
-        let dtTick = Math.floor(dtFrom / settings.tickSeconds) * settings.tickSeconds;
-        let tickArray = [];
-        while (dtTick < dtTo) {
-            tickArray.push(dtTick);
-            dtTick += settings.tickSeconds;
-        }
-        //console.log(`pressure ticks: ${JSON.stringify(tickArray)}`);
-        return tickArray;
-    }
+        }, settings.startupMillis);
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isVisible]);
 
     // ----------------------------------------------------------------------------------------------------
-
+    // return the component
     return (
         <div className="wrapper">
             <div className="label left">Pressure</div>
@@ -144,7 +147,7 @@ function PressureChart({
                         allowDataOverflow={true}
                     >
                         <Label
-                            value='hPa'
+                            value='hpa'
                             position='insideLeft'
                             angle={-90}
                             style={{

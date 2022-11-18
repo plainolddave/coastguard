@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import PressureChart from "./PressureChart"
 import TideChart from "./TideChart"
 import WindChart from "./WindChart"
@@ -11,32 +11,25 @@ const settings = {
     tideHeight: 180
 };
 
-class ChartPanel extends Component {
-
-    //constructor(props) {
-    //    super(props);
-    //}
-
-    render = () => {
-        return (
-            <>
-                <WindChart
-                    windRoseWidth={settings.windRoseWidth}
-                    windRoseHeight={settings.windRoseHeight}
-                    chartHeight={settings.chartHeight}
-                    isVisible={this.props.isVisible} 
-                />
-                <PressureChart
-                    chartHeight={settings.chartHeight}
-                    isVisible={this.props.isVisible}
-                />
-                <TideChart
-                    chartHeight={settings.tideHeight}
-                    isVisible={this.props.isVisible} 
-                />
-            </>
-        )
-    }
+function ChartPanel({ isVisible, ...restProps }) {
+    return (
+        <div className="chart panel">
+            <WindChart
+                windRoseWidth={settings.windRoseWidth}
+                windRoseHeight={settings.windRoseHeight}
+                chartHeight={settings.chartHeight}
+                isVisible={isVisible}
+            />
+            <PressureChart
+                chartHeight={settings.chartHeight}
+                isVisible={isVisible}
+            />
+            <TideChart
+                chartHeight={settings.tideHeight}
+                isVisible={isVisible}
+            />
+        </ div>
+    )
 }
 
 export default ChartPanel

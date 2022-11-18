@@ -121,7 +121,7 @@ class RainLayer extends Component {
                     'frames': frames,
                     'opacity': opacity
                 })
-                LogJSON("rain refresh frames", frames);
+                LogJSON("rain frames", frames);
             })
             .catch((err) => {
                 Log("rain error", err);

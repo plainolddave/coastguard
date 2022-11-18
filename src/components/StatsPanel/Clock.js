@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from "react";
 import * as dayjs from 'dayjs'
 
-/**
- * Displays time and date
- *
- * @returns {JSX.Element} Clock component
- */
 function Clock() { 
 
     const [dateNow, setDateNow] = useState(new Date());
