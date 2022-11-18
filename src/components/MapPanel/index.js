@@ -139,7 +139,7 @@ function MapPanel({ isVisible, autoScale, ...restProps }) {
             .catch((err) => {
                 Log("track error", err);
             });
-
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isVisible]);
 
     // ----------------------------------------------------------------------------------------------------
@@ -166,7 +166,7 @@ function MapPanel({ isVisible, autoScale, ...restProps }) {
         }, settings.startupMillis);
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isVisible]);
+    }, []);
 
     // ----------------------------------------------------------------------------------------------------
     // return the component
