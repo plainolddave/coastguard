@@ -3,7 +3,7 @@ import * as dayjs from 'dayjs'
 
 function Legend({
     map = null,
-    colors = new Map(),
+    colors = [],
     fromDate = new Date(),
     toDate = new Date(),
     ...restProps }) {
@@ -23,7 +23,7 @@ function Legend({
                         <td className="sidebar-label left">{dayjs(toDate).format("D MMM YYYY")}</td>
                     </tr>
                     <tr><td>&nbsp;</td><td></td></tr>
-                    {Array.from(colors.values()).map((value, index) =>
+                    {colors.map((value, index) =>
                         <tr key={`lg_${value.label}`}>
                             <td><img className="sidebar-icon" src={value.icon.url} alt="" /></td>
                             <td className="sidebar-label left">{value.label}</td>
@@ -43,5 +43,3 @@ function Legend({
 }
 
 export default Legend;
-
-//style = "width:20px;height:20px;"

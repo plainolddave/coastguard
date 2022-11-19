@@ -60,7 +60,7 @@ function Tracks({
     );
 
     const displayTracks = useMemo(() => (
-        <LayerGroup>
+        <>
             {tracks.map((vessel, index) =>
                 <LayerGroup key={`lg_${vessel.mmsi}`}>
                     {vessel.lines.map((segment, index) =>
@@ -90,7 +90,7 @@ function Tracks({
                     {(showMarkers ? displayMarker(vessel) : <></>)}
                 </LayerGroup>
             )}
-        </LayerGroup>),
+        </>),
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [tracks, showMarkers],
     );

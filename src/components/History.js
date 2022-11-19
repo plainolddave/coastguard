@@ -57,6 +57,13 @@ const settings = {
         ["CG23", 'violet'],
         ["CG24", 'red'],
         ["CG26", 'orange']
+    ]),
+    zIndex: new Map([
+        ["QF2", 5],
+        ["AVCG", 4],
+        ["VMR", 3],
+        ["QPS", 2],
+        ["Other", 1],
     ])
 }
 
@@ -78,7 +85,7 @@ function History({ isVisible, ...restProps }) {
     const [fromDate, setFromDate] = useState(new Date());
     const [toDate, setToDate] = useState(new Date());
     const [isLoading, setIsLoading] = useState(false);
-    const [colors, setColors] = useState(new Map());
+    const [colors, setColors] = useState([]);
     const [tracks, setTracks] = useState([]);
     const [map, setMap] = useState(null);
     const refreshTimer = useRef(null);
@@ -189,21 +196,31 @@ function History({ isVisible, ...restProps }) {
                     if (org.value === defaultOrg) {
                         vessel.info.icon = GetIcon(settings.colors.get(vessel.info.name));
                         vessel.info.color = GetColor(settings.colors.get(vessel.info.name));
+                        vessel.info.zIndex = vessel.info.name;
                         newColors.set(vessel.info.name, { label: vessel.info.name, icon: vessel.info.icon, color: vessel.info.color });
                     } else {
                         vessel.info.icon = GetIcon(vessel.info.color);
                         vessel.info.color = GetColor(vessel.info.color);
+                        vessel.info.zIndex = (settings.zIndex.has(vessel.info.org) ? settings.zIndex.get(vessel.info.org) : 0);
                         newColors.set(vessel.info.org, {
                             label: vessel.info.org,
                             icon: vessel.info.icon,
                             color: vessel.info.color,
                         });
                     }
-                });
+                });  
 
-                // store for ron
+                // sort and store for ron
+                //newTracks.forEach((vessel) => { Log("before",vessel.info.name)});
+                newTracks = newTracks.sort((a, b) => (a.info.zIndex > b.info.zIndex) ? 1 : -1)
+                //newTracks.forEach((vessel) => { Log("after", `name: ${vessel.info.name} index: ${vessel.info.zIndex}`)  });
                 setTracks(newTracks);
+
+                // sort and store for ron, as an array
+                newColors = Array.from(newColors.values()).sort((a, b) => (a.label > b.label) ? 1 : -1)
                 setColors(newColors);
+
+                // save-the-date like charles from brooklyn99
                 setFromDate(new Date(response.data.from));
                 setToDate(new Date(response.data.to));
 

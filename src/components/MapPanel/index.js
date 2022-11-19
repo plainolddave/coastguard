@@ -23,9 +23,9 @@ const settings = {
             opacity: 0.8
         },
         circle: {
-            radius: 5,
-            weight: 1,
-            opacity: 0.8
+            radius: 4,
+            weight: 2,
+            opacity: 1.0
         },
         tooltip: {
             opacity: 1.0,
@@ -49,7 +49,14 @@ const settings = {
     useScrollWheel: true,
     style: { height: "100%", width: "100%" },
     attribution: false,
-    zoomSnap: 0.1
+    zoomSnap: 0.1,
+    zIndex: new Map([
+        ["QF2", 5],
+        ["AVCG", 4],
+        ["VMR", 3],
+        ["QPS", 2],
+        ["Other", 1],
+    ])
 }
 
 // ----------------------------------------------------------------------------------------------------
@@ -132,7 +139,9 @@ function MapPanel({ isVisible, autoScale, ...restProps }) {
                     // thats been set from the database
                     vessel.info.icon = GetIcon(vessel.info.color);
                     vessel.info.color = GetColor(vessel.info.color);
+                    vessel.info.zIndex = (settings.zIndex.has(vessel.info.org) ? settings.zIndex.get(vessel.info.org) : 0);
                 });
+                newTracks.sort((a, b) => (a.info.zIndex > b.info.zIndex) ? 1 : -1)
                 setTracks(newTracks);
                 setBounds(newBounds);
             })
