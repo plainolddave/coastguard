@@ -19,8 +19,9 @@ const settings = {
     refreshMillis: 1000 * 60 * 60,      // get new data from the server once each hour
     recalcMillis: 1000 * 60,            // recalculate current tide height each 1/2 minute
     tickSeconds: 2 * 60 * 60,           // interval for chart ticks
-    fromHours: -12,                     // use a window of tide information n hours behind now()
-    toHours: 12,                        // use a window of tide information n hours ahead of now()
+    showHours: 10,                      // hours to show either side of now
+    fromHours: -12,                     // get data for tide information n hours behind now()
+    toHours: 12,                        // get data for tide information n hours ahead of now()
     url: "https://coastguard.netlify.app/.netlify/functions/tide",
     heightOffset: 1.328,
     fontSize: 16,
@@ -48,8 +49,8 @@ const formatLabel = item => {
 const getXAxisTicks = () => {
 
     // get the start tick for the next even increment
-    const dtFrom = GetTimeOffset(settings.fromHours).getTime() / 1000 + settings.tickSeconds;
-    const dtTo = GetTimeOffset(settings.toHours).getTime() / 1000;
+    const dtFrom = GetTimeOffset(-settings.showHours).getTime() / 1000 + settings.tickSeconds;
+    const dtTo = GetTimeOffset(settings.showHours).getTime() / 1000;
     let dtTick = Math.floor(dtFrom / settings.tickSeconds) * settings.tickSeconds;
     let tickArray = [];
     while (dtTick < dtTo) {
@@ -58,6 +59,14 @@ const getXAxisTicks = () => {
     }
 
     return tickArray;
+}
+
+const getXDomainMin = () => {
+    return GetTimeOffset(-settings.showHours).getTime() / 1000;
+}
+
+const getXDomainMax = () => {
+    return GetTimeOffset(settings.showHours).getTime() / 1000;
 }
 
 // ----------------------------------------------------------------------------------------------------
@@ -141,7 +150,7 @@ function TideChart({
         const dtTo = Math.floor(timeTo.getTime() / 1000);
         let url = `${settings.url}?limit=100&from=${dtFrom}&to=${dtTo}&offset=${settings.heightOffset}`;
         Log("tide", url);
-
+       
         axios.get(url)
             .then((response) => {
                 let data = response.data;
@@ -212,13 +221,13 @@ function TideChart({
                     <XAxis
                         dataKey="dt"
                         type="number"
-                        domain={['dataMin', 'dataMax']}
+                        domain={[getXDomainMin, getXDomainMax]}
                         scale="time"
-                        interval="preserveStart"
+                        interval="0"
                         tickFormatter={formatXAxis}
                         angle={0}
-                        tick={{ fontSize: settings.fontSize, fill: settings.fontColor }}
                         ticks={getXAxisTicks()}
+                        tick={{ fontSize: settings.fontSize, fill: settings.fontColor }}
                         allowDataOverflow={true}
                     />
                     <YAxis
