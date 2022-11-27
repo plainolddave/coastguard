@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { LayerGroup, Polyline, Marker, Popup, Tooltip, CircleMarker } from "react-leaflet";
+import { LayerGroup, LayersControl, Polyline, Marker, Popup, Tooltip, CircleMarker, Pane } from "react-leaflet";
 import * as dayjs from 'dayjs'
 import { PositionToString, CogToString } from "./Utils"
 
@@ -25,14 +25,8 @@ const settings = {
     }
 }
 
-function Tracks({
-    map = null,
-    tracks = [],
-    showMarkers = true,
-    format = settings.format,
-    ...restProps }) {
-
-    const displayMarker = (vessel) => (
+function displayMarker(vessel, format) {
+    return (
         <Marker
             key={`mk_${vessel.mmsi}`}
             position={[vessel.pos.lat, vessel.pos.lon]}
@@ -58,37 +52,55 @@ function Tracks({
             </Popup>
         </Marker>
     );
+}
+
+function Tracks({
+    map = null,
+    tracks = [],
+    showMarkers = true,
+    format = settings.format,
+    ...restProps }) {
+
+    //useEffect(() => {
+    //    tracks.forEach((vessel) => {
+    //        console.log(`vessel: ${vessel.info.name} org: ${vessel.info.org} index: ${vessel.info.zIndex} `)
+    //    });
+    //}, [tracks]);
 
     const displayTracks = useMemo(() => (
         <>
             {tracks.map((vessel, index) =>
-                <LayerGroup key={`lg_${vessel.mmsi}`}>
-                    {vessel.lines.map((segment, index) =>
-                        <Polyline
-                            key={`tk_${vessel.mmsi}_${index}`}
-                            pathOptions={{ weight: format.track.weight, opacity: format.track.opacity, color: vessel.info.color }}
-                            positions={segment}
-                        />
-                    )}
-                    {vessel.track.map((point, index) =>
-                        <CircleMarker
-                            key={`cm_${vessel.mmsi}_${point.dt}`}
-                            center={point}
-                            radius={format.circle.radius}
-                            pathOptions={{ weight: format.circle.weight, opacity: format.circle.opacity, color: vessel.info.color }}
-                        >
-                            <Popup key={`pu_${vessel.mmsi}`}>
-                                Name: {vessel.info.name}<br />
-                                MMSI: {vessel.info.mmsi}<br />
-                                Time: {dayjs.unix(point.dt).format("DD MMM YYYY HH:mm")}<br />
-                                Pos: {PositionToString(point.lat, point.lon)}<br />
-                                Course: {CogToString(point.cog)}<br />
-                                Speed: {point.sog} kts<br />
-                            </Popup>
-                        </CircleMarker>
-                    )}
-                    {(showMarkers ? displayMarker(vessel) : <></>)}
-                </LayerGroup>
+                <LayersControl.Overlay name={vessel.info.name} checked>
+                    <Pane key={`pn_${vessel.mmsi}`} style={{ zIndex: (vessel.info.zIndex ? vessel.info.zIndex : 100) }}>
+                        <LayerGroup key={`lg_${vessel.mmsi}`}>
+                            {vessel.lines.map((segment, index) =>
+                                <Polyline
+                                    key={`tk_${vessel.mmsi}_${index}`}
+                                    pathOptions={{ weight: format.track.weight, opacity: format.track.opacity, color: vessel.info.color }}
+                                    positions={segment}
+                                />
+                            )}
+                            {vessel.track.map((point, index) =>
+                                <CircleMarker
+                                    key={`cm_${vessel.mmsi}_${point.dt}`}
+                                    center={point}
+                                    radius={format.circle.radius}
+                                    pathOptions={{ weight: format.circle.weight, opacity: format.circle.opacity, color: vessel.info.color }}
+                                >
+                                    <Popup key={`pu_${vessel.mmsi}`}>
+                                        Name: {vessel.info.name}<br />
+                                        MMSI: {vessel.info.mmsi}<br />
+                                        Time: {dayjs.unix(point.dt).format("DD MMM YYYY HH:mm")}<br />
+                                        Pos: {PositionToString(point.lat, point.lon)}<br />
+                                        Course: {CogToString(point.cog)}<br />
+                                        Speed: {point.sog} kts<br />
+                                    </Popup>
+                                </CircleMarker>
+                            )}
+                            {(showMarkers ? displayMarker(vessel, format) : <></>)}
+                        </LayerGroup>
+                    </Pane>
+                </LayersControl.Overlay>
             )}
         </>),
         // eslint-disable-next-line react-hooks/exhaustive-deps

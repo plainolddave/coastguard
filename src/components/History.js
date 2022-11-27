@@ -59,11 +59,11 @@ const settings = {
         ["CG26", 'orange']
     ]),
     zIndex: new Map([
-        ["QF2", 5],
-        ["AVCG", 4],
-        ["VMR", 3],
-        ["QPS", 2],
-        ["Other", 1],
+        ["QF2", 150],
+        ["AVCG", 140],
+        ["VMR", 130],
+        ["QPS", 120],
+        ["Other", 110],
     ])
 }
 
@@ -201,14 +201,14 @@ function History({ isVisible, ...restProps }) {
                     } else {
                         vessel.info.icon = GetIcon(vessel.info.color);
                         vessel.info.color = GetColor(vessel.info.color);
-                        vessel.info.zIndex = (settings.zIndex.has(vessel.info.org) ? settings.zIndex.get(vessel.info.org) : 0);
+                        vessel.info.zIndex = (settings.zIndex.has(vessel.info.org) ? settings.zIndex.get(vessel.info.org) : 100);
                         newColors.set(vessel.info.org, {
                             label: vessel.info.org,
                             icon: vessel.info.icon,
                             color: vessel.info.color,
                         });
                     }
-                });  
+                });
 
                 // sort and store for ron
                 //newTracks.forEach((vessel) => { Log("before",vessel.info.name)});
@@ -346,13 +346,11 @@ function History({ isVisible, ...restProps }) {
                 >
                     <LayersControl position="topright">
                         <BaseLayers isChecked="Simple" />
-                        <LayersControl.Overlay name="Vessels" checked>
-                            <Tracks
-                                map={map}
-                                tracks={tracks}
-                                showMarkers={settings.showMarkers}
-                            />
-                        </LayersControl.Overlay>
+                        <Tracks
+                            map={map}
+                            tracks={tracks}
+                            showMarkers={settings.showMarkers}
+                        />
                         <LayersControl.Overlay name="Nav Marks">
                             <TileLayer
                                 url="https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png"

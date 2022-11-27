@@ -5,7 +5,6 @@ import ChartPanel from "./../components/ChartPanel";
 import "./../index.css"
 
 function Dashboard({ isVisible, ...restProps }) {
-
     return (
         <div className="page">
             <MapPanel isVisible={isVisible} autoScale={false} />

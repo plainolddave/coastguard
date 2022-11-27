@@ -51,11 +51,11 @@ const settings = {
     attribution: false,
     zoomSnap: 0.1,
     zIndex: new Map([
-        ["QF2", 5],
-        ["AVCG", 4],
-        ["VMR", 3],
-        ["QPS", 2],
-        ["Other", 1],
+        ["QF2", 150],
+        ["AVCG", 140],
+        ["VMR", 130],
+        ["QPS", 120],
+        ["Other", 110],
     ])
 }
 
@@ -139,7 +139,7 @@ function MapPanel({ isVisible, autoScale, ...restProps }) {
                     // thats been set from the database
                     vessel.info.icon = GetIcon(vessel.info.color);
                     vessel.info.color = GetColor(vessel.info.color);
-                    vessel.info.zIndex = (settings.zIndex.has(vessel.info.org) ? settings.zIndex.get(vessel.info.org) : 0);
+                    vessel.info.zIndex = (settings.zIndex.has(vessel.info.org) ? settings.zIndex.get(vessel.info.org) : 100);
                 });
                 newTracks.sort((a, b) => (a.info.zIndex > b.info.zIndex) ? 1 : -1)
                 setTracks(newTracks);
@@ -197,15 +197,13 @@ function MapPanel({ isVisible, autoScale, ...restProps }) {
                     <LayersControl.Overlay name="Rain">
                         <RainLayer map={map} isVisible={isVisible} />
                     </LayersControl.Overlay>
-                    <LayersControl.Overlay name="Vessels" checked>
-                        <Tracks
-                            map={map}
-                            tracks={tracks}
-                            isVisible={isVisible}
-                            showMarkers={settings.showMarkers}
-                            format={settings.format}
-                        />
-                    </LayersControl.Overlay>
+                    <Tracks
+                        map={map}
+                        tracks={tracks}
+                        isVisible={isVisible}
+                        showMarkers={settings.showMarkers}
+                        format={settings.format}
+                    />
                     <LayersControl.Overlay name="Nav Marks">
                         <TileLayer
                             url="https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png"
