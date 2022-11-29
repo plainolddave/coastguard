@@ -310,29 +310,103 @@ label {
     overflow-x: hidden;
     overflow-y: hidden;
     position: relative;
-    z-index: 100;
+    display: flex;
+    flex-direction:column;
+    align-items: center;
+    justify-content: flex-start;
 }
 
 .sidebar-label {
     color: #FFF;
+    border: 0px solid green;
+    width: 240px;
+    padding: 10px 0px 0px 10px;
+    text-align: left;
 }
 
-.sidebar-reset {
-    width: 30px;
-    height: 30px;
-    margin: 0px;
-    padding: 3px;
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    z-index: 120;
+/*.sidebar-center {
+    border: 1px solid yellow;
+    text-align: center;
+    width: calc(100%-12px);
+}*/
+
+.sidebar-select {
+    padding: 5px;
+    margin: 1px 0px;
+    border: 0px solid blue;
+    width: 240px;
+    text-align: center;
+}
+
+    .sidebar-select > * {
+        max-width: 228px;
+        text-align: left;
+    }
+
+.sidebar-date {
+    padding: 10px;
+    margin: 1px 0px;
+    border: 1px solid blue;
+    width: 228px;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+    border-color: hsl(0, 0%, 80%);
+    border-radius: 4px;
+    border-style: solid;
+    border-width: 1px;
+}
+
+.sidebar-date-picker {
+    padding: 5px;
+    margin: 1px 0px;
+    border: 0px solid blue;
+    width: 228px;
+}
+
+.sidebar-button {
+    padding: 10px;
+    margin: 10px 0px 40px 0px;
+    border-radius: 4px;
+    border: 1px solid hsl(0, 0%, 80%);
+    width: 228px;
+    opacity: 0.6;
+}
+
+    .sidebar-button:hover {
+        color: yellow;
+        background-color: #3366cc;
+        opacity: 1.0;
+        padding: 9px;
+        border: 2px solid yellow;
+    }
+
+.enabled {
+    color: #FFF;
+    background-color: #3366cc;
+    opacity: 1.0;
+    padding: 9px;
+    border: 2px solid white;
+}
+
+.sidebar-box {
+    display: grid;
+    grid-template-columns: 20px auto;
+    align-items: center;
+    justify-content: center;
+    column-gap: 10px;
+    row-gap: 15px;
 }
 
 .sidebar-icon {
     width: 20px;
     height: 32px;
     margin-right: 10px;
-    z-index: 130;
+}
+
+.sidebar-key {
+    display: inline-block;
+    color: #FFF;
 }
 
 .sidebar-ip {
@@ -401,4 +475,3 @@ label {
         transform: rotate(360deg);
     }
 }
-

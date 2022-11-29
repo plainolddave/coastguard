@@ -119,7 +119,13 @@ exports = function ({ query, headers, body }, response) {
                             mmsi: "$mmsi",
                             fleet: "Other",
                             org: "Other",
-                            color: "gray"
+                            color: "gray",
+                            style: {
+                                zIndex: 100,
+                                vesselColor: "gray",
+                                fleetColor: "gray",
+                                orgColor: "gray"
+                            }
                         }
                     }
                 }

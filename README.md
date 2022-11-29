@@ -29,7 +29,8 @@ npm install react-icons --save
 npm install recharts
 npm install react-router-dom
 npm install react-select
-npm install --save react-page-visibility
+npm install react-page-visibility --save 
+npm install react-datepicker --save
 ```
 For more instructions on the front-end React App [look here](Netlify_Instructions.md)  
 

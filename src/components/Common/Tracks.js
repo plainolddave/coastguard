@@ -70,7 +70,7 @@ function Tracks({
     const displayTracks = useMemo(() => (
         <>
             {tracks.map((vessel, index) =>
-                <LayersControl.Overlay name={vessel.info.name} checked>
+                <LayersControl.Overlay name={vessel.info.name} key={`nm_${vessel.mmsi}`} checked>
                     <Pane key={`pn_${vessel.mmsi}`} style={{ zIndex: (vessel.info.zIndex ? vessel.info.zIndex : 100) }}>
                         <LayerGroup key={`lg_${vessel.mmsi}`}>
                             {vessel.lines.map((segment, index) =>
