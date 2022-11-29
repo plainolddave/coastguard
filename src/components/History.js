@@ -44,7 +44,7 @@ const Timeframes = new Map([
     [Timeframe.ThisMonth, { value: Timeframe.ThisMonth, line: true, label: 'This month' }],
     [Timeframe.LastMonth, { value: Timeframe.LastMonth, line: false, label: 'Previous month' }],
     [Timeframe.LastTwoMonths, { value: Timeframe.LastTwoMonths, line: false, label: 'Previous 2 months' }],
-    [Timeframe.Custom, { value: Timeframe.Custom, line: false, label: 'Select dates...' }],
+    [Timeframe.Custom, { value: Timeframe.Custom, line: false, label: 'Date range' }],
 ]);
 
 const Resolution = {
@@ -290,7 +290,6 @@ function History({ isVisible, ...restProps }) {
 
     // update the dates when timeframe changes
     useEffect(() => {
-
         switch (timeframe.value) {
             case Timeframe.Today:  // today
                 setFromDate(dayjs().startOf("day"));
@@ -428,7 +427,7 @@ function History({ isVisible, ...restProps }) {
                     selected={fromDate.toDate()}
                     onChange={(value) => {
                         setFromDate(dayjs(value));
-                        setTimeframe(Timeframe.Custom);
+                        setTimeframe(Timeframes.get(Timeframe.Custom));
                         setPageState(PageState.Stale);
                     }}
                 />
@@ -440,7 +439,7 @@ function History({ isVisible, ...restProps }) {
                     minDate={fromDate.toDate()}
                     onChange={(value) => {
                         setToDate(dayjs(value));
-                        setTimeframe(Timeframe.Custom);
+                        setTimeframe(Timeframes.get(Timeframe.Custom));
                         setPageState(PageState.Stale);
                     }}
                 />
