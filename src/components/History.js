@@ -453,10 +453,10 @@ function History({ isVisible, ...restProps }) {
                 <div className="sidebar-label">Vessels:</div>
                 <div className="sidebar-content sidebar-box">
                     {colors.map((value, index) =>
-                        <>
+                        <div className="sidebar-row" key={`vm_${value.label}`}>
                             <img className="sidebar-icon" src={value.icon.url} alt="" />
                             <div className="sidebar-key">{value.label}</div>
-                        </>
+                        </div>
                     )}
                 </div>
                 <LocalIP classes="sidebar-ip" />

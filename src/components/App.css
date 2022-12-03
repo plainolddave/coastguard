@@ -391,6 +391,15 @@ label {
 
 .sidebar-box {
     display: grid;
+    grid-template-columns: auto;
+    align-items: center;
+    justify-content: center;
+    column-gap: 10px;
+    row-gap: 15px;
+}
+
+.sidebar-row {
+    display: grid;
     grid-template-columns: 20px auto;
     align-items: center;
     justify-content: center;
@@ -416,6 +425,7 @@ label {
     width: 100%;
     text-align: center;
     z-index: 110;
+    color: #888;
 }
 
 @media (max-width: 1100px) {
