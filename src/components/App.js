@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { Route, Routes, Outlet, Navigate, useLocation } from "react-router-dom";
 import { usePageVisibility } from 'react-page-visibility';
-import HideCursorOnIdle from "./Common/HideCursorOnIdle";
+import HideCursorOnIdle from "./Common/HideCursor";
 import { Log } from "./Common/Utils"
 import Dashboard from "./Dashboard";
 import History from "./History";

@@ -94,7 +94,6 @@ label {
 }
 
 /* ------------------------------------------------------------ */
-
 .clock {
     border: 0px solid gray;
     padding-top: 5px;
@@ -485,3 +484,5 @@ label {
         transform: rotate(360deg);
     }
 }
+
+

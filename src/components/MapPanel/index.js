@@ -6,6 +6,7 @@ import Next from "./../Common/Next"
 import Coords from "./../Common/Coords"
 import BaseLayers from "./BaseLayers";
 import Tracks from "./../Common/Tracks"
+import Graticule from "./../Common/Graticule"
 import { GetTimeOffset, Log, PositionBounds } from "./../Common/Utils"
 import RainLayer from "./RainLayer"
 import { GetColor, GetIcon } from "./TrackIcon"
@@ -204,10 +205,13 @@ function MapPanel({ isVisible, autoScale, ...restProps }) {
                         showMarkers={settings.showMarkers}
                         format={settings.format}
                     />
-                    <LayersControl.Overlay name="Nav Marks">
+                    <LayersControl.Overlay name="Navigation">
                         <TileLayer
                             url="https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png"
                         />
+                    </LayersControl.Overlay>
+                    <LayersControl.Overlay name="Grid" checked>
+                        <Graticule map={map} bounds={map == null ? null : map.getBounds()} zoom={map == null ? null : map.getZoom()} />
                     </LayersControl.Overlay>
                 </LayersControl>
                 <Control position="bottomleft">
