@@ -11,13 +11,20 @@ Components are:
 
 Dependencies are:
 
-1. [react-leaflet](https://react-leaflet.js.org/docs/start-installation/)
-2. [axios](https://www.npmjs.com/package/axios)
-3. [datejs](https://www.npmjs.com/package/datejs)
-4. [recharts](https://recharts.org/en-US)
-5. [react-icons](https://react-icons.github.io/react-icons/)
-6. [material ui icons](https://mui.com/material-ui/icons/#icons)
-7. [leaflet-easybutton]()
+1.  [axios](https://www.npmjs.com/package/axios)
+2.  [datejs](https://day.js.org/)
+3.  [leaflet](https://leafletjs.com/)
+4.  [prop-types](https://www.npmjs.com/package/prop-types)
+5.  [react-datepicker](https://reactdatepicker.com/)
+6.  [react-dom](https://reactjs.org/docs/react-dom.html)
+7.  [react-icons](https://react-icons.github.io/react-icons/)
+8.  [react-leaflet](https://react-leaflet.js.org/docs/start-installation/)
+9.  [react-leaflet-custom-control](https://www.npmjs.com/package/react-leaflet-custom-control)
+10. [react-page-visibility](https://www.npmjs.com/package/react-page-visibility)
+11. [react-router-dom](https://reactrouter.com/)
+12. [react-scripts](https://www.npmjs.com/package/react-scripts)
+13. [react-select](https://react-select.com/)
+14. [recharts](https://recharts.org/en-US)
 
 To install npm packages for the React App::
 ```bash
@@ -47,7 +54,6 @@ To do now:
 Maybe later:
 - still some annoying CSS alignment issues
 - add a TTL index to signalk->ais->positions to cap data at 3 months
-- allow history to be selected by date range
 - allow history to be selected per individual vessel or group of vessels
 - shorten the variable names all round e.g. for wind
 - put the 'weather refreshed' time somewhere inconspicuous
@@ -59,6 +65,9 @@ Maybe later:
 - look at a higher contrast map or marine chart layer
 
 Done:
+-~~allow history to be selected by date range~~
+-~~ add a lat/lon grid to the dashboard map~~
+- ~~minify production delyment~~
 - ~~add position in the bottom corner of the map~~
 - ~~add a menu and extra tab pages for historical tracks~~
 - ~~fix the default routing to point to the dashboard page~~
