@@ -66,8 +66,8 @@ Maybe later:
 
 Done:
 - ~~allow history to be selected by date range~~
-- ~~ add a lat/lon grid to the dashboard map~~
-- ~~minify production delyment~~
+- ~~add a lat/lon grid to the dashboard map~~
+- ~~minify production deployment~~
 - ~~add position in the bottom corner of the map~~
 - ~~add a menu and extra tab pages for historical tracks~~
 - ~~fix the default routing to point to the dashboard page~~
