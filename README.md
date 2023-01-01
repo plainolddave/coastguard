@@ -65,8 +65,8 @@ Maybe later:
 - look at a higher contrast map or marine chart layer
 
 Done:
--~~allow history to be selected by date range~~
--~~ add a lat/lon grid to the dashboard map~~
+- ~~allow history to be selected by date range~~
+- ~~ add a lat/lon grid to the dashboard map~~
 - ~~minify production delyment~~
 - ~~add position in the bottom corner of the map~~
 - ~~add a menu and extra tab pages for historical tracks~~
