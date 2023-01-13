@@ -1,0 +1,5 @@
+{
+    "name": "OPENWEATHERMAP_API_KEY_VALUE",
+    "value": "OPENWEATHERMAP_API_KEY_SECRET",
+    "from_secret": true
+}

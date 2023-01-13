@@ -1,0 +1,51 @@
+[
+    {
+        "name": "openweathermap_get_observation",
+        "private": true
+    },
+    {
+        "name": "openweathermap_get_forecast",
+        "private": true,
+        "run_as_system": true,
+        "disable_arg_logs": true
+    },
+    {
+        "name": "api_get_tide",
+        "private": false,
+        "disable_arg_logs": true
+    },
+    {
+        "name": "api_get_weather",
+        "private": false,
+        "disable_arg_logs": true
+    },
+    {
+        "name": "api_get_forecast",
+        "private": false,
+        "disable_arg_logs": true
+    },
+    {
+        "name": "api_put_signalk",
+        "private": false,
+        "disable_arg_logs": true
+    },
+    {
+        "name": "api_get_signalk",
+        "private": false,
+        "disable_arg_logs": true
+    },
+    {
+        "name": "api_get_fleet",
+        "private": true
+    },
+    {
+        "name": "api_post_position",
+        "private": false
+    },
+    {
+        "name": "api_log",
+        "private": true,
+        "run_as_system": true,
+        "disable_arg_logs": true
+    }
+]

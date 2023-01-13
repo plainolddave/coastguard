@@ -1,0 +1,16 @@
+{
+    "name": "openweathermap_get_forecast",
+    "type": "SCHEDULED",
+    "config": {
+        "schedule": "0 */3 * * *",
+        "skip_catchup_events": true
+    },
+    "disabled": false,
+    "event_processors": {
+        "FUNCTION": {
+            "config": {
+                "function_name": "openweathermap_get_forecast"
+            }
+        }
+    }
+}
