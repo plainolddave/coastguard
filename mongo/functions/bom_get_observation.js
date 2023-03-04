@@ -123,47 +123,6 @@ exports = function(){
     return new Date(year, monthIndex, day, hours, minutes, seconds);
   }
   
-    // parse a 14 digit string like "aifstime_utc": "20230304083000" to a Date value
-  function stringToDegrees (cardinal_str)
-  {
-    switch(cardinal_str) {
-      case "N":
-        return 0.0;
-      case "NNE":
-        return 22.5;
-      case "NE":
-        return 45.0;
-      case "ENE":
-        return 67.5;
-      case "E":
-        return 90.0;  
-      case "ESE":
-        return 112.5;  
-      case "SE":
-        return 135.0;  
-      case "SSE":
-        return 157.5;  
-      case "S":
-        return 180.0;  
-      case "SSW":
-        return 112.5;  
-      case "SW":
-        return 225.0;  
-      case "WSW":
-        return 247.5;  
-      case "W":
-        return 270.0;  
-      case "WNW":
-        return 292.5;  
-      case "NW":
-        return 315.0;  
-      case "NNW":
-        return 337.5;  
-      default: 
-        return 0;
-    }
-  }
-  
   // ====================================================================================================
   
   // retrieve the latest observation
@@ -180,8 +139,7 @@ exports = function(){
       
       obs.time = stringToDate(obs.aifstime_utc);
       obs.dt = secondsSinceEpoch(obs.time);
-      obs.wind = { "knots": obs.wind_spd_kt, "direction": stringToDegrees(obs.wind_dir), "gust": obs.gust_kt};
-
+      
       bulkWriteOps.push(
         {
           replaceOne: {
