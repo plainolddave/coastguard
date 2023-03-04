@@ -75,5 +75,16 @@
         "create_user_on_auth": false,
         "disabled": false,
         "return_type": "JSON"
+    },
+    {
+        "route": "/bom",
+        "http_method": "GET",
+        "function_name": "api_get_bom",
+        "validation_method": "NO_VALIDATION",
+        "respond_result": false,
+        "fetch_custom_user_data": false,
+        "create_user_on_auth": false,
+        "disabled": false,
+        "return_type": "JSON"
     }
 ]

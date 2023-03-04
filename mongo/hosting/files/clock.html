@@ -1,0 +1,60 @@
+<!--
+    <iframe src="https://stitch-statichosting-prod.s3.amazonaws.com/631beba32428aa70b1fb6339/clock.html" allowtransparency="true" frameBorder="0">Loading...</iframe>
+
+    curl --header "api-key:iDvpoZ7c5YfGEhvZGr0K1mjYC1owcwUCUXmcmSSCqSOAIipg34SEoht0KizAiDbt" https://ap-southeast-2.aws.data.mongodb-api.com/app/signalk-jtrvz/endpoint/tide?field=weather&from=1662868790&to=1662955190
+
+    curl -X 'GET' -H 'Api-Key: iDvpoZ7c5YfGEhvZGr0K1mjYC1owcwUCUXmcmSSCqSOAIipg34SEoht0KizAiDbt' -H 'Content-Type: application/json' 'https://ap-southeast-2.aws.data.mongodb-api.com/app/signalk-jtrvz/endpoint/weather?field=weather&from=1662868790&to=1662955190'
+    -->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Clock</title>
+    <script src="./js/dayjs.min.js"></script>
+    <link rel="stylesheet" href="./dashboard.css" />
+    <style>
+        .clock {
+            width: 100%;
+            text-align: center;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div id="clock-date" class="text-med clock"></div>
+    <div id="clock-time" class="text-lge clock"></div>
+    <script>
+
+        async function ticker() {
+
+            try {
+                // set the time and date
+                var dt = dayjs(new Date())
+                document.getElementById("clock-time").innerHTML = dt.format("HH:mm:ss");
+                document.getElementById("clock-date").innerHTML = dt.format("dddd D MMM YYYY");
+            } catch (error) {
+                console.log(`clock error: ${JSON.stringify(error)}`);
+            }
+        };
+
+        window.addEventListener('load', () => {
+
+            // align approximately to the nearest second
+            function alignToSeconds() {
+                delay = 1000 - Date.now() % 1000;
+                return new Promise(resolve => setTimeout(resolve, delay));
+            };
+
+            // setup a timer to refresh the clock each second
+            async function startTicker() {
+                await alignToSeconds();
+                setInterval(() => {
+                    ticker();
+                }, 1000)
+            };
+            startTicker();
+        });
+
+    </script>
+</body>
+</html>
