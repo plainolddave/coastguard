@@ -1,0 +1,389 @@
+<!--
+    <iframe src="https://stitch-statichosting-prod.s3.amazonaws.com/631beba32428aa70b1fb6339/chart.html" allowtransparency="true" frameBorder="0">Loading...</iframe>
+    -->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Chart</title>
+    <link rel="stylesheet" href="./leaflet/leaflet.css" />
+    <link rel="stylesheet" href="./dashboard.css" />
+    <script src="./leaflet/leaflet.js"></script>
+    <style>
+        #map {
+            width: 100%;
+            height: 100%;
+            margin: 0px;
+            padding: 0px;
+            z-index: 10;
+            border: solid #FFFFFF 0px;
+            border-radius: 10px;
+        }
+
+        #map-label {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            z-index: 20;
+        }
+
+        #ais-label {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            z-index: 20;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <div id="map-label" class="text-overlay"></div>
+    <div id="ais-label" class="text-overlay"></div>
+    <script>
+
+        // -------------------------------------------------------------------------------
+
+        var map;
+        const mapStartLat = -27.33;
+        const mapStartLon = 153.27;
+        const mapStartZoom = 11;
+
+        // -------------------------------------------------------------------------------
+
+        const rainOpacityOn = 0.4;
+        const rainOpacityOff = 0.0;
+        const rainWaitTime = 5000;
+        const rainFrameTime = 500;
+        const rainFramesToHold = 5;
+        const rainRefreshTime = 120000; // 2 mins
+        const rainFrames = new Map();
+        var rainAnimationFrame = 0;
+        var rainRefreshErrors = 0;
+        const rainRefreshErrorsMax = 3;
+
+        async function rainLoad() {
+
+            try {
+
+                // load the initial rain layers
+                rainRefresh();
+
+                // setup a timer to refresh the rain radar occasionally
+                setInterval(() => {
+                    rainRefresh();
+                }, rainRefreshTime)
+
+                // start the rain radar loop
+                setTimeout(() => {
+                    setInterval(() => {
+                        if (rainFrames.size > 0) {
+
+                            // include a pause at the end of each loop on the last (current) frame
+                            const total = rainFrames.size + rainFramesToHold - 1;
+                            rainAnimationFrame = rainAnimationFrame >= total ? 0 : rainAnimationFrame + 1;
+                            const current = rainAnimationFrame > rainFrames.size - 1
+                                ? rainFrames.size - 1
+                                : rainAnimationFrame;
+
+                            // loop through each frame and set opacity to the next frame
+                            let i = 0;
+                            rainFrames.forEach((frame, key) => {
+                                if (i === current) {
+                                    frame.setOpacity(rainOpacityOn);
+                                    document.getElementById("map-label").innerHTML = new Date(key * 1000).toLocaleString();
+                                } else {
+                                    frame.setOpacity(rainOpacityOff);
+                                }
+                                i++;
+                            })
+                        }
+                    }, rainFrameTime)
+                }, rainWaitTime);
+            } catch (error) {
+                console.log(`rain: error loading ${JSON.stringify(error)}`);
+            }
+        }
+
+        async function rainRefresh() {
+
+            try {
+                rainGetTimestamps().then(timestamps => {
+
+                    // check the output for basic errors - we're expecting
+                    // timestamps = [1662181200, 1662181800, 1662182400 ... ]
+                    // console.log(`rain: data (${JSON.stringify(timestamps)})`);
+                    let isRefreshError = true;
+                    if (Array.isArray(timestamps)) {
+                        if (timestamps.length > 0) {
+                            if (!Number.isNaN(timestamps[0])
+                                && !Number.isNaN(timestamps[timestamps.length - 1])) {
+                                isRefreshError = false;
+                            }
+                        }
+                    }
+                    if (isRefreshError === true) {
+                        rainRefreshError();
+                        return;
+                    }
+
+                    // purge old frames
+                    rainFrames.forEach((frame, timestamp) => {
+                        if (!timestamps.includes(timestamp)) {
+                            // console.log(`rain: removing frame ${timestamp}`);
+                            frame.removeFrom(map);
+                            rainFrames.delete(timestamp);
+                        }
+                    });
+
+                    // add new frames
+                    for (let i = 0; i < timestamps.length; i += 1) {
+                        if (!rainFrames.has(timestamps[i])) {
+                            // console.log(`rain: adding frame ${timestamps[i]}`);
+                            rainFrames.set(timestamps[i], rainGetTiles(timestamps[i], rainOpacityOff).addTo(map));
+                        }
+                    }
+                    // success - reset the error counter
+                    rainRefreshErrors = 0;
+                });
+
+            } catch (error) {
+                console.log(`rain: refresh exception ${JSON.stringify(error)}`);
+                rainRefreshError();
+            }
+        }
+
+        async function rainGetTimestamps() {
+            // Get the current timestamps from https://api.rainviewer.com/public/maps.json
+            // Data is an array of unix timestamps like [1662181200, 1662181800, 1662182400 ... ]
+            return fetch('https://api.rainviewer.com/public/maps.json', {
+                method: 'GET', // GET, POST, PUT, DELETE, etc.
+                mode: 'cors', // no-cors, *cors, same-origin
+                cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            }).then((response) => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    return null;
+                }
+            });
+        }
+
+        function rainGetTiles(timeStamp, initialOpacity = 0) {
+            const urlString = 'https://tilecache.rainviewer.com/v2/radar/{time}/{size}/{z}/{x}/{y}/{color}/{smooth}_{snow}.png';
+            const attributionString = '<a href="https://www.rainviewer.com/">RainViewer</a>';
+            return L.tileLayer(urlString, {
+                maxZoom: 19,
+                attribution: attributionString,
+                time: timeStamp,
+                opacity: initialOpacity,
+                size: 512,
+                color: 2, // https://www.rainviewer.com/api.html#colorSchemes
+                smooth: 1,
+                snow: 1
+            });
+        }
+
+        function rainRefreshError() {
+            rainRefreshErrors++;
+            console.log(`rain: error refreshing data (${rainRefreshErrors})`);
+            if (rainRefreshErrors >= rainRefreshErrorsMax) {
+                console.log(`rain: too many errors - clearing all frames`);
+                rainFrames.forEach((frame, timestamp) => {
+                    console.log(`rain: removing frame ${timestamp}`);
+                    frame.removeFrom(map);
+                    rainFrames.delete(timestamp);
+                });
+                document.getElementById("map-label").innerHTML = 'Error refreshing rain radar';
+            }
+        }
+
+        // -------------------------------------------------------------------------------
+
+        const aisRefreshTime = 120000; // 2 mins
+        var aisRefreshErrors = 0;
+        const aisRefreshErrorsMax = 5;
+        const aisTracks = new Map();
+        const aisMarkers = new Map();
+
+        const aisMarkerSize = 500;
+        const aisMarkerColor = 'blue';
+        const aisMarkerWeight = 3;
+        const aisMarkerOpacity = 0.3;
+
+        const aisTrackColor = 'blue';
+        const aisTrackWeight = 3;
+        const aisTrackOpacity = 0.1;
+
+        async function aisLoad() {
+            try {
+
+                // load the initial ais data
+                aisRefresh();
+
+                // setup a timer to refresh the ais data occasionally
+                setInterval(() => {
+                    aisRefresh();
+                }, aisRefreshTime)
+
+            } catch (error) {
+                console.log(`ais:  error loading ${JSON.stringify(error)}`);
+            }
+        }
+
+        async function aisRefresh() {
+
+            aisGetData().then(data => {
+
+                // check the output for basic errors - we're expecting
+                // an array of vessels, with movement data :
+                // { "status": 200, "vessels": [{
+                //      "mmsi": 503058190,
+                //      "name": "QPV DAN STILLER",
+                //      "org": "QPS",
+                //      "lat": -27.182,
+                //      "lon": 153.112,
+                //      "cog": 85.4,
+                //      "sog": 19.8,
+                //      "time": 1657331640000,
+                //      "track": [
+                //          { "time" : 1657331640000, "lat": -27.116, "lon": 153.128 },
+                //          { "time" : 1657331650000, "lat": -27.358, "lon": 153.172 }
+                //          ... etc ... ]}]}
+                // console.log(`ais:  data (${JSON.stringify(data)})`);
+                let isRefreshError = true;
+                if (data) {
+                    if (data.status === 200) {
+                        if (Array.isArray(data.vessels)) {
+                            if (data.vessels.length > 0) {
+                                isRefreshError = false;
+                            }
+                        }
+                    }
+                }
+                if (isRefreshError == true) {
+                    aisRefreshError();
+                    return;
+                }
+
+                // add vessel markers
+                data.vessels.forEach(vessel => {
+
+                    if (aisMarkers.has(vessel.mmsi)) {
+
+                        // if the vessel position marker exists just update its position
+                        aisMarkers.get(vessel.mmsi).setLatLng([vessel.lat, vessel.lon]);
+
+                    } else {
+
+                        // otherwise create a new marker
+                        let marker = L.marker([vessel.lat, vessel.lon]).addTo(map);
+                        if (vessel.name) {
+                            marker.bindTooltip(vessel.name, { permanent: true, className: "ais-label", offset: [0, 0] });
+                        }
+                        if (vessel.hue) {
+                            marker._icon.classList.add("hue" + vessel.hue.toString());
+                        }
+                        aisMarkers.set(vessel.mmsi, marker);
+                    }
+
+                    // display the vessel track as a polyline
+                    let track = [];
+                    vessel.track.sort((a, b) => (a.time > b.time) ? 1 : ((b.time > a.time) ? -1 : 0))
+                    vessel.track.forEach(t => {
+                        let point = [t.lat, t.lon];
+                        track.push(point);
+                    });
+
+                    if (aisTracks.has(vessel.mmsi)) {
+
+                        // if the vessel position marker exists just update its position
+                        aisTracks.get(vessel.mmsi).setLatLngs(track);
+
+                    } else {
+
+                        // otherwise create a new polyline
+                        aisTracks.set(vessel.mmsi, L.polyline(track,
+                            {
+                                color: aisTrackColor,
+                                weight: aisTrackWeight,
+                                opacity: aisTrackOpacity
+                            }).addTo(map));
+                    }
+                });
+
+                // success - reset the error counter
+                document.getElementById("ais-label").innerHTML = ``;
+                aisRefreshErrors = 0;
+            }).catch(error => {
+                console.log(`ais:  refresh exception ${JSON.stringify(error)}`);
+                aisRefreshError();
+            });
+        }
+
+        async function aisGetData() {
+            // Get the current vessel data from mongodb where prototype:
+            //      curl --request GET 'https://data.mongodb-api.com/app/data-xplts/endpoint/fleet_activity' \
+            //          --header 'Content-Type: application/json' \
+            //          --header 'api-key: ge7IDbWs23g84J2smkY82GP0waJUjRz1YngcZPQkmL0zpfUTx8meeOS3Rk7RCvcR' \
+            //          --data - raw '{'tag':val}'
+            return fetch('https://proxy.cors.sh/https://data.mongodb-api.com/app/data-xplts/endpoint/fleet_activity', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'api-key': 'ge7IDbWs23g84J2smkY82GP0waJUjRz1YngcZPQkmL0zpfUTx8meeOS3Rk7RCvcR'
+                }
+            }).then((response) => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    return null;
+                }
+            }).catch(error => {
+                console.log(`ais:  error fetching data ${JSON.stringify(error)}`);
+                return null;
+            });
+        }
+
+        function aisRefreshError() {
+            aisRefreshErrors++;
+            console.log(`ais:  error refreshing data (${aisRefreshErrors})`);
+            document.getElementById("ais-label").innerHTML = `AIS error (${aisRefreshErrors})`;
+            if (aisRefreshErrors >= aisRefreshErrorsMax) {
+
+                console.log(`ais:  too many errors - clearing all data`);
+                aisTracks.forEach(track => {
+                    track.removeFrom(map);
+                });
+                aisTracks.clear();
+
+                aisMarkers.forEach(marker => {
+                    marker.removeFrom(map);
+                });
+                aisMarkers.clear();
+            }
+        }
+
+        // -------------------------------------------------------------------------------
+
+        window.addEventListener('load', () => {
+
+            // create a map object
+            map = L.map('map', { attributionControl: false }).setView([mapStartLat, mapStartLon], mapStartZoom);
+
+            // load the CartoDB_Positron base map - for more basemap options see
+            // https://leaflet-extras.github.io/leaflet-providers/preview/
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a>',
+                subdomains: 'abcd',
+                maxZoom: 20
+            }).addTo(map);
+
+            // load the rain and ais layers
+            document.getElementById("map-label").innerHTML = 'Loading...';
+            rainLoad();
+            aisLoad();
+        });
+
+    </script>
+</body>
+</html>
