@@ -3,7 +3,7 @@
     "name": "bom_get_observation",
     "type": "SCHEDULED",
     "config": {
-        "schedule": "*/5 * * * *",
+        "schedule": "*/1 * * * *",
         "skip_catchup_events": true
     },
     "disabled": false,
