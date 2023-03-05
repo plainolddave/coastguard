@@ -1,11 +1,11 @@
 // Send back an error message
 const handleError = (code, headers, error, response) => {
   console.log(`error: ${JSON.stringify(error)}`);
-  if(headers == null)
-    return;
+  //if(headers == null)
+  //  return;
   context.functions.execute("api_log", "api_get_bom", code, headers, error);
-  if(response == null)
-    return;
+  //if(response == null)
+  //  return;
   response.setStatusCode(code);
   response.setHeader("Content-Type","application/json");
   response.setBody(JSON.stringify({"code": code, "error": JSON.stringify(error)}));
@@ -19,22 +19,21 @@ function ApiException(message) {
 // This function is the endpoint's request handler.
 exports = function({query, headers, body}, response) {
     
-  // test code  
-  console.log(`query: ${JSON.stringify(query)} response: ${JSON.stringify(response)}`);
+  //console.log(`query: ${JSON.stringify(query)} response: ${JSON.stringify(response)}`);
   //query = { "field": "all", "id": 99497, "limit": 100 } // test code
   
   try {
   
     // check mandatory arguments
     if(query == null) {
-      throw new ApiException(`invalid query`);
+      throw new ApiException(`invalid request arguments`);
     }
     
-    if(!("field" in query)) {
+    if(!("field" in query) || query["field"] == undefined || query["field"] == "undefined") {
       throw new ApiException(`field must be included in request e.g. ?field=pressure or ?field=wind or ?field=all to get all weather fields`);
     }
     
-    if(!("id" in query)) {
+    if(!("id" in query)|| query["id"] == undefined || query["id"] == "undefined") {
       throw new ApiException(`station id must be included in request e.g. ?id=99497 for Hope Banks Beacon`);
     }
 
@@ -43,6 +42,7 @@ exports = function({query, headers, body}, response) {
     
     // run an aggregation pipeline to get the requested data
     var pipeline = [];
+    var result = { "data": [], "field": argField};
     
     // station id that will be returned e.g. ?station=99497 for Hope Banks Beacon
     const idStr = String(argId);
@@ -51,12 +51,14 @@ exports = function({query, headers, body}, response) {
       throw new ApiException(`invalid station id "${argId}" included in request - should be like ?id=99497 for Hope Banks Beacon`);
     }
     pipeline.push({"$match": {"all.wmo":idVal}});
+    result.id = idVal;
   
     // optional - unix timestamp from which to include in the response
     if (query["from"]) {
       const dtFromVal = parseInt(String(query["from"]));
       if(!isNaN(dtFromVal)) {
-        pipeline.push({"$match": {"$expr": { "$gte": ["$all.dt", dtFromVal]}}});
+        pipeline.push({"$match": {"$expr": { "$gte": ["$dt", dtFromVal]}}});
+        result.from = dtFromVal;
       }
     }
 
@@ -64,24 +66,26 @@ exports = function({query, headers, body}, response) {
     if (query["to"]) {
       const dtToVal = parseInt(String(query["to"]));
       if(!isNaN(dtToVal)) {
-        pipeline.push({"$match": {"$expr": { "$lte": ["$all.dt", dtToVal]}}});
+        pipeline.push({"$match": {"$expr": { "$lte": ["$dt", dtToVal]}}});
+        result.to = dtToVal;
       }
     }
 
     // sort the pipeline by reverse Date
     pipeline.push({"$sort": {"time": -1}});
 
-    // optional - limit the records in the response
+    // optional - limit the records in the response (note if no limit is specified
+    // there is an arbitrary cap of 100 of the most recent records)
+    var limit = 100;
     if (query["limit"]) {
       const limitStr = String(query["limit"]);
       const limitVal = parseInt(limitStr);
       if(!isNaN(limitVal)) {
-        pipeline.push({"$limit": limitVal});
+        limit = limitVal;
       }
-    } 
-
-    // note there is an arbitrary cap of 1000 of the most recent records
-    pipeline.push({"$limit": 1000});
+    }
+    result.limit = limit;
+    pipeline.push({"$limit": limit});
     pipeline.push({"$sort": {"time": 1}});
 
     console.log(`pipeline: ${JSON.stringify(pipeline)}`);
@@ -91,18 +95,23 @@ exports = function({query, headers, body}, response) {
     return collection.aggregate(pipeline).toArray()
     .then(values => {
       
-      console.log(`values: ${JSON.stringify(values)}`);
-          
-      // return all fields in the observation
-      subset = [];
+      // console.log(`values: ${JSON.stringify(values)}`);
+      
+      if(values.length > 0)
+      {
+        result.name = values[0].name || ""
+      }
+      
       if(argField == "all") {
+        
+        // return all fields in the observation
         values.forEach(r => {
             delete r._id;
-            subset.push(r);
+            result.data.push(r);
         });
-        
-      // just return one field as requested
       } else {
+        
+        // just return one requested field
         values.forEach(r => {
           if(r[argField]==null) {
             // do nothing
@@ -110,10 +119,10 @@ exports = function({query, headers, body}, response) {
             let val = r[argField];
             let row = { 
               "value": (Array.isArray(val) ? val[0] : val), 
-              "time": r.time,
+              //"time": r.time,
               "dt": r.dt
             };
-            subset.push(row);
+            result.data.push(row);
           } 
         });
       }
@@ -124,17 +133,13 @@ exports = function({query, headers, body}, response) {
       }
       response.setStatusCode(200);
       response.setHeader("Content-Type","application/json");
-      response.setBody(JSON.stringify(subset));
+      response.setBody(JSON.stringify(result));
       context.functions.execute("api_log", "api_get_bom", 200, headers);
     })
     .catch(error => {
-          
-      throw new ApiException("FFS");
-
       handleError(422, headers, error, response);
     });
   } catch (error) {
-          throw new ApiException("FFS 2");
     handleError(400, headers, error, response);
   }
 };
