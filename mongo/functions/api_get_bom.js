@@ -17,12 +17,14 @@ function ApiException(message) {
 }
 
 // This function is the endpoint's request handler.
-exports = function({ query, headers, body}, response) {
-
+exports = function({query, headers, body}, response) {
+    
+  // test code  
+  console.log(`query: ${JSON.stringify(query)} response: ${JSON.stringify(response)}`);
   query = { "field": "all", "id": 99497, "limit": 100 } // test code
   
   try {
-
+  
     // check mandatory arguments
     if(query == null) {
       throw new ApiException(`invalid query`);
@@ -48,7 +50,7 @@ exports = function({ query, headers, body}, response) {
     if(isNaN(idVal)) {
       throw new ApiException(`invalid station id "${argId}" included in request - should be like ?id=99497 for Hope Banks Beacon`);
     }
-    pipeline.push({"$match": {"$expr": { "$eq": ["$all.wmo", idVal]}}});
+    pipeline.push({"$match": {"$all.wmo":idVal}});
   
     // optional - unix timestamp from which to include in the response
     if (query["from"]) {
@@ -77,30 +79,23 @@ exports = function({ query, headers, body}, response) {
         pipeline.push({"$limit": limitVal});
       }
     } 
-    
+
     // note there is an arbitrary cap of 1000 of the most recent records
     pipeline.push({"$limit": 1000});
     pipeline.push({"$sort": {"time": 1}});
 
-    throw new ApiException(`test test test 1`);
-
+    console.log(`pipeline: ${JSON.stringify(pipeline)}`);
+    
     // run the aggregation pipeline
-    const collection = context.services.get("mongodb-atlas").db("weather").collection("bom_observation");
-        throw new ApiException(`test test test 2`);
+    const collection = context.services.get("mongodb-atlas").db("weather").collection("observation");
     return collection.aggregate(pipeline).toArray()
     .then(values => {
       
-          throw new ApiException(values);
+      console.log(`values: ${JSON.stringify(values)}`);
           
       // return all fields in the observation
       subset = [];
- 
-    throw new ApiException(`test test test 1`);
-          
       if(argField == "all") {
-        
-        throw new ApiException(`test test test 2`);
-        
         values.forEach(r => {
             delete r._id;
             subset.push(r);
@@ -130,12 +125,16 @@ exports = function({ query, headers, body}, response) {
       response.setStatusCode(200);
       response.setHeader("Content-Type","application/json");
       response.setBody(JSON.stringify(subset));
-      context.functions.execute("api_log", "api_get_weather", 200, headers);
+      context.functions.execute("api_log", "api_get_bom", 200, headers);
     })
     .catch(error => {
+          
+      throw new ApiException("FFS");
+
       handleError(422, headers, error, response);
     });
   } catch (error) {
+          throw new ApiException("FFS 2");
     handleError(400, headers, error, response);
   }
 };
