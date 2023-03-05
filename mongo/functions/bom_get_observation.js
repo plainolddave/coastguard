@@ -212,7 +212,7 @@ exports = function(){
       let doc = {
         "time": obsTime,
         "dt": secondsSinceEpoch(obsTime),
-        "name": obs.name.substring(0,11),
+        "name": obs.name.substring(0,10),
         "temp": obs.air_temp,
         "humidity": obs.rel_hum,
         "cloud": (obs.cloud_oktas == null ? null : Math.round(obs.cloud_oktas / 8.0 * 100.0)),
