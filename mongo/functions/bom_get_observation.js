@@ -208,9 +208,10 @@ exports = function(){
           }
         }
       */
+      const obsTime = stringToDate(obs.aifstime_utc);
       let doc = {
-        "time": stringToDate(obs.aifstime_utc),
-        "dt": secondsSinceEpoch(obs.time),
+        "time": obsTime,
+        "dt": secondsSinceEpoch(obsTime),
         "name": obs.name,
         "temp": obs.air_temp,
         "humidity": obs.rel_hum,
@@ -219,7 +220,7 @@ exports = function(){
         "all": obs
       };
       
-      if(obs.obs.wind_spd_kt != null)
+      if(obs.wind_spd_kt != null)
         doc.wind = {
           "knots": obs.wind_spd_kt, 
           "direction": stringToDegrees(obs.wind_dir),
