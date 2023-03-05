@@ -177,16 +177,80 @@ exports = function(){
     // loop through each record and prepare docs to upsert based on "wmo" and utc seconds
     let bulkWriteOps = [];
     doc.observations.data.forEach(function (obs, index) {
+    
+      /* build up a doc to help later queries 
+        {
+          "time": 
+          "dt": 1675366920,
+          "wind": {
+            "knots": 5,
+            "direction": 270,
+            "gust": 9
+          },
+          "stats": {
+            "sunrise_dt": 1675365659,
+            "sunset_dt": 1675413648,
+            "cloud": 0,
+            "pressure": 996,
+            "humidity": 89,
+            "temp": 23.77
+          },
+          "weather": {
+            "icon": "01d",
+            "label": "Clear Sky",
+            "temp": 23.77
+          },
+          "temp": 23.77,
+          "humidity": 89,
+          "cloud": 0,
+          "pressure": 996,
+          "all": {...original...}
+          }
+        }
+      */
+      let doc = {
+        "time": stringToDate(obs.aifstime_utc),
+        "dt": secondsSinceEpoch(obs.time),
+        "name": obs.name,
+        "temp": obs.air_temp,
+        "humidity": obs.rel_hum,
+        "cloud": (obs.cloud_oktas == null ? null : Math.round(obs.cloud_oktas / 8.0 * 100.0)),
+        "pressure": obs.press_msl,
+        "all": obs
+      };
       
-      obs.time = stringToDate(obs.aifstime_utc);
-      obs.dt = secondsSinceEpoch(obs.time);
-      obs.wind = { "knots": obs.wind_spd_kt, "direction": stringToDegrees(obs.wind_dir), "gust": obs.gust_kt};
-
+      if(obs.obs.wind_spd_kt != null)
+        doc.wind = {
+          "knots": obs.wind_spd_kt, 
+          "direction": stringToDegrees(obs.wind_dir),
+          "gust": obs.gust_kt || 0.0
+        };
+      
+      /*
+      doc.stats = {
+        //"sunrise_dt": 1675365659,
+        //"sunset_dt": 1675413648,
+        "cloud": doc.cloud,
+        "pressure": doc.pressure,
+        "humidity": doc.humidity,
+        "temp": doc.temp
+      };
+      */
+      /*
+      doc.weather = {
+        //"icon": "01d",
+        "label": obs.cloud,
+        "temp": doc.temp
+      };
+      */
+      
+      console.log(`bom upsert: ${JSON.stringify(doc)}`);
+      
       bulkWriteOps.push(
         {
           replaceOne: {
-            filter: { "time": obs.time, "wmo": obs.wmo, "history_product": obs.history_product},
-            replacement: obs,
+            filter: { "time": doc.time, "all.wmo": doc.all.wmo, "all.history_product": doc.all.history_product},
+            replacement: doc,
             upsert: true,
           }
         }
@@ -196,7 +260,7 @@ exports = function(){
     // run the bulk operation
     collection.bulkWrite(bulkWriteOps)
     .then(result => {
-      console.log(`bom result: ${JSON.stringify(result)}`);
+      //console.log(`bom result: ${JSON.stringify(result)}`);
     })
     .catch(error => {
       console.error(`bom error: ${error}`);
