@@ -11,6 +11,8 @@ const handleError = (code, headers, error, response) => {
 exports = function({ query, headers, body}, response) {
 
   try {
+    throw new Error(`test test test`)
+    
     // mandatory - field that will be returned
     const argField = query["field"]; 
     if(argField == null) {
