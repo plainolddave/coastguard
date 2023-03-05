@@ -15,8 +15,7 @@
     },
     {
         "name": "api_get_bom",
-        "private": false,
-        "disable_arg_logs": true
+        "private": true
     },
     {
         "name": "api_log",
