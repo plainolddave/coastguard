@@ -87,7 +87,7 @@ exports = function({query, headers, body}, response) {
     console.log(`pipeline: ${JSON.stringify(pipeline)}`);
     
     // run the aggregation pipeline
-    const collection = context.services.get("mongodb-atlas").db("weather").collection("observation");
+    const collection = context.services.get("mongodb-atlas").db("weather").collection("bom_observation");
     return collection.aggregate(pipeline).toArray()
     .then(values => {
       
