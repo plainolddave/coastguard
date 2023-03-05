@@ -146,7 +146,7 @@ exports = function(){
       case "S":
         return 180.0;  
       case "SSW":
-        return 112.5;  
+        return 202.5;  
       case "SW":
         return 225.0;  
       case "WSW":
