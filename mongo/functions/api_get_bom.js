@@ -29,11 +29,11 @@ exports = function({query, headers, body}, response) {
       throw new ApiException(`invalid request arguments`);
     }
     
-    if(!("field" in query)) {
+    if(!("field" in query) || query["field"] == undefined || query["field"] == "undefined") {
       throw new ApiException(`field must be included in request e.g. ?field=pressure or ?field=wind or ?field=all to get all weather fields`);
     }
     
-    if(!("id" in query)) {
+    if(!("id" in query)|| query["id"] == undefined || query["id"] == "undefined") {
       throw new ApiException(`station id must be included in request e.g. ?id=99497 for Hope Banks Beacon`);
     }
 
