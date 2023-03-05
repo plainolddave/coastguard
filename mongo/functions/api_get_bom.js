@@ -90,7 +90,8 @@ exports = function({query, headers, body}, response) {
     return collection.aggregate(pipeline).toArray()
     .then(values => {
       
-      // console.log(`values: ${JSON.stringify(values)}`);
+      console.log(`values: ${JSON.stringify(values)}`);
+      
       var result = { "id": idVal, "field": argField, "data": [] };
       if(values.length > 0)
       {
