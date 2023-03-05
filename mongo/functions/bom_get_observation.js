@@ -245,7 +245,7 @@ exports = function(){
       };
       */
       
-      console.log(`bom upsert: ${JSON.stringify(doc)}`);
+      //console.log(`bom upsert: ${JSON.stringify(doc)}`);
       
       bulkWriteOps.push(
         {
