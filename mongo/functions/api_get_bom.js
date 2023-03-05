@@ -21,7 +21,7 @@ exports = function({query, headers, body}, response) {
     
   // test code  
   console.log(`query: ${JSON.stringify(query)} response: ${JSON.stringify(response)}`);
-  query = { "field": "all", "id": 99497, "limit": 100 } // test code
+  //query = { "field": "all", "id": 99497, "limit": 100 } // test code
   
   try {
   
