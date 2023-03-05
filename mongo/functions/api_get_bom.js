@@ -91,17 +91,22 @@ exports = function({query, headers, body}, response) {
     .then(values => {
       
       // console.log(`values: ${JSON.stringify(values)}`);
-          
-      // return all fields in the observation
-      subset = [];
+      var result = { "id": idVal, "field": argField, "data": [] };
+      if(values.length > 0)
+      {
+        result.name = values[0].name || ""
+      }
+      
       if(argField == "all") {
+        
+        // return all fields in the observation
         values.forEach(r => {
             delete r._id;
-            subset.push(r);
+            result.data.push(r);
         });
-        
-      // just return one field as requested
       } else {
+        
+        // just return one requested field
         values.forEach(r => {
           if(r[argField]==null) {
             // do nothing
@@ -112,7 +117,7 @@ exports = function({query, headers, body}, response) {
               "time": r.time,
               "dt": r.dt
             };
-            subset.push(row);
+            result.data.push(row);
           } 
         });
       }
@@ -123,7 +128,7 @@ exports = function({query, headers, body}, response) {
       }
       response.setStatusCode(200);
       response.setHeader("Content-Type","application/json");
-      response.setBody(JSON.stringify(subset));
+      response.setBody(JSON.stringify(result));
       context.functions.execute("api_log", "api_get_bom", 200, headers);
     })
     .catch(error => {
