@@ -15,7 +15,7 @@ import {
 } from "recharts";
 
 const settings = {
-    startupMillis: 5000,                // soft start
+    startupMillis: 2500,                // soft start msec
     refreshMillis: 1000 * 60 * 60,      // get new data from the server once each hour
     recalcMillis: 1000 * 60,            // recalculate current tide height each 1/2 minute
     tickSeconds: 2 * 60 * 60,           // interval for chart ticks

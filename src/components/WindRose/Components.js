@@ -48,7 +48,7 @@ const Tick = ({ angle, radius, label, fontSize }) => {
     )
 };
 
-const Numeral = ({ value, units,
+const Numeral = ({ value, units, 
     valueSize, valueWeight, valueY,
     unitSize, unitWeight, unitY }) => {
     return (
@@ -75,4 +75,20 @@ const Numeral = ({ value, units,
     )
 };
 
-export { Dial, Border, Dot, Numeral, Tick }
+const Label = ({ value, fill, size, weight, anchor, x, y }) => {
+    return (
+        <g>
+            <text x={x} y={y}
+                textAnchor={anchor}
+                dominantBaseline="middle"
+                fill={fill}
+                fontSize={size}
+                fontWeight={weight}
+            >
+                {value}
+            </text>
+        </g>
+    )
+};
+
+export { Dial, Border, Dot, Numeral, Tick, Label }

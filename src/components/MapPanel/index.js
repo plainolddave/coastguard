@@ -12,7 +12,7 @@ import RainLayer from "./RainLayer"
 import { GetColor, GetIcon } from "./TrackIcon"
 
 const settings = {
-    startupMillis: 5000,            // soft start
+    startupMillis: 2500,            // soft start msec
     refreshMillis: 1000 * 60 * 2,   // updates every n minutes
     fromHours: -12,                 // use a window of track info behind now()
     sog: 0.2,                       // minimum speed over ground

@@ -13,6 +13,7 @@ function Row({ label, value, rowStyle, iconStyle, iconRotation}) {
     const getIcon = (label, value) => {
         let name = label;
         switch (label) {
+            case 'Wind':
             case 'Gust':
                 if (value < 1) {
                     name = "Wind0";
@@ -41,6 +42,9 @@ function Row({ label, value, rowStyle, iconStyle, iconRotation}) {
                 } else {
                     name = "Wind12";
                 }
+                break;
+            case "Pressure":
+                name = "None";
                 break;
             case "Tide":
                 if (value.type === "High" || value.type === "Low") {

@@ -14,13 +14,16 @@ import {
 } from "recharts";
 
 const settings = {
-    startupMillis: 3000,            // soft start
+    startupMillis: 1500,            // soft start msec
     refreshMillis: 1000 * 60 * 10,  // get new data every n minutes
     fromHours: -6,                  // use a window of tide information from 6 hours behind now()
     toHours: 0,                     // use a window of tide information to 6 hours ahead of now()
     tickSeconds: 1 * 60 * 60,       // interval for chart ticks
-    url: "https://coastguard.netlify.app/.netlify/functions/weather",
+    url: "https://coastguard.netlify.app/.netlify/functions/bom",
+    stationId: 99497,
     fontSize: 16,
+    labelSize: 12,
+    labelOffset: -5,
     fontColor: "white",
     numberPrecision: 0,
     windRoseWidth: 400,
@@ -64,10 +67,16 @@ function WindChart({
 
     // data received from the server
     const [data, setData] = useState([]);
+    const [label, setLabel] = useState("");
     const refreshTimer = useRef(null);
 
     // ----------------------------------------------------------------------------------------------------
-    // refresh data from the server
+    // refresh data from the server - expected format is:
+    // [
+    //      { "value": { "knots": 15.01, "direction": 130 }, "dt": 1677915840 },
+    //      { "value": { "knots": 13, "direction": 130 }, "dt": 1677916560 }
+    // ]
+
     const onRefresh = useCallback(() => {
 
         // suspend refresh when page is not visible
@@ -77,12 +86,18 @@ function WindChart({
         const dtFrom = Math.floor(timeFrom.getTime() / 1000);
         const timeTo = GetTimeOffset(settings.toHours);
         const dtTo = Math.floor(timeTo.getTime() / 1000);
-        let url = `${settings.url}?field=wind&limit=1000&from=${dtFrom}&to=${dtTo}`;
+        let url = `${settings.url}?field=wind&id=${settings.stationId}&limit=100&from=${dtFrom}&to=${dtTo}`;
         Log("wind", url);
 
         axios.get(url)
             .then((response) => {
-                setData(response.data);
+
+                const result = response.data;
+                if (result == null)
+                    return;
+
+                setData(result.data);
+                setLabel(result.name);
             })
             .catch((err) => {
                 Log("wind error", err);
@@ -122,17 +137,22 @@ function WindChart({
         <div className="wrapper">
             <WindRose
                 data={data}
+                label={label}
                 precision={settings.numberPrecision}
                 width={windRoseWidth}
                 height={windRoseHeight} />
             <ResponsiveContainer width="100%" height={chartHeight}>
                 <AreaChart data={data}
-                    margin={{ top: 0, right: 10, left: 0, bottom: 0 }}>
+                    margin={{ top: 0, right: 10, left: 0, bottom: -3 }}>
                     <defs>
                         <linearGradient id="windColor" x1="0" y1="0" x2="0" y2="1">
                             <stop offset="50%" stopColor="#9933FF" stopOpacity={0.9} />
                             <stop offset="100%" stopColor="#660066" stopOpacity={0.7} />
                         </linearGradient>
+                        {/*<linearGradient id="gustColor" x1="0" y1="0" x2="0" y2="1">*/}
+                        {/*    <stop offset="50%" stopColor="#9933FF" stopOpacity={0.9} />*/}
+                        {/*    <stop offset="100%" stopColor="#660066" stopOpacity={0.7} />*/}
+                        {/*</linearGradient>*/}
                     </defs>
                     <XAxis
                         dataKey="dt"
@@ -145,7 +165,18 @@ function WindChart({
                         tick={{ fontSize: settings.fontSize, fill: settings.fontColor }}
                         ticks={formatTicks()}
                         allowDataOverflow={true}
-                    />
+                    >
+                        {/*<Label*/}
+                        {/*    value={label}*/}
+                        {/*    position='bottom'*/}
+                        {/*    offset={settings.labelOffset}*/}
+                        {/*    style={{*/}
+                        {/*        textAnchor: 'middle',*/}
+                        {/*        fontSize: settings.labelSize,*/}
+                        {/*        fill: 'white'*/}
+                        {/*    }}*/}
+                        {/*/>*/}
+                    </XAxis>
                     <YAxis
                         type="number"
                         tick={{ fontSize: settings.fontSize, fill: settings.fontColor }}
@@ -173,6 +204,12 @@ function WindChart({
                         strokeWidth={3}
                         fillOpacity={1}
                         fill="url(#windColor)" />
+                    <Area
+                        type="monotone"
+                        dataKey="value.gust"
+                        stroke="#8000ff"
+                        strokeWidth={3}
+                        fillOpacity={0} />
                 </AreaChart>
             </ResponsiveContainer>
         </div>

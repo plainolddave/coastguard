@@ -5,7 +5,7 @@ import Row from "./../Common/Row"
 import { Log } from "./../Common/Utils"
 
 const settings = {
-    startupMillis: 2000,            // soft start
+    startupMillis: 1000,            // soft start msec
     refreshMillis: 1000 * 60 * 60,  // 1 hour
     hoursFrom: -3,                  // now minus n hours
     hoursTo: 9.5,                   // now plus n hours
@@ -76,14 +76,16 @@ function Forecast({ isVisible, ...restProps }) {
         <div className="wrapper">
             <div className="label center">Forecast</div>
             <div className="forecast">
-                {forecast.map(({ dt, icon, label, temp, wind }) => (
+                {forecast.map(({ dt, icon, label, temp, wind, pressure }) => (
                     <div className="forecast-column" key={`fc-${dt}`}>
                         <div className="time label">{`${dayjs.unix(dt).format("HH:mm")}`}</div>
                         <div className="icon"><img src={`icons/${icon}.png`} alt={`${label}`} /></div>
                         <div className="desc label">{label}</div>
                         <Row className="temp" label="Temp" value={temp} rowStyle="forecast-row" />
-                        <Row className="wind" label="Wind" value={wind.knots} rowStyle="forecast-row" iconRotation={wind.direction} />
-                        <Row className="gust" label="Gust" value={wind.gust} rowStyle="forecast-row" />
+                        <Row className="wind" label="Wind" value={wind.knots} rowStyle="forecast-row" iconRotation={0} />
+                        <Row className="pressure" label="Pressure" value={pressure} rowStyle="forecast-row" />
+                        {/*<Row className="wind" label="Wind" value={wind.knots} rowStyle="forecast-row" iconRotation={wind.direction} />*/}
+                        {/*<Row className="gust" label="Gust" value={wind.gust} rowStyle="forecast-row" />*/}
                     </div>
                 ))}
             </div>

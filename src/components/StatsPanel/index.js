@@ -9,7 +9,7 @@ import axios from "axios";
 
 const settings = {
     url: "https://coastguard.netlify.app/.netlify/functions/weather",
-    startupMillis: 1000,           // soft start
+    startupMillis: 500,            // soft start msec
     refreshMillis: 1000 * 60 * 10, // n mins
     maxErrors: 5,
     spacerHeight1: "10px",

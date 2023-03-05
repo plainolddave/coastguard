@@ -25,6 +25,7 @@ Dependencies are:
 12. [react-scripts](https://www.npmjs.com/package/react-scripts)
 13. [react-select](https://react-select.com/)
 14. [recharts](https://recharts.org/en-US)
+15. [react-burger-menu](https://www.npmjs.com/package/react-burger-menu)
 
 To install npm packages for the React App::
 ```bash
@@ -38,6 +39,7 @@ npm install react-router-dom
 npm install react-select
 npm install react-page-visibility --save 
 npm install react-datepicker --save
+npm install react-burger-menu --save
 ```
 For more instructions on the front-end React App [look here](Netlify_Instructions.md)  
 

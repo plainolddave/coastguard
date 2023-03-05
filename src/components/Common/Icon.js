@@ -116,6 +116,8 @@ function Icon({ name }) {
 					return <GoCalendar />;
 				case 'Undo':
 					return <FaUndo />;
+				case 'None':
+					return <></>;
 				default:
 					return <GoBug />;
 			}

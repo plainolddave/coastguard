@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { ClampAngle, Saturate } from "./../Common/Utils"
-import { Dot, Numeral, Tick } from "./Components"
+import { Dot, Numeral, Tick, Label } from "./Components"
 
 const settings = {
     dotCount: 36,
@@ -16,9 +16,17 @@ const settings = {
     numeralSize: 40,
     numeralWeight: 700,
     numeralOffset: 0,
-    labelSize: 9,
-    labelWeight: 600,
-    labelOffset: 20,
+    unitText: "knots",
+    unitSize: 9,
+    unitWeight: 600,
+    unitOffset: 18,
+    labelText: "",
+    labelFill: "white",
+    labelSize: 6,
+    labelWeight: 400,
+    labelAnchor: "middle",
+    labelXOffset: 0,
+    labelYOffset: -25,
     tickRadius: 45,
     tickSize: 5,
     ticks: [
@@ -68,7 +76,6 @@ class WindRose extends Component {
 
     componentWillUnmount() {
     }
-
 
     recalc() {
         //[ { "value": { "knots": 9.99, "direction": 10 }, "dt": 1665277680 },
@@ -170,10 +177,19 @@ class WindRose extends Component {
                     valueSize={settings.numeralSize}
                     valueWeight={settings.numeralWeight}
                     valueY={settings.numeralOffset}
-                    units="knots"
-                    unitSize={settings.labelSize}
-                    unitWeight={settings.labelWeight}
-                    unitY={settings.labelOffset}
+                    units={settings.unitText}
+                    unitSize={settings.unitSize}
+                    unitWeight={settings.unitWeight}
+                    unitY={settings.unitOffset}
+                />
+                <Label
+                    value={this.props.label}
+                    fill={settings.labelFill}
+                    size={settings.labelSize}
+                    weight={settings.labelWeight}
+                    anchor={settings.labelAnchor}
+                    x={settings.labelXOffset}
+                    y={settings.labelYOffset}
                 />
             </svg>
         );
@@ -181,6 +197,7 @@ class WindRose extends Component {
 }
 
 WindRose.defaultProps = {
+    label: "",
     data: [{ "value": { "knots": 0, "direction": 0 }, "dt": 0 }],
     precision: 1,
     width: 300,
