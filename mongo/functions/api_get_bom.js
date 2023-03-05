@@ -42,6 +42,7 @@ exports = function({query, headers, body}, response) {
     
     // run an aggregation pipeline to get the requested data
     var pipeline = [];
+    var result = { "data": [], "field": argField};
     
     // station id that will be returned e.g. ?station=99497 for Hope Banks Beacon
     const idStr = String(argId);
@@ -50,12 +51,14 @@ exports = function({query, headers, body}, response) {
       throw new ApiException(`invalid station id "${argId}" included in request - should be like ?id=99497 for Hope Banks Beacon`);
     }
     pipeline.push({"$match": {"all.wmo":idVal}});
+    result.id = idVal;
   
     // optional - unix timestamp from which to include in the response
     if (query["from"]) {
       const dtFromVal = parseInt(String(query["from"]));
       if(!isNaN(dtFromVal)) {
         pipeline.push({"$match": {"$expr": { "$gte": ["$dt", dtFromVal]}}});
+        result.from = dtFromVal;
       }
     }
 
@@ -64,23 +67,25 @@ exports = function({query, headers, body}, response) {
       const dtToVal = parseInt(String(query["to"]));
       if(!isNaN(dtToVal)) {
         pipeline.push({"$match": {"$expr": { "$lte": ["$dt", dtToVal]}}});
+        result.to = dtToVal;
       }
     }
 
     // sort the pipeline by reverse Date
     pipeline.push({"$sort": {"time": -1}});
 
-    // optional - limit the records in the response
+    // optional - limit the records in the response (note if no limit is specified
+    // there is an arbitrary cap of 100 of the most recent records)
+    var limit = 100;
     if (query["limit"]) {
       const limitStr = String(query["limit"]);
       const limitVal = parseInt(limitStr);
       if(!isNaN(limitVal)) {
-        pipeline.push({"$limit": limitVal});
+        limit = limitVal;
       }
-    } 
-
-    // note there is an arbitrary cap of 1000 of the most recent records
-    pipeline.push({"$limit": 1000});
+    }
+    result.limit = limit;
+    pipeline.push({"$limit": limit});
     pipeline.push({"$sort": {"time": 1}});
 
     console.log(`pipeline: ${JSON.stringify(pipeline)}`);
@@ -90,9 +95,8 @@ exports = function({query, headers, body}, response) {
     return collection.aggregate(pipeline).toArray()
     .then(values => {
       
-      console.log(`values: ${JSON.stringify(values)}`);
+      // console.log(`values: ${JSON.stringify(values)}`);
       
-      var result = { "id": idVal, "field": argField, "data": [] };
       if(values.length > 0)
       {
         result.name = values[0].name || ""
