@@ -15,7 +15,7 @@
     },
     {
         "name": "api_get_bom",
-        "private": true
+        "private": false
     },
     {
         "name": "api_log",
