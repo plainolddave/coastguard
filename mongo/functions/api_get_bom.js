@@ -3,6 +3,7 @@ const handleError = (code, headers, error, response) => {
   response.setStatusCode(code);
   response.setHeader("Content-Type","application/json");
   response.setBody(JSON.stringify({"code": code, "error": JSON.stringify(error)}));
+  console.log(`error: ${JSON.stringify(error)}`);
   context.functions.execute("api_log", "api_get_weather", code, headers, error);
 }
 
