@@ -1,11 +1,11 @@
 // Send back an error message
 const handleError = (code, headers, error, response) => {
   console.log(`error: ${JSON.stringify(error)}`);
-  if(headers == null)
-    return;
+  //if(headers == null)
+  //  return;
   context.functions.execute("api_log", "api_get_bom", code, headers, error);
-  if(response == null)
-    return;
+  //if(response == null)
+  //  return;
   response.setStatusCode(code);
   response.setHeader("Content-Type","application/json");
   response.setBody(JSON.stringify({"code": code, "error": JSON.stringify(error)}));
@@ -19,15 +19,14 @@ function ApiException(message) {
 // This function is the endpoint's request handler.
 exports = function({query, headers, body}, response) {
     
-  // test code  
-  console.log(`query: ${JSON.stringify(query)} response: ${JSON.stringify(response)}`);
+  //console.log(`query: ${JSON.stringify(query)} response: ${JSON.stringify(response)}`);
   //query = { "field": "all", "id": 99497, "limit": 100 } // test code
   
   try {
   
     // check mandatory arguments
     if(query == null) {
-      throw new ApiException(`invalid query`);
+      throw new ApiException(`invalid request arguments`);
     }
     
     if(!("field" in query)) {
@@ -91,7 +90,7 @@ exports = function({query, headers, body}, response) {
     return collection.aggregate(pipeline).toArray()
     .then(values => {
       
-      console.log(`values: ${JSON.stringify(values)}`);
+      // console.log(`values: ${JSON.stringify(values)}`);
           
       // return all fields in the observation
       subset = [];
@@ -128,13 +127,9 @@ exports = function({query, headers, body}, response) {
       context.functions.execute("api_log", "api_get_bom", 200, headers);
     })
     .catch(error => {
-          
-      throw new ApiException("FFS");
-
       handleError(422, headers, error, response);
     });
   } catch (error) {
-          throw new ApiException("FFS 2");
     handleError(400, headers, error, response);
   }
 };
