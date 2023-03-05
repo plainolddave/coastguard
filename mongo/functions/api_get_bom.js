@@ -114,7 +114,7 @@ exports = function({query, headers, body}, response) {
             let val = r[argField];
             let row = { 
               "value": (Array.isArray(val) ? val[0] : val), 
-              "time": r.time,
+              //"time": r.time,
               "dt": r.dt
             };
             result.data.push(row);
