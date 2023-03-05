@@ -123,6 +123,47 @@ exports = function(){
     return new Date(year, monthIndex, day, hours, minutes, seconds);
   }
   
+    // parse a 14 digit string like "aifstime_utc": "20230304083000" to a Date value
+  function stringToDegrees (cardinal_str)
+  {
+    switch(cardinal_str) {
+      case "N":
+        return 0.0;
+      case "NNE":
+        return 22.5;
+      case "NE":
+        return 45.0;
+      case "ENE":
+        return 67.5;
+      case "E":
+        return 90.0;  
+      case "ESE":
+        return 112.5;  
+      case "SE":
+        return 135.0;  
+      case "SSE":
+        return 157.5;  
+      case "S":
+        return 180.0;  
+      case "SSW":
+        return 202.5;  
+      case "SW":
+        return 225.0;  
+      case "WSW":
+        return 247.5;  
+      case "W":
+        return 270.0;  
+      case "WNW":
+        return 292.5;  
+      case "NW":
+        return 315.0;  
+      case "NNW":
+        return 337.5;  
+      default: 
+        return 0;
+    }
+  }
+  
   // ====================================================================================================
   
   // retrieve the latest observation
@@ -136,15 +177,81 @@ exports = function(){
     // loop through each record and prepare docs to upsert based on "wmo" and utc seconds
     let bulkWriteOps = [];
     doc.observations.data.forEach(function (obs, index) {
+    
+      /* build up a doc to help later queries 
+        {
+          "time": 
+          "dt": 1675366920,
+          "wind": {
+            "knots": 5,
+            "direction": 270,
+            "gust": 9
+          },
+          "stats": {
+            "sunrise_dt": 1675365659,
+            "sunset_dt": 1675413648,
+            "cloud": 0,
+            "pressure": 996,
+            "humidity": 89,
+            "temp": 23.77
+          },
+          "weather": {
+            "icon": "01d",
+            "label": "Clear Sky",
+            "temp": 23.77
+          },
+          "temp": 23.77,
+          "humidity": 89,
+          "cloud": 0,
+          "pressure": 996,
+          "all": {...original...}
+          }
+        }
+      */
+      const obsTime = stringToDate(obs.aifstime_utc);
+      let doc = {
+        "time": obsTime,
+        "dt": secondsSinceEpoch(obsTime),
+        "name": obs.name,
+        "temp": obs.air_temp,
+        "humidity": obs.rel_hum,
+        "cloud": (obs.cloud_oktas == null ? null : Math.round(obs.cloud_oktas / 8.0 * 100.0)),
+        "pressure": obs.press_msl,
+        "all": obs
+      };
       
-      obs.time = stringToDate(obs.aifstime_utc);
-      obs.dt = secondsSinceEpoch(obs.time);
+      if(obs.wind_spd_kt != null)
+        doc.wind = {
+          "knots": obs.wind_spd_kt, 
+          "direction": stringToDegrees(obs.wind_dir),
+          "gust": obs.gust_kt || 0.0
+        };
+      
+      /*
+      doc.stats = {
+        //"sunrise_dt": 1675365659,
+        //"sunset_dt": 1675413648,
+        "cloud": doc.cloud,
+        "pressure": doc.pressure,
+        "humidity": doc.humidity,
+        "temp": doc.temp
+      };
+      */
+      /*
+      doc.weather = {
+        //"icon": "01d",
+        "label": obs.cloud,
+        "temp": doc.temp
+      };
+      */
+      
+      //console.log(`bom upsert: ${JSON.stringify(doc)}`);
       
       bulkWriteOps.push(
         {
           replaceOne: {
-            filter: { "time": obs.time, "wmo": obs.wmo, "history_product": obs.history_product},
-            replacement: obs,
+            filter: { "time": doc.time, "all.wmo": doc.all.wmo, "all.history_product": doc.all.history_product},
+            replacement: doc,
             upsert: true,
           }
         }
@@ -154,7 +261,7 @@ exports = function(){
     // run the bulk operation
     collection.bulkWrite(bulkWriteOps)
     .then(result => {
-      console.log(`bom result: ${JSON.stringify(result)}`);
+      //console.log(`bom result: ${JSON.stringify(result)}`);
     })
     .catch(error => {
       console.error(`bom error: ${error}`);
