@@ -50,7 +50,7 @@ exports = function({query, headers, body}, response) {
     if(isNaN(idVal)) {
       throw new ApiException(`invalid station id "${argId}" included in request - should be like ?id=99497 for Hope Banks Beacon`);
     }
-    pipeline.push({"$match": {"$all.wmo":idVal}});
+    pipeline.push({"$match": {"all.wmo":idVal}});
   
     // optional - unix timestamp from which to include in the response
     if (query["from"]) {
