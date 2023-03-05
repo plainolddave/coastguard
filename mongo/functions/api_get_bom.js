@@ -55,7 +55,7 @@ exports = function({query, headers, body}, response) {
     if (query["from"]) {
       const dtFromVal = parseInt(String(query["from"]));
       if(!isNaN(dtFromVal)) {
-        pipeline.push({"$match": {"$expr": { "$gte": ["$all.dt", dtFromVal]}}});
+        pipeline.push({"$match": {"$expr": { "$gte": ["$dt", dtFromVal]}}});
       }
     }
 
@@ -63,7 +63,7 @@ exports = function({query, headers, body}, response) {
     if (query["to"]) {
       const dtToVal = parseInt(String(query["to"]));
       if(!isNaN(dtToVal)) {
-        pipeline.push({"$match": {"$expr": { "$lte": ["$all.dt", dtToVal]}}});
+        pipeline.push({"$match": {"$expr": { "$lte": ["$dt", dtToVal]}}});
       }
     }
 
