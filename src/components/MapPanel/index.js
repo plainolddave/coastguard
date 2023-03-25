@@ -11,6 +11,8 @@ import { GetTimeOffset, Log, PositionBounds } from "./../Common/Utils"
 import RainLayer from "./RainLayer"
 import { GetColor, GetIcon } from "./TrackIcon"
 
+import 'leaflet/dist/leaflet.css'
+
 const settings = {
     startupMillis: 2500,            // soft start msec
     refreshMillis: 1000 * 60 * 2,   // updates every n minutes

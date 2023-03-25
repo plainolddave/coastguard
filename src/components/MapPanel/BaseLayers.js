@@ -1,4 +1,6 @@
 import React from "react";
+import 'leaflet/dist/leaflet.css'
+
 import { TileLayer, LayersControl } from "react-leaflet";
 const { BaseLayer } = LayersControl;
 
