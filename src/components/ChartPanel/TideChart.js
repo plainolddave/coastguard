@@ -23,7 +23,7 @@ const settings = {
     fromHours: -12,                     // get data for tide information n hours behind now()
     toHours: 12,                        // get data for tide information n hours ahead of now()
     url: "https://coastguard.netlify.app/.netlify/functions/tide",
-    heightOffset: 1.328,
+    heightOffset: 0,                    // refer to https://www.msq.qld.gov.au/tides/tidal-datum-information
     fontSize: 16,
     fontColor: "white",
     numberPrecision: 2,
