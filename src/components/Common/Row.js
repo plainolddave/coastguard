@@ -43,7 +43,7 @@ function Row({ label, value, rowStyle, iconStyle, iconRotation}) {
                     name = "Wind12";
                 }
                 break;
-            case "Pressure":
+            case "PressureForecast":
                 name = "None";
                 break;
             case "Tide":
@@ -92,6 +92,7 @@ function Row({ label, value, rowStyle, iconStyle, iconRotation}) {
             case 'Gust':
                 return <>&nbsp;<sup>kts</sup></>;
             case 'Pressure':
+            case 'PressureForecast':
                 return <>&nbsp;<sup>hPa</sup></>;
             case 'Humidity':
             case 'Cloud':

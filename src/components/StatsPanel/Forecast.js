@@ -83,7 +83,7 @@ function Forecast({ isVisible, ...restProps }) {
                         <div className="desc label">{label}</div>
                         <Row className="temp" label="Temp" value={temp} rowStyle="forecast-row" />
                         <Row className="wind" label="Wind" value={wind.knots} rowStyle="forecast-row" iconRotation={0} />
-                        <Row className="pressure" label="Pressure" value={pressure} rowStyle="forecast-row" />
+                        <Row className="pressure" label="PressureForecast" value={pressure} rowStyle="forecast-row" />
                         {/*<Row className="wind" label="Wind" value={wind.knots} rowStyle="forecast-row" iconRotation={wind.direction} />*/}
                         {/*<Row className="gust" label="Gust" value={wind.gust} rowStyle="forecast-row" />*/}
                     </div>
