@@ -46,7 +46,7 @@ For more instructions on the front-end React App [look here](Netlify_Instruction
 ## Issues and improvements
 
 To do now:
-- add wind gusts
+- ~~add wind gusts~~
 - re-architect API calls to remove unecessary requests
 - add a config setting to switch between live and BOM data source
 - write a function to collect names and data of vessels not currently in the database
@@ -56,9 +56,9 @@ To do now:
 Maybe later:
 - still some annoying CSS alignment issues
 - add a TTL index to signalk->ais->positions to cap data at 3 months
-- allow history to be selected per individual vessel or group of vessels
+- ~~allow history to be selected per individual vessel or group of vessels~~
 - shorten the variable names all round e.g. for wind
-- put the 'weather refreshed' time somewhere inconspicuous
+- ~~put the 'weather refreshed' time somewhere inconspicuous~~
 - add tooltips back into each chart
 - experiment with serviceworker
 - experiment with adding all other AIS tracks in view
