@@ -42,9 +42,9 @@ const Timeframes = new Map([
     [Timeframe.OneWeek, { value: Timeframe.OneWeek, line: true, label: 'Last week' }],
     [Timeframe.FourWeeks, { value: Timeframe.FourWeeks, line: true, label: 'Last 4 weeks' }],
     [Timeframe.ThisMonth, { value: Timeframe.ThisMonth, line: true, label: 'This month' }],
-    [Timeframe.LastMonth, { value: Timeframe.LastMonth, line: false, label: 'Previous month' }],
-    [Timeframe.LastTwoMonths, { value: Timeframe.LastTwoMonths, line: false, label: 'Previous 2 months' }],
-    [Timeframe.Custom, { value: Timeframe.Custom, line: false, label: 'Date range' }],
+    [Timeframe.LastMonth, { value: Timeframe.LastMonth, line: true, label: 'Previous month' }],
+    [Timeframe.LastTwoMonths, { value: Timeframe.LastTwoMonths, line: true, label: 'Previous 2 months' }],
+    [Timeframe.Custom, { value: Timeframe.Custom, line: true, label: 'Date range' }],
 ]);
 
 const Resolution = {
@@ -54,7 +54,7 @@ const Resolution = {
 }
 
 const Resolutions = new Map([
-    [Resolution.ThreeMinutes, { secs: 2678400, mins: 3 }],  // greater than 31 days is grouped in 3 min intervals 
+    [Resolution.ThreeMinutes, { secs: 7890000, mins: 2 }],  // greater than 3 months days is grouped in 3 min intervals
     [Resolution.TwoMinutes, { secs: 1209600, mins: 2 }],    // greater than  7 days is grouped in 2 min intervals
     [Resolution.OneMinute, { secs: 0, mins: 1 }],           // up to 7 days is grouped in 1 min intervals
 ]);
