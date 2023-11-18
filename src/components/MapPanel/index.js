@@ -14,7 +14,7 @@ import { GetColor, GetIcon } from "./TrackIcon"
 import 'leaflet/dist/leaflet.css'
 
 const settings = {
-    startupMillis: 2500,            // soft start msec
+    startupMillis: 100,             // soft start msec
     refreshMillis: 1000 * 60 * 2,   // updates every n minutes
     fromHours: -12,                 // use a window of track info behind now()
     sog: 0.2,                       // minimum speed over ground
@@ -147,6 +147,7 @@ function MapPanel({ isVisible, autoScale, ...restProps }) {
                 newTracks.sort((a, b) => (a.info.zIndex > b.info.zIndex) ? 1 : -1)
                 setTracks(newTracks);
                 setBounds(newBounds);
+                map.invalidateSize(true);
             })
             .catch((err) => {
                 Log("track error", err);

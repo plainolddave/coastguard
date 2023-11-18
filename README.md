@@ -1,25 +1,30 @@
-## Coastguard Brisbane Dashboard
+# Coastguard Brisbane Dashboard
 
 This is a dashboard hosted at [https://coastguard.netlify.app/](https://coastguard.netlify.app/)
 
+## Components
+
 Components are:
+
 - [Github](https://github.com/plainolddave/coastguard) - repository including CICD pipe to auto-build the React app on Netlify
 - [Netlify](https://app.netlify.com/sites/coastguard/overview) - front end hosting, and proxying of API calls to MongoDB Atlas
 - [MongoDB Atlas](https://cloud.mongodb.com/v2/631ba89895f2d85906fa7fa3#clusters) - data storage, aggregatation pipelines, API to handle ingestion of AIS data, and functions to poll OpenWeatherMap for updates
 - SignalK - locally hosted to push NMEA2K data to MongoDB
 - AIS Server - pushes AIS data to MongoDB in batches
 
+## Dependencies
+
 Dependencies are:
 
-1.  [axios](https://www.npmjs.com/package/axios)
-2.  [datejs](https://day.js.org/)
-3.  [leaflet](https://leafletjs.com/)
-4.  [prop-types](https://www.npmjs.com/package/prop-types)
-5.  [react-datepicker](https://reactdatepicker.com/)
-6.  [react-dom](https://reactjs.org/docs/react-dom.html)
-7.  [react-icons](https://react-icons.github.io/react-icons/)
-8.  [react-leaflet](https://react-leaflet.js.org/docs/start-installation/)
-9.  [react-leaflet-custom-control](https://www.npmjs.com/package/react-leaflet-custom-control)
+1. [axios](https://www.npmjs.com/package/axios)
+2. [datejs](https://day.js.org/)
+3. [leaflet](https://leafletjs.com/)
+4. [prop-types](https://www.npmjs.com/package/prop-types)
+5. [react-datepicker](https://reactdatepicker.com/)
+6. [react-dom](https://reactjs.org/docs/react-dom.html)
+7. [react-icons](https://react-icons.github.io/react-icons/)
+8. [react-leaflet](https://react-leaflet.js.org/docs/start-installation/)
+9. [react-leaflet-custom-control](https://www.npmjs.com/package/react-leaflet-custom-control)
 10. [react-page-visibility](https://www.npmjs.com/package/react-page-visibility)
 11. [react-router-dom](https://reactrouter.com/)
 12. [react-scripts](https://www.npmjs.com/package/react-scripts)
@@ -27,7 +32,8 @@ Dependencies are:
 14. [recharts](https://recharts.org/en-US)
 15. [react-burger-menu](https://www.npmjs.com/package/react-burger-menu)
 
-To install npm packages for the React App::
+To install npm packages for the React App:
+
 ```bash
 npm install react react-dom leaflet
 npm install react-leaflet
@@ -41,32 +47,38 @@ npm install react-page-visibility --save
 npm install react-datepicker --save
 npm install react-burger-menu --save
 ```
+
 For more instructions on the front-end React App [look here](Netlify_Instructions.md)  
 
 ## Issues and improvements
 
-To do now:
-- ~~add wind gusts~~
+Sometime soon:
+
 - re-architect API calls to remove unecessary requests
 - add a config setting to switch between live and BOM data source
 - write a function to collect names and data of vessels not currently in the database
 - add AISHub data / confrm Scarborough is feeding correctly (separate to Manly)
 - turn off data refresh if the page is not selected
+- investigate tides (is time correct for AESST)
 
 Maybe later:
+
 - still some annoying CSS alignment issues
+- Forecast is not showing in mobile view
 - add a TTL index to signalk->ais->positions to cap data at 3 months
-- ~~allow history to be selected per individual vessel or group of vessels~~
-- shorten the variable names all round e.g. for wind
+- add config page to support other locations
 - ~~put the 'weather refreshed' time somewhere inconspicuous~~
 - add tooltips back into each chart
 - experiment with serviceworker
 - experiment with adding all other AIS tracks in view
-- experiment with adding operational areas 
-- this mini-map is kind of cool https://react-leaflet.js.org/docs/example-react-control/
+- experiment with adding operational areas
+- this mini-map is kind of cool <https://react-leaflet.js.org/docs/example-react-control/>
 - look at a higher contrast map or marine chart layer
 
 Done:
+
+- ~~add wind gusts~~
+- ~~allow history to be selected per individual vessel or group of vessels~~
 - ~~allow history to be selected by date range~~
 - ~~add a lat/lon grid to the dashboard map~~
 - ~~minify production deployment~~
@@ -109,46 +121,62 @@ Done:
 - ~~make the course display as three digits and degrees symbol~~
 - ~~add an indicator for local ip and remote address~~
 
+## Startup & Debugging
+
+Reminder (as I look at this so infrequently):
+
+```bash
+npm start
+```
+
 ## Setup for Android TV
 
 - Default AndroidTV resolution was 1280x720
 - ViewSonic 27in QHD VA 165Hz Curved Adaptive Sync Gaming Monitor (VX2718-2KPC-MHD) is 2560x1440
 - Using ADB:
+
 ```bash
 adb connect [IP address]
 adb devices
 adb shell wm size 1920x1080
 adb shell wm density 164
 ```
+
 Play around with the density number depending on the size of your tv (160 is ok on the viewsonic monitor)
 
 Then to update the splash screen:
+
 ```bash
 adb remount
 adb shell ls -al /system/media
 
-	C:\Temp\ADB>adb shell ls -al /system/media
-	total 5939
-	drwxr-xr-x 3 root root    4096 2022-04-18 16:53 .
-	drwxr-xr-x 1 root root    3488 2022-10-20 19:19 ..
-	drwxr-xr-x 6 root root    4096 2022-04-18 15:52 audio
-	-rw-r--r-- 1 root root  475354 2022-04-18 16:53 boot.mp4
-	-rw-r--r-- 1 root root 5588643 2022-04-18 16:53 bootanimation.zip
+ C:\Temp\ADB>adb shell ls -al /system/media
+ total 5939
+ drwxr-xr-x 3 root root    4096 2022-04-18 16:53 .
+ drwxr-xr-x 1 root root    3488 2022-10-20 19:19 ..
+ drwxr-xr-x 6 root root    4096 2022-04-18 15:52 audio
+ -rw-r--r-- 1 root root  475354 2022-04-18 16:53 boot.mp4
+ -rw-r--r-- 1 root root 5588643 2022-04-18 16:53 bootanimation.zip
 ```
+
 Find the bootanimation file:
 adb shell find / -name "bootanimation*"
 Pull the old files:
+
 ```bash
 adb pull /system/media/boot.mp4 c:\temp\boot.mp4
 adb pull /system/media/bootanimation.zip c:\temp\bootanimation.zip
 ```
+
 Change them and push them back to the device:
+
 ```bash
 adb push c:\temp\boot.mp4 /system/media/boot.mp4 
 adb push c:\temp\bootanimation.zip /system/media/bootanimation.zip 
 ```
 
 For more info look at:
+
 - [Android Debug Bridge (adb)](https://github.com/K3V1991/ADB-and-FastbootPlusPlus)
 - [ADB setup instructions](https://www.makeuseof.com/how-to-use-adb-on-android-tv/)
 - [ADB commands](https://devhints.io/adb)
