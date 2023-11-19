@@ -17,7 +17,7 @@ import {
 const settings = {
     startupMillis: 700,                 // soft start msec
     refreshMillis: 1000 * 60 * 60,      // get new data from the server once each hour
-    recalcMillis: 1000 * 60,            // recalculate current tide height each 1/2 minute
+    recalcMillis: 1000 * 30,            // recalculate current tide height each 1/2 minute
     tickSeconds: 2 * 60 * 60,           // interval for chart ticks
     showHours: 10,                      // hours to show either side of now
     fromHours: -12,                     // get data for tide information n hours behind now()
@@ -82,13 +82,14 @@ function TideChart({
     let [prevTide, setPrevTide] = useState(settings.nullTide);
     let [nextTide, setNextTide] = useState(settings.nullTide);
     let [station, setStation] = useState("");
+    let [recalcFlag, setRecalcFlag] = useState(0);
 
     const refreshTimer = useRef(null);
     const recalcTimer = useRef(null);
 
     // ----------------------------------------------------------------------------------------------------
     // recalculate tide data displayed in the react component
-    const onRecalc = useCallback(() => {
+    useEffect(() => {
 
         // get the current time in unix seconds
         const seconds = Math.round(Date.now() / 1000);
@@ -112,7 +113,7 @@ function TideChart({
                 "dt": seconds,
                 "type": station  // just a label...
             });
-            Log("tide height", height.toFixed(2));
+            Log("tide recalc height", height.toFixed(2));
             break;
         }
 
@@ -128,14 +129,31 @@ function TideChart({
             break;
         }
 
-    }, [heights, extremes, station]);
+    }, [heights, extremes, recalcFlag]);
 
-    // ----------------------------------------------------------------------------------------------------
-    // recalc after new data is fetched
+    // perform an initial recalc, then set a timer for periodic refresh
     useEffect(() => {
-        onRecalc();
+
+        if (recalcTimer.current) {
+            Log("tide recalc timer", "clear");
+            clearInterval(recalcTimer.current);
+            recalcTimer.current = null;
+        }
+
+        Log("tide recalc timer", settings.recalcMillis / 1000);
+        recalcTimer.current = setInterval(function doRecalc() {
+            setRecalcFlag(Date.now())
+            return doRecalc;
+        }(), settings.recalcMillis);
+
+        return () => {
+            Log("tide recalc timer", "exit");
+            clearInterval(recalcTimer.current);
+            recalcTimer.current = null;
+        };
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [heights, extremes, station]);
+    }, []);
 
     // ----------------------------------------------------------------------------------------------------
     // refresh data from the server
@@ -149,60 +167,46 @@ function TideChart({
         const timeTo = GetTimeOffset(settings.toHours);
         const dtTo = Math.floor(timeTo.getTime() / 1000);
         let url = `${settings.url}?limit=100&from=${dtFrom}&to=${dtTo}&offset=${settings.heightOffset}`;
-        Log("tide", url);
-       
+        Log("tide refresh", url);
+
         axios.get(url)
             .then((response) => {
                 let data = response.data;
                 setHeights(data.heights);
                 setExtremes(data.extremes);
                 setStation(data.station);
-                onRecalc();
             })
             .catch((err) => {
                 Log("tide error", err);
             });
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isVisible]);
+    }, []);
 
-    // ----------------------------------------------------------------------------------------------------
-    // soft start a timer to periodically refresh data
+    // perform an initial pull of data, then set a timer for periodic refresh
     useEffect(() => {
 
-        setTimeout(() => {
+        if (refreshTimer.current) {
+            Log("tide refresh timer", "clear");
+            clearInterval(refreshTimer.current);
+            refreshTimer.current = null;
+        }
 
-            if (refreshTimer.current) {
-                clearInterval(refreshTimer.current);
-                refreshTimer.current = null;
-            }
+        // this function refresh() within setinterval triggers an immediate refresh
+        Log("tide refresh timer", settings.refreshMillis / 1000);
+        refreshTimer.current = setInterval(function refresh() {
+            onRefresh();
+            return refresh;
+        }(), settings.refreshMillis);
 
-            if (recalcTimer.current) {
-                clearInterval(recalcTimer.current);
-                recalcTimer.current = null;
-            }
-
-            refreshTimer.current = setInterval(function refresh() {
-                onRefresh();
-                return refresh;
-            }(), settings.refreshMillis);
-
-            recalcTimer.current = setInterval(function recalc() {
-                onRecalc();
-                return recalc;
-            }(), settings.recalcMillis);
-
-            return () => {
-                clearInterval(refreshTimer.current);
-                clearInterval(recalcTimer.current);
-                refreshTimer.current = null;
-                recalcTimer.current = null;
-            };
-
-        }, settings.startupMillis);
+        return () => {
+            Log("tide refresh timer", "exit");
+            clearInterval(refreshTimer.current);
+            refreshTimer.current = null;
+        };
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[]);
+    }, []);
 
     // ----------------------------------------------------------------------------------------------------
     // return the component

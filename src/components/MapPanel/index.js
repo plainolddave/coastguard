@@ -72,15 +72,24 @@ function MapPanel({ isVisible, autoScale, ...restProps }) {
     const [tracks, setTracks] = useState([]);
     const refreshTimer = useRef(null);
 
+    // ----------------------------------------------------------------------------------------------------
+    // force a redraw the map when bounds or tracks change
     useEffect(() => {
-        if (map && autoScale) {
-            //let box = PositionBounds.min(bounds.box, settings.mapBounds);
+
+        if (!map) return;
+
+        if (autoScale) {
+            Log("map", "fly to bounds");
             console.log(JSON.stringify(bounds.box));
             console.log(JSON.stringify(bounds.clip(settings.mapBounds)));
             map.flyToBounds(bounds.clip(settings.mapBounds), settings.mapBoundsOptions);
             map.invalidateSize(true);
         }
-    }, [map, bounds, autoScale]);
+
+        Log("map", "redraw");
+        map.invalidateSize(true);
+
+    }, [map, bounds, tracks, autoScale]);
 
     // ----------------------------------------------------------------------------------------------------
     // refresh data from the server
@@ -147,7 +156,6 @@ function MapPanel({ isVisible, autoScale, ...restProps }) {
                 newTracks.sort((a, b) => (a.info.zIndex > b.info.zIndex) ? 1 : -1)
                 setTracks(newTracks);
                 setBounds(newBounds);
-                map.invalidateSize(true);
             })
             .catch((err) => {
                 Log("track error", err);
