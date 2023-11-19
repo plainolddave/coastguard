@@ -129,7 +129,7 @@ function TideChart({
             break;
         }
 
-    }, [heights, extremes, recalcFlag]);
+    }, [heights, extremes, station, recalcFlag]);
 
     // perform an initial recalc, then set a timer for periodic refresh
     useEffect(() => {
