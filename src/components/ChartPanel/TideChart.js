@@ -113,7 +113,7 @@ function TideChart({
                 "dt": seconds,
                 "type": station  // just a label...
             });
-            Log("tide recalc height", height.toFixed(2));
+            Log("tide", `recalc height: ${height.toFixed(2)}`);
             break;
         }
 
@@ -135,19 +135,19 @@ function TideChart({
     useEffect(() => {
 
         if (recalcTimer.current) {
-            Log("tide recalc timer", "clear");
+            Log("tide", `recalc timer: cleared`);
             clearInterval(recalcTimer.current);
             recalcTimer.current = null;
         }
 
-        Log("tide recalc timer", settings.recalcMillis / 1000);
+        Log("tide", `recalc timer: ${settings.recalcMillis / 1000} ms`);
         recalcTimer.current = setInterval(function doRecalc() {
             setRecalcFlag(Date.now())
             return doRecalc;
         }(), settings.recalcMillis);
 
         return () => {
-            Log("tide recalc timer", "exit");
+            Log("tide", "recalc timer: exiting");
             clearInterval(recalcTimer.current);
             recalcTimer.current = null;
         };
@@ -167,7 +167,7 @@ function TideChart({
         const timeTo = GetTimeOffset(settings.toHours);
         const dtTo = Math.floor(timeTo.getTime() / 1000);
         let url = `${settings.url}?limit=100&from=${dtFrom}&to=${dtTo}&offset=${settings.heightOffset}`;
-        Log("tide refresh", url);
+        Log("tide", `refresh: ${url}`);
 
         axios.get(url)
             .then((response) => {
@@ -177,7 +177,7 @@ function TideChart({
                 setStation(data.station);
             })
             .catch((err) => {
-                Log("tide error", err);
+                Log("tide", `error:  ${err}`);
             });
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -187,20 +187,20 @@ function TideChart({
     useEffect(() => {
 
         if (refreshTimer.current) {
-            Log("tide refresh timer", "clear");
+            Log("tide", `refresh timer: cleared`);
             clearInterval(refreshTimer.current);
             refreshTimer.current = null;
         }
 
         // this function refresh() within setinterval triggers an immediate refresh
-        Log("tide refresh timer", settings.refreshMillis / 1000);
+        Log("tide", `refresh timer: ${settings.refreshMillis / 1000} ms`);
         refreshTimer.current = setInterval(function refresh() {
             onRefresh();
             return refresh;
         }(), settings.refreshMillis);
 
         return () => {
-            Log("tide refresh timer", "exit");
+            Log("tide", `refresh timer: exiting`);
             clearInterval(refreshTimer.current);
             refreshTimer.current = null;
         };

@@ -11,7 +11,7 @@ import { GetTimeOffset, Log, PositionBounds } from "./../Common/Utils"
 import RainLayer from "./RainLayer"
 import { GetColor, GetIcon } from "./TrackIcon"
 
-import 'leaflet/dist/leaflet.css'
+//import 'leaflet/dist/leaflet.css'
 
 const settings = {
     startupMillis: 100,             // soft start msec
@@ -185,6 +185,18 @@ function MapPanel({ isVisible, autoScale, ...restProps }) {
             };
 
         }, settings.startupMillis);
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // ----------------------------------------------------------------------------------------------------
+    // this is a kludge to refresh the map after startup to fix loading issues
+    useEffect(() => {
+
+        setTimeout(() => {
+            Log("map", "invalidate size");
+            if (map) map.invalidateSize(true);
+        }, 5000);
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);

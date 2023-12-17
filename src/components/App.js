@@ -21,7 +21,7 @@ function App() {
             newPage = location.pathname;
         }
         setPageNow(newPage);
-        Log("App", `visible: ${visible} page: ${newPage}`);
+        Log("app", `visible: ${visible} page: ${newPage}`);
     }, [location, visible]);
 
     return (

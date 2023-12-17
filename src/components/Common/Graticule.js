@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { LayerGroup, Polyline, useMapEvents } from "react-leaflet";
 import { LatToString, LonToString } from "./Utils"
 import GraticuleText from "./GraticuleText"
+import { Log } from "./Utils"
 
 const settings = {
     lineOptions: {
@@ -97,7 +98,7 @@ function Graticule({
             }
         }
 
-        console.log(`graticule: zoom: ${zoom} interval: ${interval} bounds: ${bounds.getNorth()},${bounds.getWest()} / ${bounds.getSouth()},${bounds.getEast()}`);
+        Log("map", `graticule: zoom: ${zoom} interval: ${interval} bounds: ${bounds.getNorth()},${bounds.getWest()} / ${bounds.getSouth()},${bounds.getEast()}`);
 
         // calculate latitude lines
         var lat1 = bounds.getNorth();
