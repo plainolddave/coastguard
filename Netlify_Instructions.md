@@ -82,8 +82,7 @@ const handler: Handler = (event: APIGatewayEvent, context: Context, callback: Ca
     body: JSON.stringify({
       msg: `Hello world ${Math.floor(Math.random() * 10)}`,
       params,
-    }),
-  }
+    }) }
 
   callback(undefined, response)
 }

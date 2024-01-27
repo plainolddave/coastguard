@@ -1,6 +1,6 @@
 import axios from "axios"
 
-const API_ENDPOINT = "https://ap-southeast-2.aws.data.mongodb-api.com/app/signalk-jtrvz/endpoint/fleet";
+const API_ENDPOINT = "https://ap-southeast-2.aws.data.mongodb-api.com/app/signalk-jtrvz/endpoint/fleet_v2";
 const API_CONFIG = {
     headers: {
         'api-key': `${process.env.REACT_APP_MONGO_API_KEY}`,
