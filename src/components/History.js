@@ -15,7 +15,7 @@ import Loader from "./Common/Loader"
 import LocalIP from "./Common/LocalIP"
 import BaseLayers from "./MapPanel/BaseLayers"
 import { Log, PositionBounds } from "./Common/Utils"
-import { GetColor, GetIcon } from "./MapPanel/TrackIcon"
+import { GetColor, GetIcon, GetZIndex } from "./MapPanel/TrackIcon"
 
 // ----------------------------------------------------------------------------------------------------
 
@@ -54,8 +54,8 @@ const Resolution = {
 }
 
 const Resolutions = new Map([
-    [Resolution.ThreeMinutes, { secs: 7890000, mins: 2 }],  // greater than 3 months days is grouped in 3 min intervals
-    [Resolution.TwoMinutes, { secs: 1209600, mins: 2 }],    // greater than  7 days is grouped in 2 min intervals
+    [Resolution.ThreeMinutes, { secs: 7890000, mins: 2 }],  // greater than 3 months is grouped in 3 min intervals
+    [Resolution.TwoMinutes, { secs: 1209600, mins: 2 }],    // greater than 7 days is grouped in 2 min intervals
     [Resolution.OneMinute, { secs: 0, mins: 1 }],           // up to 7 days is grouped in 1 min intervals
 ]);
 
@@ -73,11 +73,12 @@ const settings = {
         easeLinearity: 0.1
     },
     style: { height: "100%", width: "100%" },
+    lostTrackSeconds: 1800,
     attribution: false,
     startupMillis: 1000,             // soft start timer
     refreshMillis: 1000 * 60 * 10,   // updates every n minutes 
     minimumSOG: 0.2,                 // minimum speed over ground
-    url: "https://coastguard.netlify.app/.netlify/functions/fleet",
+    url: "https://coastguard.netlify.app/.netlify/functions/fleet_v2",
     showMarkers: false,
 }
 
@@ -158,17 +159,16 @@ function History({ isVisible, ...restProps }) {
                     vessel.track.sort((a, b) => b.dt - a.dt);
                     vessel.pos = vessel.track[0];
 
-                    // check track, and if more than three missed transmissions break
-                    // the track into individual segments to avoid large jumps in pos
+                    // if there are long gaps in transmissions, break the 
+                    // track into segments to avoid large jumps in pos
                     let lines = [];
                     let segment = null;
                     let segmentDt = 0;
-                    const segmentMax = 3 * resolutionMins * 60;
                     vessel.track.forEach(t => {
                         if (timeframe.line) {
                             // start a new line segment
                             const interval = Math.abs(t.dt - segmentDt);
-                            if (interval > segmentMax) {
+                            if (interval > settings.lostTrackSeconds) {
                                 if (segment != null && segment.length > 1) {
                                     lines.push(segment);
                                 }
@@ -191,12 +191,12 @@ function History({ isVisible, ...restProps }) {
                     vessel.lines = lines;
 
                     // select color based on the org - if QF2 then
-                    // use multicolors otherwise use default color
+                    // use multicolors otherwise use org color
                     // thats been set from the database
                     if (org.value === "QF2") {
-                        vessel.info.icon = GetIcon(vessel.info.style.vesselColor);
-                        vessel.info.color = GetColor(vessel.info.style.vesselColor);
-                        vessel.info.zIndex = vessel.info.style.zIndex;
+                        vessel.info.icon = GetIcon(vessel.info.style.iconColor);
+                        vessel.info.color = GetColor(vessel.info.style.trackColor);
+                        vessel.info.zIndex = GetZIndex(vessel.info.style.zIndex);
                         newColors.set(vessel.info.name, {
                             label: vessel.info.name,
                             icon: vessel.info.icon,
@@ -205,7 +205,7 @@ function History({ isVisible, ...restProps }) {
                     } else {
                         vessel.info.icon = GetIcon(vessel.info.style.orgColor);
                         vessel.info.color = GetColor(vessel.info.style.orgColor);
-                        vessel.info.zIndex = vessel.info.style.zindex;
+                        vessel.info.zIndex = GetZIndex(vessel.info.style.zIndex);
                         newColors.set(vessel.info.org, {
                             label: vessel.info.org,
                             icon: vessel.info.icon,

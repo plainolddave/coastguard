@@ -9,7 +9,7 @@ import Tracks from "./../Common/Tracks"
 import Graticule from "./../Common/Graticule"
 import { GetTimeOffset, Log, PositionBounds } from "./../Common/Utils"
 import RainLayer from "./RainLayer"
-import { GetColor, GetIcon } from "./TrackIcon"
+import { GetColor, GetIcon, GetZIndex } from "./TrackIcon"
 
 //import 'leaflet/dist/leaflet.css'
 
@@ -18,7 +18,7 @@ const settings = {
     refreshMillis: 1000 * 60 * 2,   // updates every n minutes
     fromHours: -12,                 // use a window of track info behind now()
     sog: 0.2,                       // minimum speed over ground
-    url: "https://coastguard.netlify.app/.netlify/functions/fleet",
+    url: "https://coastguard.netlify.app/.netlify/functions/fleet_v2",
     showMarkers: true,
     format: {
         track: {
@@ -39,6 +39,7 @@ const settings = {
             opacity: 1.0
         }
     },
+    lostTrackSeconds: 600,
     mapPosition: { lat: -27.33, lng: 153.27 },
     mapZoom: 10.9,
     mapBounds: [[-27.1, 153.0], [-27.5, 153.5]],
@@ -52,14 +53,7 @@ const settings = {
     useScrollWheel: true,
     style: { height: "100%", width: "100%" },
     attribution: false,
-    zoomSnap: 0.1,
-    zIndex: new Map([
-        ["QF2", 150],
-        ["AVCG", 140],
-        ["VMR", 130],
-        ["QPS", 120],
-        ["Other", 110],
-    ])
+    zoomSnap: 0.1
 }
 
 // ----------------------------------------------------------------------------------------------------
@@ -115,17 +109,16 @@ function MapPanel({ isVisible, autoScale, ...restProps }) {
                     vessel.track.sort((a, b) => b.dt - a.dt);
                     vessel.pos = vessel.track[0];
 
-                    // check track, and if more than three missed transmissions break
+                    // check track, and if more than ten missed transmissions break
                     // the track into individual segments to avoid large jumps in pos
                     let lines = [];
                     let segment = null;
                     let segmentDt = 0;
-                    const segmentMax = 3 * 1 * 60;
                     vessel.track.forEach(t => {
 
                         // start a new line segment
                         const interval = Math.abs(t.dt - segmentDt);
-                        if (interval > segmentMax) {
+                        if (interval > settings.lostTrackSeconds) {
                             if (segment != null && segment.length > 1) {
                                 lines.push(segment);
                             }
@@ -147,11 +140,10 @@ function MapPanel({ isVisible, autoScale, ...restProps }) {
                     }
                     vessel.lines = lines;
 
-                    // select color based on the default color
-                    // thats been set from the database
-                    vessel.info.icon = GetIcon(vessel.info.color);
-                    vessel.info.color = GetColor(vessel.info.color);
-                    vessel.info.zIndex = (settings.zIndex.has(vessel.info.org) ? settings.zIndex.get(vessel.info.org) : 100);
+                    // set color from the database
+                    vessel.info.icon = GetIcon(vessel.info.style.fleetColor);
+                    vessel.info.color = GetColor(vessel.info.style.fleetColor);
+                    vessel.info.zIndex = GetZIndex(vessel.info.style);
                 });
                 newTracks.sort((a, b) => (a.info.zIndex > b.info.zIndex) ? 1 : -1)
                 setTracks(newTracks);

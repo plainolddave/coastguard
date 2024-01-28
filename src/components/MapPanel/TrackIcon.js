@@ -20,7 +20,7 @@ const urlMap = new Map([
     ['black', 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-black.png'],
     ['gray', 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png'],
     ['grey', 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png']
-    ]);
+]);
 
 // get the url 
 function GetUrl(color) {
@@ -32,7 +32,7 @@ function GetUrl(color) {
 
 // color strings are provided from the database
 const colorMap = new Map([
-/*    ['gold', '#FFD700'],*/
+    /*    ['gold', '#FFD700'],*/
     ['gold', '#FBBC05'],
     ['blue', '#0000FF'],
     ['green', '#00FF00'],
@@ -75,7 +75,15 @@ function GetIcon(color) {
     return icon;
 }
 
-export { GetColor, GetIcon, GetUrl }
+// get the zIndex
+function GetZIndex(style) {
+    if (style == null || style.zIndex == null || style.zIndex < 0 || style.zIndex > 1000) {
+        return 100;
+    }
+    return style.zIndex
+}
+
+export { GetColor, GetIcon, GetUrl, GetZIndex }
 
 //, greenIcon, blueIcon, goldIcon, violetIcon, greyIcon, redIcon, orangeIcon, blackIcon }
 
