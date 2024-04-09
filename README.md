@@ -43,41 +43,40 @@ npm install react-icons --save
 npm install recharts
 npm install react-router-dom
 npm install react-select
-npm install react-page-visibility --save
+npm install react-page-visibility --save 
 npm install react-datepicker --save
 npm install react-burger-menu --save
 ```
 
-For more instructions on the front-end React App [look here](Netlify_Instructions.md)
+For more instructions on the front-end React App [look here](Netlify_Instructions.md)  
 
 ## Issues and improvements
 
-Front end:
+Sometime soon:
 
-- migrate to vite - react-app is deprecated
-- still some CSS alignment issues
-- forecast is not showing properly in mobile view
-- add tooltips back into each chart, and synchronise cursor
-- add config page to support other locations
-- add an alert when refreshes are unavailable or data is stale
-- add light / dark theme
-- migrate to google maps or a marine chart, and sort out loading issues
-- experiment with serviceworker
-- experiment with adding operational areas
-- experiment with this mini-map <https://react-leaflet.js.org/docs/example-react-control/>
-- experiment with adding all other AIS tracks in view (e.g. "show live data" that displays everything)
-
-Back end:
-
-- add multiple AIS data sources
-- investigate tides - can stations be added automatically
+- re-architect API calls to remove unecessary requests
+- add a config setting to switch between live and BOM data source
 - write a function to collect names and data of vessels not currently in the database
-- add a config setting to switch between live and BOM source for weather, temp, wind
-- migrate to mongodb realm instead of polling for updates
+- add AISHub data / confrm Scarborough is feeding correctly (separate to Manly)
+- turn off data refresh if the page is not selected
+- investigate tides (is time correct for AESST)
+
+Maybe later:
+
+- still some annoying CSS alignment issues
+- Forecast is not showing in mobile view
+- add a TTL index to signalk->ais->positions to cap data at 3 months
+- add config page to support other locations
+- ~~put the 'weather refreshed' time somewhere inconspicuous~~
+- add tooltips back into each chart
+- experiment with serviceworker
+- experiment with adding all other AIS tracks in view
+- experiment with adding operational areas
+- this mini-map is kind of cool <https://react-leaflet.js.org/docs/example-react-control/>
+- look at a higher contrast map or marine chart layer
 
 Done:
 
-- ~~add a TTL index to signalk->ais->positions to cap data at n months~~
 - ~~add wind gusts~~
 - ~~allow history to be selected per individual vessel or group of vessels~~
 - ~~allow history to be selected by date range~~
@@ -161,7 +160,7 @@ adb shell ls -al /system/media
 ```
 
 Find the bootanimation file:
-adb shell find / -name "bootanimation\*"
+adb shell find / -name "bootanimation*"
 Pull the old files:
 
 ```bash
@@ -172,8 +171,8 @@ adb pull /system/media/bootanimation.zip c:\temp\bootanimation.zip
 Change them and push them back to the device:
 
 ```bash
-adb push c:\temp\boot.mp4 /system/media/boot.mp4
-adb push c:\temp\bootanimation.zip /system/media/bootanimation.zip
+adb push c:\temp\boot.mp4 /system/media/boot.mp4 
+adb push c:\temp\bootanimation.zip /system/media/bootanimation.zip 
 ```
 
 For more info look at:
