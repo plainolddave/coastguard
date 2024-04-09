@@ -36,21 +36,32 @@ function OpenStreetMap() {
     );
 }
 
-function Satellite() {
-    return (
-        <TileLayer
-            url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-            attribution="&copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
-        />
-    );
-}
-
 function Terrain() {
     return (
         <TileLayer
             url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}"
             attribution="Tiles &copy; Esri &mdash; Source: Esri"
             maxZoom={13}
+        />
+    );
+}
+
+// function Satellite() {
+//     return (
+//         <TileLayer
+//             url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+//             attribution="&copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
+//         />
+//     );
+// }
+
+function Satellite() {
+    return (
+        <TileLayer
+            attribution="Google Maps"
+            url="https://www.google.com/maps/vt?lyrs=s&x={x}&y={y}&z={z}"
+            maxZoom={20}
+            subdomains={["mt0", "mt1", "mt2", "mt3"]}
         />
     );
 }

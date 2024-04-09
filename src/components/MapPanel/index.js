@@ -39,7 +39,7 @@ const settings = {
             opacity: 1.0
         }
     },
-    lostTrackSeconds: 600,
+    lostTrackSeconds: 900,
     mapPosition: { lat: -27.33, lng: 153.27 },
     mapZoom: 10.9,
     mapBounds: [[-27.1, 153.0], [-27.5, 153.5]],
@@ -109,8 +109,8 @@ function MapPanel({ isVisible, autoScale, ...restProps }) {
                     vessel.track.sort((a, b) => b.dt - a.dt);
                     vessel.pos = vessel.track[0];
 
-                    // check track, and if more than ten missed transmissions break
-                    // the track into individual segments to avoid large jumps in pos
+                    // if there are long gaps in transmissions, break the 
+                    // track into segments to avoid large jumps in pos
                     let lines = [];
                     let segment = null;
                     let segmentDt = 0;
